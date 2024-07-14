@@ -1,30 +1,33 @@
-const {createTransport} = require("nodemailer");
-import dotenv from 'dotenv';
+import getEnvs from '../config/getEnvs';
+import { createTransport } from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import log from '../logger';
 
-dotenv.config();
+const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = getEnvs();
 
-const {sendMail} = createTransport({
-    host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT as string, 10),
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
+const { sendMail } = createTransport({
+  host: EMAIL_HOST,
+  port: parseInt(EMAIL_PORT as string, 10),
+  secure: false,
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  },
 });
 
 export const sendRegistrationEmail = (email: string) => {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: 'Registration Successful',
-        text: 'Thank you for registering!',
-    };
-    sendMail(mailOptions, (error: Error | null, info: any) => {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
+  const mailOptions = {
+    from: EMAIL_USER,
+    to: email,
+    subject: 'Registration Successful',
+    text: 'Thank you for registering!',
+  };
+
+  sendMail(mailOptions, (error: Error | null, info: SMTPTransport.SentMessageInfo) => {
+    if (error) {
+      log.error({ message: error });
+    } else {
+      log.info({ message: 'Email sent: ' + info.response });
+    }
+  });
 };

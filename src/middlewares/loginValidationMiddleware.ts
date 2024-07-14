@@ -1,26 +1,27 @@
-import { Request, Response, NextFunction } from 'express';
+import { RequestHandler } from 'express';
 import { z } from 'zod';
 
 import { validateEmail, validatePassword } from '../utils/validators';
 
 const loginSchema = z.object({
-    email: z.string().refine(validateEmail, 'Enter a valid email'),
-    password: z.string().refine(validatePassword, 'Password must be at least 8 characters long'),
+  email: z.string().refine(validateEmail, 'Enter a valid email'),
+  password: z.string().refine(validatePassword, 'Password must be at least 8 characters long'),
 });
 
-const loginValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const result = loginSchema.safeParse(req.body);
+const loginValidationMiddleware: RequestHandler = (req, res, next) => {
+  const result = loginSchema.safeParse(req.body);
 
-    if (!result.success) {
-        const errors = result.error.errors.map(err => ({
-            message: err.message,
-            path: err.path.join('.'),
-        }));
-        return res.status(400).json({ error: { message: errors[0].message, code: 400 } });
-    }
+  if (!result.success) {
+    const errors = result.error.errors.map((err) => ({
+      message: err.message,
+      path: err.path.join('.'),
+    }));
 
-    req.body = result.data;
-    next();
+    return res.status(400).j({ message: errors[0].message });
+  }
+
+  req.body = result.data;
+  next();
 };
 
 export default loginValidationMiddleware;
