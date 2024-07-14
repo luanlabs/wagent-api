@@ -1,11 +1,14 @@
-import { connect } from 'mongoose'
+import { connect } from 'mongoose';
+import log from '../logger';
 
 const connectDb = async (uri: string, dbName: string) => {
   try {
     await connect(uri, { dbName });
-    console.log(`Connected to database: ${dbName}`);
+
+    log.info({ message: `Connected to database: ${dbName}` });
   } catch (err) {
-    console.error("Error connecting to DB", err);
+    log.fatal({ message: 'Error connecting to DB' });
+
     process.exit(1);
   }
 };
