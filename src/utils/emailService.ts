@@ -1,6 +1,7 @@
 import { createTransport } from 'nodemailer';
-import getEnvs from '../config/getEnvs';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+
+import getEnvs from '../config/getEnvs';
 import log from '../logger';
 
 const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = getEnvs();
