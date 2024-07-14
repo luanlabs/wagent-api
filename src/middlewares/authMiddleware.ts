@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
+import getEnvs from '../config/getEnvs';
 
 const authMiddleware: RequestHandler = (req, res, next) => {
   const authorization = req.header('Authorization') as string;
@@ -9,12 +10,17 @@ const authMiddleware: RequestHandler = (req, res, next) => {
     return res.status(401).j({ message: 'No token, authorization denied' });
   }
 
+  const { JWT_SECRET } = getEnvs();
+
   try {
-    const secret = process.env.JWT_SECRET as string;
+    const secret = JWT_SECRET;
+
     const decodedToken = jwt.verify(token, secret);
-    const decoded = decodedToken as any;
-    req.user = decoded.id;
-    next();
+
+    if (typeof decodedToken != 'string') {
+      req.user = decodedToken.id;
+      next();
+    }
   } catch (err) {
     res.status(401).j({ message: 'Token is not valid' });
   }
