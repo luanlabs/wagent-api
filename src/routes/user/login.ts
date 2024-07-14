@@ -22,7 +22,7 @@ const loginUserHandler: RequestHandler = async (req, res) => {
 
   const token = generateToken(user.id);
 
-  res.json({
+  res.j({
     result: {
       id: user.id,
       email: user.email,

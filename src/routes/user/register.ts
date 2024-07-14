@@ -10,7 +10,7 @@ const registerUser: RequestHandler = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user) {
-    return res.status(400).json({ message: 'User Already Exist!' });
+    return res.status(400).j({ message: 'User Already Exist!' });
   }
 
   const newUser = new User({ storeName, email, password });

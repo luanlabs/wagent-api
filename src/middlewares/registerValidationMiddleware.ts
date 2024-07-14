@@ -18,7 +18,8 @@ const registerValidationMiddleware: RequestHandler = (req, res, next) => {
       message: err.message,
       path: err.path.join('.'),
     }));
-    return res.status(400).json({ error: { message: errors[0].message, code: 400 } });
+
+    return res.status(400).j({ message: errors[0].message });
   }
 
   req.body = result.data;
