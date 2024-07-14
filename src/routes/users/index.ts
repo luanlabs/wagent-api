@@ -1,7 +1,7 @@
 import express from 'express';
 
-import loginUserHandler from './login';
-import registerUserHandler from './register';
+import loginUserHandler from './loginUserHandler';
+import registerUserHandler from './registerUserHandler';
 import productsRoutes from './products';
 import transactionsRoutes from './transactions';
 import deleteUserHandler from './deleteUserHandler';
