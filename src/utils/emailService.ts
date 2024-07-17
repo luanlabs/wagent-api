@@ -1,6 +1,7 @@
-import getEnvs from '../config/getEnvs';
 import { createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+
+import getEnvs from '../config/getEnvs';
 import log from '../logger';
 
 const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = getEnvs();
@@ -28,6 +29,23 @@ export const sendRegistrationEmail = (email: string) => {
       log.error({ message: error });
     } else {
       log.info({ message: 'Email sent: ' + info.response });
+    }
+  });
+};
+
+export const sendResetPasswordEmail = (email: string, token: string) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Password Reset',
+    text: `You requested a password reset. Please use the following link to reset your password: 
+        ${process.env.FRONTEND_URL}/reset-password?token=${token}`,
+  };
+  sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
     }
   });
 };
