@@ -33,7 +33,7 @@ export const sendRegistrationEmail = (email: string) => {
   });
 };
 
-export const sendResetPasswordEmail = (email: string, token: string) => {
+export const sendResetPasswordEmail = async (email: string, token: string) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -41,11 +41,11 @@ export const sendResetPasswordEmail = (email: string, token: string) => {
     text: `You requested a password reset. Please use the following link to reset your password: 
         ${process.env.FRONTEND_URL}/reset-password?token=${token}`,
   };
-  sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
+
+  try {
+    await sendMail(mailOptions);
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
 };
