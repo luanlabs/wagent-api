@@ -3,7 +3,7 @@ import express from 'express';
 import registerUserHandler from './register';
 import loginUserHandler from './login';
 import {requestPasswordReset} from "../../middlewares/requestPasswordReset";
-import {resetPassword} from "../../middlewares/requestPasswordReset";
+import {resetPassword} from "../../middlewares/resetPassword";
 
 const router = express.Router();
 
