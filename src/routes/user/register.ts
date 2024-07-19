@@ -8,7 +8,7 @@ import registerValidationMiddleware from '../../middlewares/registerValidationMi
 const registerUserHandler: RequestHandler[] = [
   registerValidationMiddleware,
   async (req, res) => {
-    const { storeName, email, password } = req.body;
+    const { storeName, email, password, storeImage } = req.body;
 
     const user = await User.findOne({ email });
 
@@ -16,7 +16,7 @@ const registerUserHandler: RequestHandler[] = [
       return res.status(400).j({ message: 'User Already Exist!' });
     }
 
-    const newUser = new User({ storeName, email, password });
+    const newUser = new User({ storeName, email, password, storeImage });
     await newUser.save();
 
     sendRegistrationEmail(email);
