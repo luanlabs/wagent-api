@@ -16,7 +16,7 @@ const { sendMail } = createTransport({
   },
 });
 
-export const sendRegistrationEmail = (email: string) => {
+export const sendRegistrationEmail = async (email: string) => {
   const mailOptions = {
     from: EMAIL_USER,
     to: email,
@@ -24,18 +24,18 @@ export const sendRegistrationEmail = (email: string) => {
     text: 'Thank you for registering!',
   };
 
-  sendMail(mailOptions, (error: Error | null, info: SMTPTransport.SentMessageInfo) => {
-    if (error) {
-      log.error({ message: error });
-    } else {
-      log.info({ message: 'Email sent: ' + info.response });
-    }
-  });
+  try {
+    await sendMail(mailOptions);
+    log.info('Email sent');
+  } catch (error) {
+    log.error({ message: error });
+    throw error;
+  }
 };
 
 export const sendResetPasswordEmail = async (email: string, token: string) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: EMAIL_USER,
     to: email,
     subject: 'Password Reset',
     text: `You requested a password reset. Please use the following link to reset your password: 
