@@ -6,6 +6,8 @@ export interface IUser extends Document {
   password: string;
   storeName: string;
   storeImage: string;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: number;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -28,6 +30,8 @@ const User = new Schema<IUser>(
       type: String,
       required: true,
     },
+      resetPasswordToken: String,
+      resetPasswordExpires: Date,
   },
   { timestamps: true },
 );
