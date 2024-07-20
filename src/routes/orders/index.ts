@@ -1,8 +1,11 @@
 import express from 'express';
-import getOrderAndPaymentUser from './getOrderAndPaymentUser';
+
+import getOrderByIdHandler from './getOrderByIdHandler';
+import createNewOrderHandler from './createNewOrderHandler';
 
 const router = express.Router();
 
-router.post('/:id/payment', getOrderAndPaymentUser);
+router.get('/:id', getOrderByIdHandler);
+router.post('/', createNewOrderHandler);
 
 export default router;

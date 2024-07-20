@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-const getTransactionsHandler: RequestHandler = (req, res) => {
+const getTransactionsHandler: RequestHandler = (_, res) => {
   return res.status(200).j({
     result: [
       {
