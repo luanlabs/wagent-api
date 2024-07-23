@@ -38,7 +38,7 @@ export const resetPassword = async (req: Request, res: Response) => {
         });
 
         if (!user) {
-            return res.status(400).json({ error: { message: 'Invalid or expired token', code: 400 } });
+            return res.status(404).json({ error: { message: 'Invalid or expired token', code: 404 } });
         }
 
         user.password = password;
