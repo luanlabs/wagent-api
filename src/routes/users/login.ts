@@ -25,7 +25,7 @@ const loginUserHandler: RequestHandler[] = [
 
     const token = generateToken(user.id);
 
-    res.j({
+    return res.status(200).j({
       result: {
         id: user.id,
         email: user.email,
