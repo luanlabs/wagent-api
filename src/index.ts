@@ -12,12 +12,7 @@ import customResponseHandler from './middlewares/customResponseHandler';
 
 const app = express();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-const {DB_URI, DB_NAME, PORT} = getEnvs();
-=======
 const { DB_URI, DB_NAME, PORT } = getEnvs();
->>>>>>> 52a9975 (chore: fix code)
 
 connectDb(DB_URI, DB_NAME);
 
@@ -32,17 +27,5 @@ app.use(customResponseHandler);
 app.use(router);
 
 app.listen(PORT, () => {
-<<<<<<< HEAD
-    console.log(`Server is running on port ${PORT}`);
-=======
-app.get('/a', (req, res) => {
-    res.send('???');
-});
-
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
->>>>>>> 1ad8615 (ci: add new configs)
-=======
   log.info({ message: 'App started' });
->>>>>>> 52a9975 (chore: fix code)
 });
