@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import User from '../models/User';
 import {sendResetPasswordEmail} from '../utils/emailService';
 
-export const requestPasswordReset = async (req: Request, res: Response) => {
+const requestPasswordReset = async (req: Request, res: Response) => {
     const {email} = req.body;
 
     try {
@@ -27,3 +27,4 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
         res.status(500).json({error: {message: 'Error occurred!', code: 500}});
     }
 };
+export default requestPasswordReset;
