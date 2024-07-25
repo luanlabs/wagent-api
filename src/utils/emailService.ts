@@ -33,6 +33,22 @@ export const sendRegistrationEmail = async (email: string) => {
   }
 };
 
+export const sendVerificationEmail = (email: string, token: string) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Verify Your Email',
+    text: `Please verify your email by clicking the following link: ${process.env.FRONTEND_URL}/verify-email?token=${token}`,
+  };
+  sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+};
+
 export const sendResetPasswordEmail = async (email: string, token: string) => {
   const mailOptions = {
     from: EMAIL_USER,
