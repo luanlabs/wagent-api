@@ -3,14 +3,14 @@ import { IUser } from '../models/User';
 import generateApiKey from './generateApiKey';
 
 const updateApiKey = async (user: IUser) => {
-  await ApiKey.updateMany({ user, isActive: true }, { $set: { isActive: false } });
+  await ApiKey.updateMany({ user, status: 'active' }, { $set: { status: 'inactive' } });
 
   const apiKey = generateApiKey();
 
   const newApiKey = new ApiKey({
     user: user._id,
     key: apiKey,
-    isActive: true,
+    status: 'active',
   });
 
   await newApiKey.save();
