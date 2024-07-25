@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import User from "../models/User";
 
-export const resetPassword = async (req: Request, res: Response) => {
+const resetPassword = async (req: Request, res: Response) => {
     const { token, password } = req.body;
 
     try {
@@ -25,3 +25,4 @@ export const resetPassword = async (req: Request, res: Response) => {
         res.status(500).json({ error: { message: 'Error occurred!', code: 500 } });
     }
 };
+export default resetPassword;
