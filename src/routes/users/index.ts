@@ -7,6 +7,7 @@ import registerUserHandler from './registerUserHandler';
 import productsRoutes from './products';
 import transactionsRoutes from './transactions';
 import editProfileUserHandler from './editProfileUserHandler';
+import verifyEmail from "../../middlewares/verifyEmail";
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.post('/auth/login', loginUserHandler);
 router.post('/reset-password', resetPassword);
 router.put('/:id/settings', editProfileUserHandler);
 router.post('/password-reset', requestPasswordReset);
+router.get('/verify-email', verifyEmail);
 
 export default router;
