@@ -1,8 +1,10 @@
 import { RequestHandler } from 'express';
+import crypto from 'crypto';
 
 import User from '../../models/User';
 import generateToken from '../../utils/generateToken';
 import { sendRegistrationEmail } from '../../utils/emailService';
+import { sendVerificationEmail } from '../../utils/emailService';
 import registerValidationMiddleware from '../../middlewares/registerValidationMiddleware';
 
 const registerUserHandler: RequestHandler[] = [
@@ -16,10 +18,13 @@ const registerUserHandler: RequestHandler[] = [
       return res.status(400).j({ message: 'User Already Exist!' });
     }
 
-    const newUser = new User({ storeName, email, password, storeImage });
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+
+    const newUser = new User({ storeName, email, password, storeImage, verificationToken, isVerified: false });
     await newUser.save();
 
     sendRegistrationEmail(email);
+    sendVerificationEmail(email, verificationToken);
 
     const token = generateToken(newUser.id);
 
