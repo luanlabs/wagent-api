@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /users/password-reset:
+ * /users/auth/reset:
  *   post:
  *     summary: Request Password Reset
  *     tags: [Users]
