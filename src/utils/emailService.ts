@@ -1,4 +1,5 @@
 import { createTransport } from 'nodemailer';
+import logger from "../logger";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 import getEnvs from '../config/getEnvs';
@@ -31,6 +32,22 @@ export const sendRegistrationEmail = async (email: string) => {
     log.error({ message: error });
     throw error;
   }
+};
+
+export const sendVerificationEmail = (email: string, token: string) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Verify Your Email',
+    text: `Please verify your email by clicking the following link: ${process.env.FRONTEND_URL}/verify-email?token=${token}`,
+  };
+  sendMail(mailOptions, (error, info) => {
+    if (error) {
+      logger.error(error)
+    } else {
+      logger.info('Email sent: ' + info.response);
+    }
+  });
 };
 
 export const sendResetPasswordEmail = async (email: string, token: string) => {

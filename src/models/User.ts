@@ -8,6 +8,8 @@ export interface IUser extends Document {
   password: string;
   storeName: string;
   storeImage: string;
+  isVerified?: boolean;
+  verificationToken?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: number;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
@@ -30,7 +32,11 @@ const User = new Schema<IUser>(
     },
     storeImage: {
       type: String,
-      required: true,
+      required: false,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
