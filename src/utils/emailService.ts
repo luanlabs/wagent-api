@@ -1,4 +1,5 @@
 import { createTransport } from 'nodemailer';
+import logger from "../logger";
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 import getEnvs from '../config/getEnvs';
@@ -42,9 +43,9 @@ export const sendVerificationEmail = (email: string, token: string) => {
   };
   sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log(error);
+      logger.error(error)
     } else {
-      console.log('Email sent: ' + info.response);
+      logger.info('Email sent: ' + info.response);
     }
   });
 };
