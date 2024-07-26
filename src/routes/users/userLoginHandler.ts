@@ -4,7 +4,7 @@ import User from '../../models/User';
 import generateToken from '../../utils/generateToken';
 import loginValidationMiddleware from '../../middlewares/loginValidationMiddleware';
 
-const loginUserHandler: RequestHandler[] = [
+const userLoginHandler: RequestHandler[] = [
   loginValidationMiddleware,
   async (req, res) => {
     const { email, password } = req.body;
@@ -37,4 +37,4 @@ const loginUserHandler: RequestHandler[] = [
   },
 ];
 
-export default loginUserHandler;
+export default userLoginHandler;

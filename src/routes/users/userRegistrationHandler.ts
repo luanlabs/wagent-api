@@ -1,13 +1,13 @@
 import { RequestHandler } from 'express';
-import crypto from 'crypto';
 
 import User from '../../models/User';
 import generateToken from '../../utils/generateToken';
+import generateApiKey from "../../utils/generateApiKey";
 import { sendRegistrationEmail } from '../../utils/emailService';
 import { sendVerificationEmail } from '../../utils/emailService';
 import registerValidationMiddleware from '../../middlewares/registerValidationMiddleware';
 
-const registerUserHandler: RequestHandler[] = [
+const userRegistrationHandler: RequestHandler[] = [
   registerValidationMiddleware,
   async (req, res) => {
     const { storeName, email, password, storeImage } = req.body;
@@ -18,7 +18,7 @@ const registerUserHandler: RequestHandler[] = [
       return res.status(400).j({ message: 'User Already Exist!' });
     }
 
-    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationToken = generateApiKey();
 
     const newUser = new User({ storeName, email, password, storeImage, verificationToken, isVerified: false });
     await newUser.save();
@@ -40,4 +40,4 @@ const registerUserHandler: RequestHandler[] = [
   },
 ];
 
-export default registerUserHandler;
+export default userRegistrationHandler;
