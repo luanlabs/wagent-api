@@ -7,8 +7,8 @@ services:
     networks:
       - wagentapi
     volumes:
-      - ~/storage/mongodb/data/:/data/db
-      - ~/storage/mongodb/log/:/data/db
+      - ~/storage/mongodb/data/:/data/db/data
+      - ~/storage/mongodb/log/:/data/db/log
 
 networks:
   wagentapi:
