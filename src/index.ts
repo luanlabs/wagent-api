@@ -27,5 +27,5 @@ app.use(customResponseHandler);
 app.use(router);
 
 app.listen(PORT, () => {
-  log.info({ message: 'App started' });
+  log.info({ message: `App started with port: ${PORT}` });
 });
