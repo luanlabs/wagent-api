@@ -1,0 +1,20 @@
+services:
+  wagent-api:
+    container_name: wagent-api
+    env_file: .env
+    environment:
+      DB_URI: mongodb://mongo-wagent:27017
+      LOG_FILE_PATH: /app/storage/${LOG_FILENAME}
+    build: .
+    restart: unless-stopped
+    volumes:
+      - '${LOG_DIRNAME}:/app/storage'
+    networks:
+      - wagentapi
+    ports:
+      - '3000:3000'
+
+networks:
+  wagentapi:
+    name: wagentapi
+    external: true

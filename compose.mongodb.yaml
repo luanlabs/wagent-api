@@ -1,0 +1,16 @@
+services:
+  mongo-wagent:
+    image: mongo:8.0.0-rc13-jammy
+    container_name: mongo-wagent
+    ports:
+      - '127.0.0.1:27016:27017'
+    networks:
+      - wagentapi
+    volumes:
+      - ~/storage/mongodb/data/:/data/db
+      - ~/storage/mongodb/log/:/data/db
+
+networks:
+  wagentapi:
+    name: wagentapi
+    external: true
