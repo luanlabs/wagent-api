@@ -10,7 +10,7 @@ import registerValidationMiddleware from '../../middlewares/registerValidationMi
 const userRegistrationHandler: RequestHandler[] = [
   registerValidationMiddleware,
   async (req, res) => {
-    const { storeName, email, password, storeImage } = req.body;
+    const { storeName, email, password } = req.body;
 
     const user = await User.findOne({ email });
 
@@ -20,7 +20,7 @@ const userRegistrationHandler: RequestHandler[] = [
 
     const verificationToken = generateApiKey();
 
-    const newUser = new User({ storeName, email, password, storeImage, verificationToken, isVerified: false });
+    const newUser = new User({ storeName, email, password, verificationToken, isVerified: false });
     await newUser.save();
 
     // sendRegistrationEmail(email);
@@ -33,7 +33,6 @@ const userRegistrationHandler: RequestHandler[] = [
         id: newUser.id,
         email: newUser.email,
         storeName: newUser.storeName,
-        storeImage: newUser.storeImage,
         token,
       },
     });
