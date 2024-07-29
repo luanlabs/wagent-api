@@ -30,10 +30,7 @@ const userRegistrationHandler: RequestHandler[] = [
 
     return res.status(201).j({
       result: {
-        id: newUser.id,
-        email: newUser.email,
-        storeName: newUser.storeName,
-        token,
+        message: "Verification email was sent, please check your email."
       },
     });
   },
