@@ -23,8 +23,8 @@ const userRegistrationHandler: RequestHandler[] = [
     const newUser = new User({ storeName, email, password, storeImage, verificationToken, isVerified: false });
     await newUser.save();
 
-    sendRegistrationEmail(email);
-    sendVerificationEmail(email, verificationToken);
+    // sendRegistrationEmail(email);
+    // sendVerificationEmail(email, verificationToken);
 
     const token = generateToken(newUser.id);
 
