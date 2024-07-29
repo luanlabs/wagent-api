@@ -15,13 +15,8 @@ const addTokenSchema = z.object({
 const addTokenMiddleware: RequestHandler = (req, res, next) => {
   const result = addTokenSchema.safeParse(req.body);
 
-  if (!result.success) {
-    const errors = result.error.errors.map((err) => ({
-      message: err.message,
-      path: err.path.join('.'),
-    }));
-
-    return res.status(400).j({ message: errors[0].message });
+  if (result.error) {
+    return res.status(400).j({ message: result.error.errors });
   }
 
   next();

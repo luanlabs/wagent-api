@@ -28,12 +28,17 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 result:
  *                   type: string
- *                   example: The token was saved successfully
+ *                   example: {
+ *                       symbol: "usdt",
+ *                       logo: "https://logo.jpg",
+ *                       _id: "66a73cb095779d04d42b0949",
+ *                       __v: 0
+ *                   }
  *
  *       400:
- *         description: The token is available.
+ *         description: Token already exists.
  *         content:
  *           application/json:
  *             schema:
@@ -41,7 +46,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: The token is available
+ *                   example: Token already exists
  *
  *       500:
  *         description: Internal server error

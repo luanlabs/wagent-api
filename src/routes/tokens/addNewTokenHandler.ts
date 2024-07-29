@@ -11,7 +11,7 @@ const addNewTokenHandler: RequestHandler[] = [
 
     if (token) {
       return res.status(400).j({
-        message: 'The token is available',
+        message: 'Token already exists',
       });
     }
 
@@ -23,7 +23,7 @@ const addNewTokenHandler: RequestHandler[] = [
     await newToken.save();
 
     return res.status(201).j({
-      message: 'The token was saved successfully',
+      result: newToken,
     });
   },
 ];
