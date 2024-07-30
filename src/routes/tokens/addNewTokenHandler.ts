@@ -7,7 +7,9 @@ const addNewTokenHandler: RequestHandler[] = [
   async (req, res) => {
     const { symbol, logo } = req.body;
 
-    const token = await Tokens.findOne({ symbol });
+    const lowCaseSymbol = symbol.toLowerCase();
+
+    const token = await Tokens.findOne({ symbol: lowCaseSymbol });
 
     if (token) {
       return res.status(400).j({
@@ -16,7 +18,7 @@ const addNewTokenHandler: RequestHandler[] = [
     }
 
     const newToken = new Tokens({
-      symbol,
+      symbol: lowCaseSymbol,
       logo,
     });
 
