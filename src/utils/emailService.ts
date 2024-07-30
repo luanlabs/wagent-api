@@ -17,21 +17,20 @@ const { sendMail } = createTransport({
   },
 });
 
-export const sendRegistrationEmail = async (email: string) => {
+export const sendRegistrationEmail = (email: string) => {
   const mailOptions = {
     from: EMAIL_USER,
     to: email,
     subject: 'Registration Successful',
     text: 'Thank you for registering!',
   };
-
-  try {
-    await sendMail(mailOptions);
-    log.info('Email sent');
-  } catch (error) {
-    log.error({ message: error });
-    throw error;
-  }
+  sendMail(mailOptions, (error, info)=>{
+    if (error) {
+      logger.error('Error sending email: ' + error)
+    } else {
+      logger.info('Email sent: ' + info.response);
+    }
+  });
 };
 
 export const sendVerificationEmail = (email: string, token: string) => {
@@ -50,7 +49,7 @@ export const sendVerificationEmail = (email: string, token: string) => {
   });
 };
 
-export const sendResetPasswordEmail = async (email: string, token: string) => {
+export const sendResetPasswordEmail = (email: string, token: string) => {
   const mailOptions = {
     from: EMAIL_USER,
     to: email,
@@ -58,11 +57,12 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
     text: `You requested a password reset. Please use the following link to reset your password: 
         ${process.env.FRONTEND_URL}/reset-password?token=${token}`,
   };
+  sendMail(mailOptions, (error, info)=>{
+    if (error) {
+      logger.error('Error sending email: ' + error)
+    } else {
+      logger.info(info.response);
+    }
+  });
 
-  try {
-    await sendMail(mailOptions);
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw error;
-  }
 };
