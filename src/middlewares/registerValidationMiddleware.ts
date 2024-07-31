@@ -7,7 +7,6 @@ const userSchema = z.object({
   storeName: z.string().min(1, 'Store name is required'),
   email: z.string().refine(validateEmail, 'Enter a valid email'),
   password: z.string().refine(validatePassword, 'Password must be at least 8 characters long'),
-  storeImage: z.string().min(1, 'Store image is required'),
 });
 
 const registerValidationMiddleware: RequestHandler = (req, res, next) => {
