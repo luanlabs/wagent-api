@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import Tokens from '../../models/Tokens';
+import Token from '../../models/Token';
 import deleteTokenMiddleware from '../../middlewares/deleteTokenMiddleware';
 
 const deleteTokenHandler: RequestHandler[] = [
@@ -10,7 +10,7 @@ const deleteTokenHandler: RequestHandler[] = [
 
     const lowCaseSymbol = symbol.toLowerCase();
 
-    const modifyToken = await Tokens.findOneAndUpdate(
+    const modifyToken = await Token.findOneAndUpdate(
       { symbol: lowCaseSymbol },
       { isActive: false },
     );

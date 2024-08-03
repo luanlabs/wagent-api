@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 
-import Tokens from '../../models/Tokens';
+import Token from '../../models/Token';
 
-const getTokenHandler: RequestHandler = async (req, res) => {
-  const tokens = await Tokens.find({ isActive: true })
+const getTokenHandler: RequestHandler = async (_, res) => {
+  const tokens = await Token.find({ isActive: true })
     .collation({ locale: 'en' })
     .sort({ symbol: 1 })
     .exec();

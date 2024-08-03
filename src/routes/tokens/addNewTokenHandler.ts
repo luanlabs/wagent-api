@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import Tokens from '../../models/Tokens';
+import Token from '../../models/Token';
 import addTokenMiddleware from '../../middlewares/addTokenMiddleware';
 
 const addNewTokenHandler: RequestHandler[] = [
@@ -11,7 +11,7 @@ const addNewTokenHandler: RequestHandler[] = [
 
       const lowCaseSymbol = symbol.toLowerCase();
 
-      const newToken = new Tokens({
+      const newToken = new Token({
         symbol: lowCaseSymbol,
         logo,
       });

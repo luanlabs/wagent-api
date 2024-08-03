@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import Tokens from '../../models/Tokens';
+import Token from '../../models/Token';
 import editTokenMiddleware from '../../middlewares/editTokenMiddleware';
 
 const editTokenHandler: RequestHandler[] = [
@@ -11,7 +11,7 @@ const editTokenHandler: RequestHandler[] = [
 
     const lowCaseSymbol = symbol.toLowerCase();
 
-    const modifyToken = await Tokens.findOneAndUpdate({ symbol: lowCaseSymbol }, { logo });
+    const modifyToken = await Token.findOneAndUpdate({ symbol: lowCaseSymbol }, { logo });
 
     if (!modifyToken) {
       return res.status(400).j({
