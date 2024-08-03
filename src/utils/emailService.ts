@@ -1,4 +1,6 @@
 import { createTransport } from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 
 import logger from '../config/logger';
 import getEnvs from '../config/getEnvs';
@@ -15,13 +17,28 @@ const { sendMail } = createTransport({
   },
 });
 
+const loadTemplate = (templateName: string, replacements: { [key: string]: string }): string => {
+  const templatePath = path.join(__dirname, '../templates', templateName);
+  let template = fs.readFileSync(templatePath, 'utf8');
+
+  for (const key in replacements) {
+    const placeholder = `{{${key}}}`;
+    template = template.replace(new RegExp(placeholder, 'g'), replacements[key]);
+  }
+
+  return template;
+};
+
 export const sendRegistrationEmail = (email: string) => {
+  const htmlContent = loadTemplate('registrationTemplate.html', { email });
+
   const mailOptions = {
     from: EMAIL_USER,
     to: email,
     subject: 'Registration Successful',
-    text: 'Thank you for registering!',
+    html: htmlContent,
   };
+
   sendMail(mailOptions, (error, info) => {
     if (error) {
       logger.error('Error sending email: ' + error);
@@ -32,15 +49,18 @@ export const sendRegistrationEmail = (email: string) => {
 };
 
 export const sendVerificationEmail = (email: string, token: string) => {
+  const htmlContent = loadTemplate('verificationTemplate.html', { email, token, frontendUrl: process.env.FRONTEND_URL || '' });
+
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: EMAIL_USER,
     to: email,
     subject: 'Verify Your Email',
-    text: `Please verify your email by clicking the following link: ${process.env.FRONTEND_URL}/verify-email?token=${token}`,
+    html: htmlContent,
   };
+
   sendMail(mailOptions, (error, info) => {
     if (error) {
-      logger.error(error);
+      logger.error('Error sending email: ' + error);
     } else {
       logger.info('Email sent: ' + info.response);
     }
@@ -48,18 +68,20 @@ export const sendVerificationEmail = (email: string, token: string) => {
 };
 
 export const sendResetPasswordEmail = (email: string, token: string) => {
+  const htmlContent = loadTemplate('resetPasswordTemplate.html', { email, token, frontendUrl: process.env.FRONTEND_URL || '' });
+
   const mailOptions = {
     from: EMAIL_USER,
     to: email,
     subject: 'Password Reset',
-    text: `You requested a password reset. Please use the following link to reset your password: 
-        ${process.env.FRONTEND_URL}/reset-password?token=${token}`,
+    html: htmlContent,
   };
+
   sendMail(mailOptions, (error, info) => {
     if (error) {
       logger.error('Error sending email: ' + error);
     } else {
-      logger.info(info.response);
+      logger.info('Email sent: ' + info.response);
     }
   });
 };
