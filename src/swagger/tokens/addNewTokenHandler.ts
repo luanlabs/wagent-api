@@ -31,9 +31,10 @@
  *                 result:
  *                   type: string
  *                   example: {
+ *                       _id: "66a73cb095779d04d42b0949",
  *                       symbol: "usdt",
  *                       logo: "https://logo.jpg",
- *                       _id: "66a73cb095779d04d42b0949",
+ *                       isActive: true,
  *                       __v: 0
  *                   }
  *

@@ -1,9 +1,7 @@
 import { createTransport } from 'nodemailer';
-import logger from "../logger";
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
+import logger from '../config/logger';
 import getEnvs from '../config/getEnvs';
-import log from '../logger';
 
 const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = getEnvs();
 
@@ -24,9 +22,9 @@ export const sendRegistrationEmail = (email: string) => {
     subject: 'Registration Successful',
     text: 'Thank you for registering!',
   };
-  sendMail(mailOptions, (error, info)=>{
+  sendMail(mailOptions, (error, info) => {
     if (error) {
-      logger.error('Error sending email: ' + error)
+      logger.error('Error sending email: ' + error);
     } else {
       logger.info('Email sent: ' + info.response);
     }
@@ -42,7 +40,7 @@ export const sendVerificationEmail = (email: string, token: string) => {
   };
   sendMail(mailOptions, (error, info) => {
     if (error) {
-      logger.error(error)
+      logger.error(error);
     } else {
       logger.info('Email sent: ' + info.response);
     }
@@ -57,12 +55,11 @@ export const sendResetPasswordEmail = (email: string, token: string) => {
     text: `You requested a password reset. Please use the following link to reset your password: 
         ${process.env.FRONTEND_URL}/reset-password?token=${token}`,
   };
-  sendMail(mailOptions, (error, info)=>{
+  sendMail(mailOptions, (error, info) => {
     if (error) {
-      logger.error('Error sending email: ' + error)
+      logger.error('Error sending email: ' + error);
     } else {
       logger.info(info.response);
     }
   });
-
 };
