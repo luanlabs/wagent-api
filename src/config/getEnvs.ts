@@ -7,8 +7,6 @@ const getEnvs = () => {
     'PORT',
     'NODE_ENV',
     'JWT_SECRET',
-    'EMAIL_HOST',
-    'EMAIL_PORT',
     'EMAIL_USER',
     'EMAIL_PASS',
     'LOG_FILE_PATH',
