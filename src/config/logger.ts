@@ -19,7 +19,7 @@ if (process.env.NODE_ENV == 'production') {
 }
 
 export const log = bunyan.createLogger({
-  name: 'DUMONT_API',
+  name: 'WAGENT_API',
   level: bunyan.TRACE,
   src: true,
   streams,
