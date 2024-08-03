@@ -4,17 +4,17 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 
-import log from './logger';
+import db from './config/db';
 import router from './routes';
+import log from './config/logger';
 import getEnvs from './config/getEnvs';
-import connectDb from './config/connectDb';
 import customResponseHandler from './middlewares/customResponseHandler';
 
 const app = express();
 
 const { DB_URI, DB_NAME, PORT } = getEnvs();
 
-connectDb(DB_URI, DB_NAME);
+db(DB_URI, DB_NAME);
 
 app.use(compression());
 app.use(helmet());
@@ -27,5 +27,5 @@ app.use(customResponseHandler);
 app.use(router);
 
 app.listen(PORT, () => {
-  log.info({ message: `App started with port: ${PORT}` });
+  log.info(`App started with port: ${PORT}`);
 });
