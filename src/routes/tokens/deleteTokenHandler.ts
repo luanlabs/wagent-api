@@ -2,8 +2,10 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import deleteTokenMiddleware from '../../middlewares/deleteTokenMiddleware';
+import adminAuthPasswordMiddleware from '../../middlewares/adminAuthPasswordMiddleware';
 
 const deleteTokenHandler: RequestHandler[] = [
+  adminAuthPasswordMiddleware,
   deleteTokenMiddleware,
   async (req, res) => {
     const { symbol } = req.params;
@@ -11,7 +13,7 @@ const deleteTokenHandler: RequestHandler[] = [
     const lowCaseSymbol = symbol.toLowerCase();
 
     const modifyToken = await Token.findOneAndUpdate(
-      { symbol: lowCaseSymbol },
+      { symbol: lowCaseSymbol, isActive: true },
       { isActive: false },
     );
 

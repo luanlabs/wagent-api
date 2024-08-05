@@ -2,8 +2,10 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import addTokenMiddleware from '../../middlewares/addTokenMiddleware';
+import adminAuthPasswordMiddleware from '../../middlewares/adminAuthPasswordMiddleware';
 
 const addNewTokenHandler: RequestHandler[] = [
+  adminAuthPasswordMiddleware,
   addTokenMiddleware,
   async (req, res) => {
     try {

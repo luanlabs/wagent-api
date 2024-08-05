@@ -7,7 +7,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   storeName: string;
-  storeImage: string;
+  storeImage?: string;
   isVerified?: boolean;
   verificationToken?: string;
   resetPasswordToken?: string;
