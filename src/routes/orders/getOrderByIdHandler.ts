@@ -12,7 +12,7 @@ const getOrderByIdHandler: RequestHandler[] = [
       .populate([
         {
           path: 'user',
-          select: '-__v -password',
+          select: '-__v -password -resetPasswordToken -resetPasswordExpires',
         },
         {
           path: 'apiKey',
