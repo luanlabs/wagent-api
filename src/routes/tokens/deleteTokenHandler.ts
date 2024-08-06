@@ -1,11 +1,11 @@
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
+import adminAuthMIddleware from '../../middlewares/adminAuthMIddleware';
 import deleteTokenMiddleware from '../../middlewares/deleteTokenMiddleware';
-import adminAuthPasswordMiddleware from '../../middlewares/adminAuthPasswordMiddleware';
 
 const deleteTokenHandler: RequestHandler[] = [
-  adminAuthPasswordMiddleware,
+  adminAuthMIddleware,
   deleteTokenMiddleware,
   async (req, res) => {
     const { symbol } = req.params;

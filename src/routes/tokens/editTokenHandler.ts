@@ -2,10 +2,10 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import editTokenMiddleware from '../../middlewares/editTokenMiddleware';
-import adminAuthPasswordMiddleware from '../../middlewares/adminAuthPasswordMiddleware';
+import adminAuthMIddleware from '../../middlewares/adminAuthMIddleware';
 
 const editTokenHandler: RequestHandler[] = [
-  adminAuthPasswordMiddleware,
+  adminAuthMIddleware,
   editTokenMiddleware,
   async (req, res) => {
     const { symbol } = req.params;

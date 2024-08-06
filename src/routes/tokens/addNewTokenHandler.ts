@@ -2,10 +2,10 @@ import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import addTokenMiddleware from '../../middlewares/addTokenMiddleware';
-import adminAuthPasswordMiddleware from '../../middlewares/adminAuthPasswordMiddleware';
+import adminAuthMIddleware from '../../middlewares/adminAuthMIddleware';
 
 const addNewTokenHandler: RequestHandler[] = [
-  adminAuthPasswordMiddleware,
+  adminAuthMIddleware,
   addTokenMiddleware,
   async (req, res) => {
     const { symbol, logo } = req.body;

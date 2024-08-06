@@ -3,8 +3,3 @@ export enum Method {
   Stream = 'stream',
   Vesting = 'vesting',
 }
-
-export enum Network {
-  Stellar = 'stellar',
-  Soroban = 'soroban',
-}
