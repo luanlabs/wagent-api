@@ -11,13 +11,8 @@ const createOrderSchema = z.object({
 const apiKeyMiddleware: RequestHandler = (req, res, next) => {
   const result = createOrderSchema.safeParse(req.body);
 
-  if (!result.success) {
-    const errors = result.error.errors.map((err) => ({
-      message: err.message,
-      path: err.path.join('.'),
-    }));
-
-    return res.status(400).j({ message: errors[0].message });
+  if (result.error) {
+    return res.status(400).j({ message: result.error.errors });
   }
 
   next();

@@ -12,6 +12,7 @@ const getEnvs = () => {
     'EMAIL_USER',
     'EMAIL_PASS',
     'LOG_FILE_PATH',
+    'ADMIN_PASSWORD',
     'SWAGGER_API_URL',
   ];
   return enforceEnv(envVariables, { returnValues: true });

@@ -1,23 +1,37 @@
 import { RequestHandler } from 'express';
 
-const getOrderByIdHandler: RequestHandler = (_, res) => {
-  return res.status(200).j({
-    result: {
-      id: '20',
-      amount: '1000',
-      merchant: {
-        methods: ['single', 'stream'],
-        tokens: [{ symbol: 'USDT' }, { symbol: 'USDC' }],
-      },
-      products: [
+import Order from '../../models/Order';
+import getOrderMiddleware from '../../middlewares/getOrderMiddleware';
+
+const getOrderByIdHandler: RequestHandler[] = [
+  getOrderMiddleware,
+  async (req, res) => {
+    const { id } = req.params;
+
+    const order = await Order.findOne({ _id: id })
+      .populate([
         {
-          id: '5',
-          name: 'Mobile',
-          amount: '25',
+          path: 'user',
+          select: '-__v -password -resetPasswordToken -resetPasswordExpires',
         },
-      ],
-    },
-  });
-};
+        {
+          path: 'apiKey',
+          select: '-__v -user',
+        },
+      ])
+      .select('-__v')
+      .lean();
+
+    if (!order) {
+      return res.status(404).j({
+        message: 'Order not found',
+      });
+    }
+
+    return res.status(200).j({
+      result: order,
+    });
+  },
+];
 
 export default getOrderByIdHandler;
