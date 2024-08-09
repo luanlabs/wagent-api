@@ -1,13 +1,13 @@
 import nodemailer from 'nodemailer';
-import fs from 'fs';
-import path from 'path';
 
 import logger from '../config/logger';
 import getEnvs from '../config/getEnvs';
 import verifyEmailTemplate from '../templates/verifyEmailTemplate';
-import { EmailTitles } from '../constants/emailTitles';
+import registrationTemplate from '../templates/registrationTemplate';
+import resetPasswordTemplate from '../templates/resetPasswordTemplate';
+import {EmailTitles} from '../constants/emailTitles';
 
-const { EMAIL_USER, EMAIL_PASS, VERIFY_URL, FRONTEND_URL } = getEnvs();
+const {EMAIL_USER, EMAIL_PASS, FRONTEND_URL} = getEnvs();
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -42,31 +42,19 @@ const sendEmail = (to: string, subject: string, htmlContent: string): void => {
     });
 };
 
-const loadTemplate = (templateName: string, replacements: { [key: string]: string }): string => {
-    const templatePath = path.join(__dirname, '../templates', templateName);
-    let template = fs.readFileSync(templatePath, 'utf8');
-
-    for (const key in replacements) {
-        const placeholder = `{{${key}}}`;
-        template = template.replace(new RegExp(placeholder, 'g'), replacements[key]);
-    }
-
-    return template;
-};
-
 export const sendRegistrationEmail = (email: string): void => {
-    const htmlContent = loadTemplate('registrationTemplate.ts', { email });
-    sendEmail(email, 'Registration Successful', htmlContent);
+    const htmlContent = registrationTemplate(email);
+    sendEmail(email, EmailTitles.Registration, htmlContent);
 };
 
 export const sendVerificationEmail = (email: string, token: string): void => {
-    const verifyUrl = `${VERIFY_URL}?token=${token}`;
+    const verifyUrl = `${FRONTEND_URL}?token=${token}`;
     const htmlContent = verifyEmailTemplate(verifyUrl);
     sendEmail(email, EmailTitles.Verification, htmlContent);
 };
 
 export const sendResetPasswordEmail = (email: string, token: string): void => {
-    const resetUrl = `${FRONTEND_URL}/reset-password?token=${token}`;
-    const htmlContent = loadTemplate('resetPasswordTemplate.ts', { email, token, resetUrl });
-    sendEmail(email, 'Password Reset', htmlContent);
+    const resetUrl = `${FRONTEND_URL}?token=${token}`;
+    const htmlContent = resetPasswordTemplate(email, token, resetUrl);
+    sendEmail(email, EmailTitles.ResetPassword, htmlContent);
 };
