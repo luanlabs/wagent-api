@@ -4,7 +4,7 @@ import path from 'path';
 
 import logger from '../config/logger';
 import getEnvs from '../config/getEnvs';
-import emailTemplate from '../templates/emailTemplate';
+import verifyEmailTemplate from '../templates/verifyEmailTemplate';
 import { EmailTitles } from '../constants/emailTitles';
 
 const { EMAIL_USER, EMAIL_PASS, VERIFY_URL, FRONTEND_URL } = getEnvs();
@@ -61,7 +61,7 @@ export const sendRegistrationEmail = (email: string): void => {
 
 export const sendVerificationEmail = (email: string, token: string): void => {
     const verifyUrl = `${VERIFY_URL}?token=${token}`;
-    const htmlContent = emailTemplate(verifyUrl);
+    const htmlContent = verifyEmailTemplate(verifyUrl);
     sendEmail(email, EmailTitles.Verification, htmlContent);
 };
 
