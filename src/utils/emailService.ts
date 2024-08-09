@@ -5,6 +5,7 @@ import getEnvs from '../config/getEnvs';
 import verifyEmailTemplate from '../templates/verifyEmailTemplate';
 import registrationTemplate from '../templates/registrationTemplate';
 import resetPasswordTemplate from '../templates/resetPasswordTemplate';
+import resetPasswordSuccessTemplate from '../templates/resetPasswordSuccessTemplate';
 import {EmailTitles} from '../constants/emailTitles';
 
 const {EMAIL_USER, EMAIL_PASS, FRONTEND_URL} = getEnvs();
@@ -57,4 +58,8 @@ export const sendResetPasswordEmail = (email: string, token: string): void => {
     const resetUrl = `${FRONTEND_URL}?token=${token}`;
     const htmlContent = resetPasswordTemplate(email, token, resetUrl);
     sendEmail(email, EmailTitles.ResetPassword, htmlContent);
+};
+export const sendResetPasswordSuccess = (email: string): void => {
+    const htmlContent = resetPasswordSuccessTemplate(email);
+    sendEmail(email, EmailTitles.ResetPasswordSuccess, htmlContent);
 };

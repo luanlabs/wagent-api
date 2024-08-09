@@ -1,5 +1,7 @@
 import {Request, Response} from "express";
+
 import User from "../models/User";
+import {sendResetPasswordSuccess} from "../utils/emailService";
 
 const resetPassword = async (req: Request, res: Response) => {
     const { token, password } = req.body;
@@ -9,7 +11,7 @@ const resetPassword = async (req: Request, res: Response) => {
             resetPasswordToken: token,
             resetPasswordExpires: { $gt: Date.now() },
         });
-
+        console.log('Request body:', req.body);
         if (!user) {
             return res.status(404).json({ error: { message: 'Invalid or expired token', code: 404 } });
         }
@@ -19,6 +21,8 @@ const resetPassword = async (req: Request, res: Response) => {
         user.resetPasswordExpires = undefined;
 
         await user.save();
+
+        sendResetPasswordSuccess(user.email);
 
         res.json({ message: 'Password has been reset' });
     } catch (err) {
