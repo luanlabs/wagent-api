@@ -10,6 +10,7 @@ import editProfileUserHandler from './editProfileUserHandler';
 import verifyEmail from "../../middlewares/verifyEmail";
 import passwordValidationMiddleware from "../../middlewares/passwordValidationMiddleWare";
 import validateResetToken from "../../middlewares/validateResetToken";
+import validateVerifyToken from "../../middlewares/validateVerifyToken";
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.put('/:id/settings', editProfileUserHandler);
 router.post('/auth/reset', requestPasswordReset);
 router.get('/auth/verify', verifyEmail);
 router.get('/validate-reset-token', validateResetToken);
+router.get('/validate-verify-token', validateVerifyToken);
 
 export default router;
