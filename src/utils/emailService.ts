@@ -55,7 +55,7 @@ const loadTemplate = (templateName: string, replacements: { [key: string]: strin
 };
 
 export const sendRegistrationEmail = (email: string): void => {
-    const htmlContent = loadTemplate('registrationTemplate.html', { email });
+    const htmlContent = loadTemplate('registrationTemplate.ts', { email });
     sendEmail(email, 'Registration Successful', htmlContent);
 };
 
@@ -67,6 +67,6 @@ export const sendVerificationEmail = (email: string, token: string): void => {
 
 export const sendResetPasswordEmail = (email: string, token: string): void => {
     const resetUrl = `${FRONTEND_URL}/reset-password?token=${token}`;
-    const htmlContent = loadTemplate('resetPasswordTemplate.html', { email, token, resetUrl });
+    const htmlContent = loadTemplate('resetPasswordTemplate.ts', { email, token, resetUrl });
     sendEmail(email, 'Password Reset', htmlContent);
 };
