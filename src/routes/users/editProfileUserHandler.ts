@@ -1,7 +1,22 @@
 import { RequestHandler } from 'express';
+import { z } from 'zod';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import User from '../../models/User';
+
+const SettingsSchema = z.object({
+  methods: z.number(),
+  minimumCancellableStreamDuration: z.number(),
+  tokens: z.array(z.object({
+    symbol: z.string(),
+  })),
+  isSubscribed: z.boolean(),
+});
+
+const ProfileSchema = z.object({
+  name: z.string().optional(),
+  logoSrc: z.string().optional(),
+});
 
 const editUserProfileHandler: RequestHandler = async (req, res) => {
   try {
@@ -32,12 +47,37 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
     const userId = (decodedToken as JwtPayload).userId as string;
     const { settings, profile } = req.body;
 
+    const settingsValidation = SettingsSchema.safeParse(settings);
+    const profileValidation = ProfileSchema.safeParse(profile);
+
+    if (!settingsValidation.success) {
+      return res.status(400).json({
+        result: { success: false },
+        error: {
+          message: 'Invalid settings data',
+          details: settingsValidation.error.errors,
+          code: 400,
+        },
+      });
+    }
+
+    if (!profileValidation.success) {
+      return res.status(400).json({
+        result: { success: false },
+        error: {
+          message: 'Invalid profile data',
+          details: profileValidation.error.errors,
+          code: 400,
+        },
+      });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
         userId,
         {
           $set: {
-            settings,
-            profile,
+            settings: settingsValidation.data,
+            profile: profileValidation.data,
           }
         },
         { new: true, runValidators: true }
