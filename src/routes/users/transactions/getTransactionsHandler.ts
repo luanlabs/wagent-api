@@ -1,27 +1,23 @@
 import { RequestHandler } from 'express';
 
-const getTransactionsHandler: RequestHandler = (_, res) => {
-  return res.status(200).j({
-    result: [
-      {
-        id: '2',
-        products: [
-          {
-            id: '5',
-            name: 'Mobile',
-            method: 'single',
-            token: [{ symbol: 'USDT' }],
-            amount: 25,
-          },
-        ],
-        method: 'stream',
-        status: 'active',
-        createdAt: '2024-07-04T13:39:37.379+00:00',
-        amount: 23,
-        token: 'usdt',
-      },
-    ],
-  });
-};
+import getTransactionMiddleware from '../../../middlewares/getTransactionMiddleware';
+import Transaction from '../../../models/Transaction';
+
+const getTransactionsHandler: RequestHandler[] = [
+  getTransactionMiddleware,
+  async (req, res) => {
+    const { hash } = req.params;
+
+    const transaction = await Transaction.findOne({ hash });
+
+    if (!transaction) {
+      return res.status(404).j({
+        message: 'transaction not found',
+      });
+    }
+
+    return res.status(200).j({ result: transaction });
+  },
+];
 
 export default getTransactionsHandler;

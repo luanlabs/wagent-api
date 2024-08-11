@@ -43,6 +43,7 @@ const createTransactionHandler: RequestHandler[] = [
     }
 
     const newTransaction = new Transaction({
+      hash,
       order: order._id,
       token: token._id,
       method,
