@@ -111,7 +111,6 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
       });
     }
     return res.status(500).json({
-      result: { success: false },
       error: {
         message: error.message || 'An error occurred while updating user settings',
         code: 500,
