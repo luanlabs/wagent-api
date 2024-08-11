@@ -9,7 +9,7 @@ interface IProduct {
 interface IOrder {
   user: Schema.Types.ObjectId;
   apiKey: Schema.Types.ObjectId;
-  products: IProduct;
+  products: IProduct[];
 }
 
 const Order = new Schema<IOrder>({
