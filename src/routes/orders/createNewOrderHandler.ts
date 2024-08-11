@@ -1,20 +1,26 @@
 import { RequestHandler } from 'express';
 
-import User from '../../models/User';
 import Order from '../../models/Order';
 import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
+import ApiKey from '../../models/ApiKey';
 
 const createNewOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
   async (req, res) => {
-    const { apiKey } = req.body;
+    const { apiKey, products } = req.body;
 
-    // TODO: find user with api_key
-    const user = await User.find();
+    const userWithApiKey = await ApiKey.findOne({ key: apiKey, status: 'active' }).exec();
+
+    if (!userWithApiKey) {
+      return res.status(400).j({
+        message: 'Invalid ApiKey',
+      });
+    }
 
     const newOrder = new Order({
-      user: user[0]._id,
-      apiKey,
+      user: userWithApiKey.user,
+      apiKey: userWithApiKey._id,
+      products,
     });
 
     await newOrder.save();
