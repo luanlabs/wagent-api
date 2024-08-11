@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-
 import User from '../models/User';
 
 const validateVerifyToken = async (req: Request, res: Response) => {
@@ -16,6 +15,11 @@ const validateVerifyToken = async (req: Request, res: Response) => {
 
         if (!user) {
             return res.status(404).json({ error: { message: 'Invalid or expired token', code: 404 } });
+        }
+
+        const currentTime = new Date();
+        if (user.verificationTokenExpiration && user.verificationTokenExpiration < currentTime) {
+            return res.status(400).json({ error: { message: 'Token has expired', code: 400 } });
         }
 
         res.json({ message: 'Token is valid' });
