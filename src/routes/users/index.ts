@@ -23,7 +23,7 @@ router.post('/auth/password', passwordValidationMiddleware, resetPassword);
 router.put('/:id/settings', editProfileUserHandler);
 router.post('/auth/reset', requestPasswordReset);
 router.get('/auth/verify', verifyEmail);
-router.get('/validate-reset-token', validateResetToken);
-router.get('/validate-verify-token', validateVerifyToken);
+router.get('/auth/reset/verify', validateResetToken);
+router.get('/auth/verify', validateVerifyToken);
 
 export default router;
