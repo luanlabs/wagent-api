@@ -1,12 +1,12 @@
 import { Document, Schema, model } from 'mongoose';
 
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
-import updateApiKey from '../utils/updateApiKey';
 
 export interface IUser extends Document {
   email: string;
   password: string;
   storeName: string;
+  apiKey?: string;
   storeImage?: string;
   isVerified?: boolean;
   verificationToken?: string;
@@ -20,6 +20,10 @@ const User = new Schema<IUser>(
     storeName: {
       type: String,
       required: true,
+    },
+    apiKey: {
+      type: String,
+      required: false,
     },
     email: {
       type: String,
@@ -45,25 +49,11 @@ const User = new Schema<IUser>(
 );
 
 User.pre<IUser>('save', async function (next) {
-  if (this.isModified()) {
-    updateApiKey(this);
-  }
-
   if (!this.isModified('password')) {
     return next();
   }
 
   this.password = await hashPassword(this.password);
-  next();
-});
-
-User.pre('findOneAndUpdate', async function (next) {
-  const docToUpdate = await this.model.findOne(this.getQuery());
-
-  if (docToUpdate) {
-    updateApiKey(docToUpdate);
-  }
-
   next();
 });
 
