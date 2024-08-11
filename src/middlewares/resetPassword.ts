@@ -11,7 +11,6 @@ const resetPassword = async (req: Request, res: Response) => {
             resetPasswordToken: token,
             resetPasswordExpires: { $gt: Date.now() },
         });
-        console.log('Request body:', req.body);
         if (!user) {
             return res.status(404).json({ error: { message: 'Invalid or expired token', code: 404 } });
         }
