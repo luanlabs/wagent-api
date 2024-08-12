@@ -1,10 +1,9 @@
 import { RequestHandler } from 'express';
 import { z } from 'zod';
-import jwt, { JwtPayload } from 'jsonwebtoken';
 
-import User from '../../models/User';
+import User, { IUser } from '../../models/User';
 
-const SettingsSchema = z.object({
+const settingsSchema = z.object({
   methods: z.number(),
   minimumCancellableStreamDuration: z.number(),
   tokens: z.array(z.object({
@@ -13,42 +12,29 @@ const SettingsSchema = z.object({
   isSubscribed: z.boolean(),
 });
 
-const ProfileSchema = z.object({
+const profileSchema = z.object({
   name: z.string().optional(),
   logoSrc: z.string().optional(),
 });
 
 const editUserProfileHandler: RequestHandler = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
+    if (!req.user || typeof req.user === 'string') {
       return res.status(401).json({
         result: { success: false },
         error: {
-          message: 'Authorization token is required',
+          message: 'User information is not available',
           code: 401,
         },
       });
     }
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
+    const { _id } = req.user as IUser;
 
-    if (typeof decodedToken !== 'object' || !decodedToken || !('userId' in decodedToken)) {
-      return res.status(401).json({
-        result: { success: false },
-        error: {
-          message: 'Invalid token payload',
-          code: 401,
-        },
-      });
-    }
-
-    const userId = (decodedToken as JwtPayload).userId as string;
     const { settings, profile } = req.body;
 
-    const settingsValidation = SettingsSchema.safeParse(settings);
-    const profileValidation = ProfileSchema.safeParse(profile);
+    const settingsValidation = settingsSchema.safeParse(settings);
+    const profileValidation = profileSchema.safeParse(profile);
 
     if (!settingsValidation.success) {
       return res.status(400).json({
@@ -73,7 +59,7 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-        userId,
+        _id,
         {
           $set: {
             settings: settingsValidation.data,
@@ -101,15 +87,6 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
       },
     });
   } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({
-        result: { success: false },
-        error: {
-          message: 'Invalid or expired token',
-          code: 401,
-        },
-      });
-    }
     return res.status(500).json({
       error: {
         message: error.message || 'An error occurred while updating user settings',
