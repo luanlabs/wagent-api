@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 
 interface ICustomResponse {
   message?: object | string;
-  result?: object | string | null;
+  result?: object | string;
   error?: object | string;
 }
 
