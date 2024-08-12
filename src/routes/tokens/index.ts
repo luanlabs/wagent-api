@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/', getTokenHandler);
 router.post('/', addNewTokenHandler);
-router.put('/:symbol', editTokenHandler);
-router.delete('/:symbol', deleteTokenHandler);
+router.put('/:address', editTokenHandler);
+router.delete('/:address', deleteTokenHandler);
 
 export default router;

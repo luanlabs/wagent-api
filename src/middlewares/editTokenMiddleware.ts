@@ -2,9 +2,9 @@ import { RequestHandler } from 'express';
 import { z } from 'zod';
 
 const editTokenSchemaParams = z.object({
-  symbol: z.string({
-    required_error: 'symbol is required',
-    invalid_type_error: 'symbol must be a string',
+  address: z.string({
+    required_error: 'address is required',
+    invalid_type_error: 'address must be a string',
   }),
 });
 

@@ -17,6 +17,7 @@
  *                   type: string
  *                   example: [{
  *                       _id: "66a73cb095779d04d42b0949",
+ *                       address: "GBUQL63MMQZL37NBVRHFG3L24PYMK6TYC6I44BR5KK52J5JZTKJA2KRJ",
  *                       symbol: "usdt",
  *                       logo: "https://logo.jpg",
  *                       isActive: true,

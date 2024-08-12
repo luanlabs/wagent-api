@@ -8,12 +8,10 @@ const deleteTokenHandler: RequestHandler[] = [
   adminAuthMIddleware,
   deleteTokenMiddleware,
   async (req, res) => {
-    const { symbol } = req.params;
-
-    const lowCaseSymbol = symbol.toLowerCase();
+    const { address } = req.params;
 
     const modifyToken = await Token.findOneAndUpdate(
-      { symbol: lowCaseSymbol, isActive: true },
+      { address, isActive: true },
       { isActive: false },
     );
 
