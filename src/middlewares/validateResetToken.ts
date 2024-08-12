@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+
 import User from '../models/User';
 
-export const validateResetToken = async (req: Request, res: Response) => {
+const validateResetToken = async (req: Request, res: Response) => {
     const { token } = req.params;
 
     try {
@@ -20,3 +21,4 @@ export const validateResetToken = async (req: Request, res: Response) => {
         res.status(500).json({ error: { message: 'Error occurred!', code: 500 } });
     }
 };
+export default validateResetToken;

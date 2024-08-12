@@ -1,65 +1,65 @@
-import { createTransport } from 'nodemailer';
+import nodemailer from 'nodemailer';
 
 import logger from '../config/logger';
 import getEnvs from '../config/getEnvs';
+import verifyEmailTemplate from '../templates/verifyEmailTemplate';
+import registrationTemplate from '../templates/registrationTemplate';
+import resetPasswordTemplate from '../templates/resetPasswordTemplate';
+import resetPasswordSuccessTemplate from '../templates/resetPasswordSuccessTemplate';
+import {EmailTitles} from '../constants/emailTitles';
 
-const { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS } = getEnvs();
+const {EMAIL_USER, EMAIL_PASS, FRONTEND_URL} = getEnvs();
 
-const { sendMail } = createTransport({
-  host: EMAIL_HOST,
-  port: parseInt(EMAIL_PORT as string, 10),
-  secure: false,
-  auth: {
-    user: EMAIL_USER,
-    pass: EMAIL_PASS,
-  },
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+    },
 });
 
-export const sendRegistrationEmail = (email: string) => {
-  const mailOptions = {
-    from: EMAIL_USER,
-    to: email,
-    subject: 'Registration Successful',
-    text: 'Thank you for registering!',
-  };
-  sendMail(mailOptions, (error, info) => {
-    if (error) {
-      logger.error('Error sending email: ' + error);
+transporter.verify((err, _) => {
+    if (err) {
+        logger.error('EMAIL: Failed to verify connection');
     } else {
-      logger.info('Email sent: ' + info.response);
+        logger.info('EMAIL: Connected');
     }
-  });
+});
+
+const sendEmail = (to: string, subject: string, htmlContent: string): void => {
+    const options = {
+        from: EMAIL_USER,
+        to,
+        subject,
+        html: htmlContent,
+    };
+
+    transporter.sendMail(options, (err, info) => {
+        if (err) {
+            logger.error(`EMAIL: Failed to send email to ${to} - ${err}`);
+        } else {
+            logger.info(`EMAIL: Email sent to ${to} - ${info.response}`);
+        }
+    });
 };
 
-export const sendVerificationEmail = (email: string, token: string) => {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: 'Verify Your Email',
-    text: `Please verify your email by clicking the following link: ${process.env.FRONTEND_URL}/verify-email?token=${token}`,
-  };
-  sendMail(mailOptions, (error, info) => {
-    if (error) {
-      logger.error(error);
-    } else {
-      logger.info('Email sent: ' + info.response);
-    }
-  });
+export const sendRegistrationEmail = (email: string): void => {
+    const htmlContent = registrationTemplate(email);
+    sendEmail(email, EmailTitles.Registration, htmlContent);
 };
 
-export const sendResetPasswordEmail = (email: string, token: string) => {
-  const mailOptions = {
-    from: EMAIL_USER,
-    to: email,
-    subject: 'Password Reset',
-    text: `You requested a password reset. Please use the following link to reset your password: 
-        ${process.env.FRONTEND_URL}/reset-password?token=${token}`,
-  };
-  sendMail(mailOptions, (error, info) => {
-    if (error) {
-      logger.error('Error sending email: ' + error);
-    } else {
-      logger.info(info.response);
-    }
-  });
+export const sendVerificationEmail = (email: string, token: string): void => {
+    const verifyUrl = `${FRONTEND_URL}?token=${token}`;
+    const htmlContent = verifyEmailTemplate(verifyUrl);
+    sendEmail(email, EmailTitles.Verification, htmlContent);
+};
+
+export const sendResetPasswordEmail = (email: string, token: string): void => {
+    const resetUrl = `${FRONTEND_URL}?token=${token}`;
+    const htmlContent = resetPasswordTemplate(email, token, resetUrl);
+    sendEmail(email, EmailTitles.ResetPassword, htmlContent);
+};
+export const sendResetPasswordSuccess = (email: string): void => {
+    const htmlContent = resetPasswordSuccessTemplate(email);
+    sendEmail(email, EmailTitles.ResetPasswordSuccess, htmlContent);
 };
