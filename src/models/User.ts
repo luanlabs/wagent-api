@@ -1,5 +1,4 @@
 import { Document, Schema, model } from 'mongoose';
-
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
 import updateApiKey from '../utils/updateApiKey';
 
@@ -26,6 +25,7 @@ export interface IUser extends Document {
     storeImage: string;
     isVerified?: boolean;
     verificationToken?: string;
+    verificationTokenExpiration?: Date;
     resetPasswordToken?: string;
     resetPasswordExpires?: number;
     settings?: ISettings;
@@ -55,6 +55,14 @@ const UserSchema = new Schema<IUser>(
         isVerified: {
             type: Boolean,
             default: false,
+        },
+        verificationToken: {
+            type: String,
+            required: false,
+        },
+        verificationTokenExpiration: {
+            type: Date,
+            required: false,
         },
         resetPasswordToken: String,
         resetPasswordExpires: Date,

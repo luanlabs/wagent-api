@@ -12,12 +12,11 @@ const loginValidationMiddleware: RequestHandler = (req, res, next) => {
   const result = loginSchema.safeParse(req.body);
 
   if (!result.success) {
-    const errors = result.error.errors.map((err) => ({
-      message: err.message,
-      path: err.path.join('.'),
-    }));
-
-    return res.status(400).j({ message: errors[0].message });
+    const errors: string[] = [];
+    for (const issue of result.error.issues) {
+      errors.push(issue.message);
+    }
+    return res.status(400).json({ errors });
   }
 
   req.body = result.data;

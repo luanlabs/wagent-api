@@ -6,13 +6,37 @@ const createOrderSchema = z.object({
     required_error: 'apiKey is required',
     invalid_type_error: 'apiKey must be a string',
   }),
+  products: z
+    .array(
+      z.object({
+        name: z.string({
+          required_error: 'Product name is required',
+          invalid_type_error: 'Product name must be a string',
+        }),
+        logo: z.string({
+          required_error: 'Product logo is required',
+          invalid_type_error: 'Product logo must be a string',
+        }),
+        amount: z.string({
+          required_error: 'Product amount is required',
+          invalid_type_error: 'Product amount must be a string',
+        }),
+      }),
+    )
+    .nonempty({
+      message: 'Products array must contain at least one product',
+    }),
 });
 
 const apiKeyMiddleware: RequestHandler = (req, res, next) => {
   const result = createOrderSchema.safeParse(req.body);
 
-  if (result.error) {
-    return res.status(400).j({ message: result.error.errors });
+  if (!result.success) {
+    const errors: string[] = [];
+    for (const issue of result.error.issues) {
+      errors.push(issue.message);
+    }
+    return res.status(400).json({ errors });
   }
 
   next();

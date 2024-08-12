@@ -7,13 +7,12 @@ const getEnvs = () => {
     'PORT',
     'NODE_ENV',
     'JWT_SECRET',
-    'EMAIL_HOST',
-    'EMAIL_PORT',
     'EMAIL_USER',
     'EMAIL_PASS',
     'LOG_FILE_PATH',
     'ADMIN_PASSWORD',
     'SWAGGER_API_URL',
+    'FRONTEND_URL',
   ];
   return enforceEnv(envVariables, { returnValues: true });
 };

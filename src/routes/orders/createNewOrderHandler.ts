@@ -7,7 +7,7 @@ import ApiKey from '../../models/ApiKey';
 const createNewOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
   async (req, res) => {
-    const { apiKey } = req.body;
+    const { apiKey, products } = req.body;
 
     const userWithApiKey = await ApiKey.findOne({ key: apiKey, status: 'active' }).exec();
 
@@ -20,6 +20,7 @@ const createNewOrderHandler: RequestHandler[] = [
     const newOrder = new Order({
       user: userWithApiKey.user,
       apiKey: userWithApiKey._id,
+      products,
     });
 
     await newOrder.save();
