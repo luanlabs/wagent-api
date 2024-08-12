@@ -1,10 +1,11 @@
 import { RequestHandler } from 'express';
-import generateApiKeyMiddleware from '../../middlewares/generateApiKeyMiddleware';
+
 import User from '../../models/User';
 import generateApiKey from '../../utils/generateApiKey';
+import authMiddleware from '../../middlewares/authMiddleware';
 
 const generateNewApiKeyHandler: RequestHandler[] = [
-  generateApiKeyMiddleware,
+  authMiddleware,
   async (req, res) => {
     const { id } = req.params;
 
@@ -14,7 +15,7 @@ const generateNewApiKeyHandler: RequestHandler[] = [
 
     if (!user) {
       return res.status(400).j({
-        message: 'User not found',
+        message: 'User not exist',
       });
     }
 
