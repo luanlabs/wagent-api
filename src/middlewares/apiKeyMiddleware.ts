@@ -32,11 +32,7 @@ const apiKeyMiddleware: RequestHandler = (req, res, next) => {
   const result = createOrderSchema.safeParse(req.body);
 
   if (!result.success) {
-    const errors: string[] = [];
-    for (const issue of result.error.issues) {
-      errors.push(issue.message);
-    }
-    return res.status(400).json({ errors });
+    return res.status(400).json({  message: result.error.errors } );
   }
 
   next();
