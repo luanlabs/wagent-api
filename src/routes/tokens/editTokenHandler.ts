@@ -8,10 +8,15 @@ const editTokenHandler: RequestHandler[] = [
   adminAuthMIddleware,
   editTokenMiddleware,
   async (req, res) => {
-    const { address } = req.params;
+    const { symbol } = req.params;
     const { logo } = req.body;
 
-    const modifyToken = await Token.findOneAndUpdate({ address, isActive: true }, { logo });
+    const lowCaseSymbol = symbol.toLowerCase();
+
+    const modifyToken = await Token.findOneAndUpdate(
+      { symbol: lowCaseSymbol, isActive: true },
+      { logo },
+    );
 
     if (!modifyToken) {
       return res.status(400).j({

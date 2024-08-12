@@ -11,7 +11,7 @@
  *           schema:
  *             type: object
  *             properties:
- *               address:
+ *               symbol:
  *                 type: string
  *                 required: true
  *                 example : GBUQL63MMQZL37NBVRHFG3L24PYMK6TYC6I44BR5KK52J5JZTKJA2KRJ

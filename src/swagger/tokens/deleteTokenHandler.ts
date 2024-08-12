@@ -1,13 +1,13 @@
 /**
  * @swagger
- * /tokens/{address}:
+ * /tokens/{symbol}:
  *   delete:
  *     summary: Deleting the token.
  *     tags: [Tokens]
  *     parameters:
- *       - name: address
+ *       - name: symbol
  *         in: path
- *         description: Token address
+ *         description: Token symbol
  *         required: true
  *         schema:
  *           type: string

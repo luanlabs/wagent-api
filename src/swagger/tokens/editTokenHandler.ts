@@ -5,9 +5,9 @@
  *     summary: Modifying the active tokens.
  *     tags: [Tokens]
  *     parameters:
- *       - name: address
+ *       - name: symbol
  *         in: path
- *         description: Token address
+ *         description: Token symbol
  *         required: true
  *         schema:
  *           type: string
