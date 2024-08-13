@@ -1,47 +1,74 @@
 import { RequestHandler } from 'express';
-import User from '../../models/User'
+
+import { z } from 'zod';
+
+import User, { IUser } from '../../models/User';
+
+const settingsSchema = z.object({
+  methods: z.number(),
+  minimumCancellableStreamDuration: z.number(),
+  tokens: z.array(z.object({
+    symbol: z.string(),
+  })),
+  isSubscribed: z.boolean(),
+});
+
+const profileSchema = z.object({
+  name: z.string().optional(),
+  logoSrc: z.string().optional(),
+});
 
 const editUserProfileHandler: RequestHandler = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const { settings, profile } = req.body;
-
-    const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        {
-          $set: {
-            settings,
-            profile,
-          }
-        },
-        { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({
+    if (!req.user || typeof req.user === 'string') {
+      return res.status(401).json({
         result: { success: false },
         error: {
-          message: 'User not found',
-          code: 404,
+          message: 'User information is not available',
+          code: 401,
         },
       });
     }
 
-    return res.status(200).json({
-      result: {
-        success: true,
-        settings: updatedUser.settings,
-        profile: updatedUser.profile,
-      },
-    });
-  } catch (error) {
-    return res.status(500).json({
-      result: { success: false },
-      error: {
-        message: error.message || 'An error occurred while updating user settings',
-        code: 500,
-      },
-    });
+    const { _id } = req.user as IUser;
+
+    const { settings, profile } = req.body;
+
+    const settingsValidation = settingsSchema.safeParse(settings);
+    const profileValidation = profileSchema.safeParse(profile);
+
+    if (!settingsValidation.success) {
+      return res.status(400).json({
+        result: { success: false },
+        error: {
+          message: 'Invalid settings data',
+          details: settingsValidation.error.errors,
+          code: 400,
+        },
+      });
+    }
+
+    if (!profileValidation.success) {
+      return res.status(400).json({
+        result: { success: false },
+        error: {
+          message: 'Invalid profile data',
+          details: profileValidation.error.errors,
+          code: 400,
+        },
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        _id,
+        {
+          $set: {
+            settings: settingsValidation.data,
+            profile: profileValidation.data,
+          }
+        },
+        { new: true, runValidators: true }
+    );
   }
 };
 

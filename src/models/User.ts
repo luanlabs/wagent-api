@@ -2,11 +2,15 @@ import { Document, Schema, model } from 'mongoose';
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
 import updateApiKey from '../utils/updateApiKey';
 
+export interface IToken {
+    symbol: string;
+}
+
 export interface ISettings {
-    method: 'single' | 'stream' | 'vesting';
-    minDuration: number;
-    tokens: { symbol: string }[];
-    emailNotif: boolean;
+    methods: number;
+    minimumCancellableStreamDuration: number;
+    tokens: IToken[];
+    isSubscribed: boolean;
 }
 
 export interface IProfile {

@@ -9,6 +9,7 @@ import transactionsRoutes from './transactions';
 import editProfileUserHandler from './editProfileUserHandler';
 import verifyEmail from "../../middlewares/verifyEmail";
 import passwordValidationMiddleware from "../../middlewares/passwordValidationMiddleWare";
+import validateEditProfileToken from "../../middlewares/validateEditProfileToken";
 import validateResetToken from "../../middlewares/validateResetToken";
 import validateVerifyToken from "../../middlewares/validateVerifyToken";
 
@@ -20,7 +21,7 @@ router.use('/transactions', transactionsRoutes);
 router.post('/auth', userRegistrationHandler);
 router.post('/auth/login', userLoginHandler);
 router.post('/auth/password', passwordValidationMiddleware, resetPassword);
-router.put('/:id/settings', editProfileUserHandler);
+router.put('/:id/settings' ,validateEditProfileToken, editProfileUserHandler);
 router.post('/auth/reset', requestPasswordReset);
 router.get('/auth/verify', verifyEmail);
 router.get('/auth/reset/verify', validateResetToken);
