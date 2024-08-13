@@ -10,15 +10,15 @@ const addNewTokenHandler: RequestHandler[] = [
   async (req, res) => {
     const { symbol, logo } = req.body;
 
-    const lowCaseSymbol = symbol.toLowerCase();
+    const tokenExists = await Token.findOne({ symbol, isActive: true });
 
-    const existsToken = await Token.findOne({ symbol, isActive: true });
-
-    if (existsToken) {
+    if (tokenExists) {
       return res.status(400).j({
         message: 'Token already exists',
       });
     }
+
+    const lowCaseSymbol = symbol.toLowerCase();
 
     const newToken = new Token({
       symbol: lowCaseSymbol,

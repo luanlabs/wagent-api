@@ -31,8 +31,8 @@ const createOrderSchema = z.object({
 const apiKeyMiddleware: RequestHandler = (req, res, next) => {
   const result = createOrderSchema.safeParse(req.body);
 
-  if (result.error) {
-    return res.status(400).j({ message: result.error.errors });
+  if (!result.success) {
+    return res.status(400).json({  message: result.error.errors } );
   }
 
   next();
