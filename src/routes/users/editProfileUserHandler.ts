@@ -7,9 +7,11 @@ import User, { IUser } from '../../models/User';
 const settingsSchema = z.object({
   methods: z.number(),
   minimumCancellableStreamDuration: z.number(),
-  tokens: z.array(z.object({
-    symbol: z.string(),
-  })),
+  tokens: z.array(
+    z.object({
+      symbol: z.string(),
+    }),
+  ),
   isSubscribed: z.boolean(),
 });
 
@@ -60,16 +62,16 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-        _id,
-        {
-          $set: {
-            settings: settingsValidation.data,
-            profile: profileValidation.data,
-          }
+      _id,
+      {
+        $set: {
+          settings: settingsValidation.data,
+          profile: profileValidation.data,
         },
-        { new: true, runValidators: true }
+      },
+      { new: true, runValidators: true },
     );
-  }
+  } catch (e) {}
 };
 
 export default editUserProfileHandler;
