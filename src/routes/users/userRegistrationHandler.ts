@@ -18,8 +18,16 @@ const userRegistrationHandler: RequestHandler[] = [
     }
 
     const verificationToken = generateApiKey();
+    const apiKey = generateApiKey();
 
-    const newUser = new User({ storeName, email, password, verificationToken, isVerified: false });
+    const newUser = new User({
+      storeName,
+      email,
+      password,
+      verificationToken,
+      isVerified: false,
+      apiKey,
+    });
     await newUser.save();
 
     sendRegistrationEmail(email);
@@ -29,7 +37,7 @@ const userRegistrationHandler: RequestHandler[] = [
 
     return res.status(201).j({
       result: {
-        message: "Verification email was sent, please check your email."
+        message: 'Verification email was sent, please check your email.',
       },
     });
   },

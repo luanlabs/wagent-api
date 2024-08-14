@@ -1,6 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
-import updateApiKey from '../utils/updateApiKey';
 
 export interface IToken {
     symbol: string;
@@ -19,6 +18,7 @@ export interface IProfile {
 }
 
 export interface IUser extends Document {
+    apiKey?: string;
     email: string;
     password: string;
     storeName: string;
@@ -43,6 +43,10 @@ const UserSchema = new Schema<IUser>(
             type: String,
             required: true,
             unique: true,
+        },
+        apiKey: {
+            type: String,
+            required: false,
         },
         password: {
             type: String,
@@ -80,26 +84,12 @@ const UserSchema = new Schema<IUser>(
     { timestamps: true },
 );
 
-UserSchema.pre<IUser>('save', async function (next) {
-    if (this.isModified()) {
-        updateApiKey(this);
-    }
-
+User.pre<IUser>('save', async function (next) {
     if (!this.isModified('password')) {
-        return next();
+      return next();
     }
-
+  
     this.password = await hashPassword(this.password);
-    next();
-});
-
-UserSchema.pre('findOneAndUpdate', async function (next) {
-    const docToUpdate = await this.model.findOne(this.getQuery());
-
-    if (docToUpdate) {
-        updateApiKey(docToUpdate);
-    }
-
     next();
 });
 

@@ -1,7 +1,7 @@
 import express from 'express';
 
 import requestPasswordReset from '../../middlewares/requestPasswordReset';
-import resetPassword from "../../middlewares/resetPassword";
+import resetPassword from '../../middlewares/resetPassword';
 import userLoginHandler from './userLoginHandler';
 import userRegistrationHandler from './userRegistrationHandler';
 import productsRoutes from './products';
@@ -21,7 +21,8 @@ router.use('/transactions', transactionsRoutes);
 router.post('/auth', userRegistrationHandler);
 router.post('/auth/login', userLoginHandler);
 router.post('/auth/password', passwordValidationMiddleware, resetPassword);
-router.put('/:id/settings' ,validateEditProfileToken, editProfileUserHandler);
+router.put('/:id/settings', editProfileUserHandler);
+router.put('/:id/apiKey', generateNewApiKeyHandler);
 router.post('/auth/reset', requestPasswordReset);
 router.get('/auth/verify', verifyEmail);
 router.get('/auth/reset/verify', validateResetToken);
