@@ -7,9 +7,11 @@ import userRegistrationHandler from './userRegistrationHandler';
 import productsRoutes from './products';
 import transactionsRoutes from './transactions';
 import editProfileUserHandler from './editProfileUserHandler';
-import verifyEmail from '../../middlewares/verifyEmail';
-import passwordValidationMiddleware from '../../middlewares/passwordValidationMiddleWare';
-import generateNewApiKeyHandler from './generateNewApiKeyHandler';
+import verifyEmail from "../../middlewares/verifyEmail";
+import passwordValidationMiddleware from "../../middlewares/passwordValidationMiddleWare";
+import validateEditProfileToken from "../../middlewares/validateEditProfileToken";
+import validateResetToken from "../../middlewares/validateResetToken";
+import validateVerifyToken from "../../middlewares/validateVerifyToken";
 
 const router = express.Router();
 
@@ -23,5 +25,7 @@ router.put('/:id/settings', editProfileUserHandler);
 router.put('/:id/apiKey', generateNewApiKeyHandler);
 router.post('/auth/reset', requestPasswordReset);
 router.get('/auth/verify', verifyEmail);
+router.get('/auth/reset/verify', validateResetToken);
+router.get('/auth/verify', validateVerifyToken);
 
 export default router;

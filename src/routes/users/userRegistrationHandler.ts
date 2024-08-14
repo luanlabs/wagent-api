@@ -2,9 +2,8 @@ import { RequestHandler } from 'express';
 
 import User from '../../models/User';
 import generateToken from '../../utils/generateToken';
-import generateApiKey from '../../utils/generateApiKey';
-import { sendRegistrationEmail } from '../../utils/emailService';
-import { sendVerificationEmail } from '../../utils/emailService';
+import generateApiKey from "../../utils/generateApiKey";
+import { sendVerificationEmail,sendRegistrationEmail } from '../../utils/emailService';
 import registerValidationMiddleware from '../../middlewares/registerValidationMiddleware';
 
 const userRegistrationHandler: RequestHandler[] = [
@@ -31,8 +30,8 @@ const userRegistrationHandler: RequestHandler[] = [
     });
     await newUser.save();
 
-    // sendRegistrationEmail(email);
-    // sendVerificationEmail(email, verificationToken);
+    sendRegistrationEmail(email);
+    sendVerificationEmail(email, verificationToken);
 
     const token = generateToken(newUser.id);
 
