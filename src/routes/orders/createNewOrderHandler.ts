@@ -7,7 +7,7 @@ import User from '../../models/User';
 const createNewOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
   async (req, res) => {
-    const { apiKey, products } = req.body;
+    const { apiKey, products, callback, link2 } = req.body;
 
     const user = await User.findOne({ apiKey }).exec();
 
@@ -20,6 +20,8 @@ const createNewOrderHandler: RequestHandler[] = [
     const newOrder = new Order({
       user: user._id,
       products,
+      callback,
+      link2,
     });
 
     await newOrder.save();
