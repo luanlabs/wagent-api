@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 import * as path from 'path';
 
-const serviceAccountPath = path.resolve(__dirname, 'path/to/serviceAccountKey.json');
+const serviceAccountPath = path.resolve(__dirname, '../../src/config/serviceAccountKey.json');
 
 const serviceAccount = require(serviceAccountPath);
 
