@@ -1,4 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
+
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
 import updateApiKey from '../utils/updateApiKey';
 
@@ -67,10 +68,10 @@ const UserSchema = new Schema<IUser>(
         resetPasswordToken: String,
         resetPasswordExpires: Date,
         settings: {
-            method: { type: String, enum: ['single', 'stream', 'vesting'], required: false },
-            minDuration: { type: Number, required: false },
+            methods: { type: Number, required: false },
+            minimumCancellableStreamDuration: { type: Number, required: false },
             tokens: [{ symbol: { type: String, required: true } }],
-            emailNotif: { type: Boolean, required: false }
+            isSubscribed: { type: Boolean, required: false }
         },
         profile: {
             name: { type: String, required: false },

@@ -24,14 +24,10 @@
  *                 type: object
  *                 required: true
  *                 properties:
- *                   method:
- *                     type: string
+ *                   methods:
+ *                     type: number
  *                     required: true
- *                     example : single
- *                     enum:
- *                       - single
- *                       - stream
- *                       - vesting
+ *                     example : 1
  *                   tokens:
  *                     type: array
  *                     required: true
@@ -41,10 +37,10 @@
  *                         symbol:
  *                           type: string
  *                           example: usdt
- *                   minDuration:
+ *                   minimumCancellableStreamDuration:
  *                     type: number
  *                     example: 25
- *                   emailNotif:
+ *                   isSubscribed:
  *                     type: boolean
  *                     example: true
  *               profile:
