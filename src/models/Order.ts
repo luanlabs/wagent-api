@@ -9,8 +9,8 @@ interface IProduct {
 interface IOrder {
   user: Schema.Types.ObjectId;
   products: IProduct[];
-  callback: string;
-  link2: string;
+  callbackApiUrl: string;
+  redirectUrl: string;
 }
 
 const Order = new Schema<IOrder>(
@@ -23,8 +23,8 @@ const Order = new Schema<IOrder>(
         amount: { type: String, required: true },
       },
     ],
-    callback: { type: String, required: true },
-    link2: { type: String, required: true },
+    callbackApiUrl: { type: String, required: true },
+    redirectUrl: { type: String, required: true },
   },
   { timestamps: true },
 );

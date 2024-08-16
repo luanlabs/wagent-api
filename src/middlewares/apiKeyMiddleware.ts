@@ -26,21 +26,21 @@ const createOrderSchema = z.object({
     .nonempty({
       message: 'Products array must contain at least one product',
     }),
-  callback: z
+  callbackApiUrl: z
     .string({
-      required_error: 'callback is required',
-      invalid_type_error: 'callback must be a string',
+      required_error: 'callbackApiUrl is required',
+      invalid_type_error: 'callbackApiUrl must be a string',
     })
     .url({
-      message: 'callback must be a valid URL',
+      message: 'callbackApiUrl must be a valid URL',
     }),
-  link2: z
+  redirectUrl: z
     .string({
-      required_error: 'link2 is required',
-      invalid_type_error: 'link2 must be a string',
+      required_error: 'redirectUrl is required',
+      invalid_type_error: 'redirectUrl must be a string',
     })
     .url({
-      message: 'link2 must be a valid URL',
+      message: 'redirectUrl must be a valid URL',
     }),
 });
 
