@@ -9,12 +9,12 @@ const verifyEmailTemplate = (verifyUrl: string): string => {
 </head>
 <body style="font-family: Aeonik, sans-serif; margin: 0; padding: 5px; background-color: #f4f4f4;">
 <div style="max-width: 152px;margin: 0 auto;">
-    <img src="https://static.wagent.app/icons/wagent.png" style="margin-top: 30px;" alt="">
+    <img src="https://static.wagent.app/icons/wagent.png" style="margin-top: 30px;width: 147px;height: 29px;" alt="">
 </div>
 <div style="max-width: 600px; margin: 0 auto;">
     <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 30px; overflow: hidden;">
         <div style="background-color: #073834; color: #ffffff; text-align: center;height: 155px;">
-            <img src="https://static.wagent.app/icons/header.png" style="height: 106%;" alt="">
+            <img src="https://static.wagent.app/icons/header.png" style="height: 106%;width: 91%;" alt="">
         </div>
         <div style="padding: 20px;padding-bottom: 40px;background-color: white;z-index: 9;position: relative;">
             <p style="color: #003C31; font-size: 24px; line-height: 1.5;">Dear Alex,</p>
@@ -46,13 +46,13 @@ const verifyEmailTemplate = (verifyUrl: string): string => {
         <p>If these emails get annoying, please feel free to <a href="#" style="color: #003C31; text-decoration: none;">unsubscribe</a>.
         </p>
         <div style="margin-top: 56px">
-            <a href="#" style="margin-right: 10px">
+            <a href="#" style="margin-right: 10px;width: 17px;height: 17px;">
                 <img src="https://static.wagent.app/icons/x.png" alt="">
             </a>
-            <a href="#" style="margin-right: 10px">
+            <a href="#" style="margin-right: 10px;width: 17px;height: 17px;">
                 <img src="https://static.wagent.app/icons/github.png" alt="">
             </a>
-            <a href="#" style="margin-right: 10px">
+            <a href="#" style="margin-right: 10px;width: 17px;height: 17px;">
                 <img src="https://static.wagent.app/icons/discord.png" alt="">
             </a>
         </div>
