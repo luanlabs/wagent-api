@@ -22,8 +22,6 @@ export interface IProfile {
 export interface IUser extends Document {
     email: string;
     password: string;
-    storeName: string;
-    storeImage: string;
     isVerified?: boolean;
     verificationToken?: string;
     verificationTokenExpiration?: Date;
@@ -36,10 +34,6 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
     {
-        storeName: {
-            type: String,
-            required: true,
-        },
         email: {
             type: String,
             required: true,
@@ -48,10 +42,6 @@ const UserSchema = new Schema<IUser>(
         password: {
             type: String,
             required: true,
-        },
-        storeImage: {
-            type: String,
-            required: false,
         },
         isVerified: {
             type: Boolean,

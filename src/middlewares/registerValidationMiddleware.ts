@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { validateEmail, validatePassword } from '../utils/validators';
 
 const userSchema = z.object({
-  storeName: z.string().min(1, 'Store name is required'),
+  name: z.string().min(1, 'Store name is required'),
   email: z.string().refine(validateEmail, 'Enter a valid email'),
   password: z.string().refine(validatePassword, 'Password must be at least 8 characters long'),
 });
