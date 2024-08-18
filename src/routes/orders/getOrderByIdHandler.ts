@@ -14,10 +14,6 @@ const getOrderByIdHandler: RequestHandler[] = [
           path: 'user',
           select: '-__v -password -resetPasswordToken -resetPasswordExpires',
         },
-        {
-          path: 'apiKey',
-          select: '-__v -user',
-        },
       ])
       .select('-__v')
       .lean();
