@@ -12,6 +12,8 @@ import passwordValidationMiddleware from '../../middlewares/passwordValidationMi
 import validateEditProfileToken from '../../middlewares/validateEditProfileToken';
 import validateResetToken from '../../middlewares/validateResetToken';
 import validateVerifyToken from '../../middlewares/validateVerifyToken';
+import subscribeUserHandler from "./subscribeUserHandler";
+import unsubscribeUserHandler from "./unsubscribeUserHandler";
 import generateNewApiKeyHandler from './generateNewApiKeyHandler';
 
 const router = express.Router();
@@ -28,5 +30,7 @@ router.post('/auth/reset', requestPasswordReset);
 router.get('/auth/verify', verifyEmail);
 router.get('/auth/reset/verify', validateResetToken);
 router.get('/auth/verify', validateVerifyToken);
+router.post('/subscribe', subscribeUserHandler);
+router.post('/unsubscribe', unsubscribeUserHandler);
 
 export default router;
