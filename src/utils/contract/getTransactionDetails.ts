@@ -4,6 +4,7 @@ const getTransactionDetails = (hash: string) => {
   const tokenAddress = 'CX....';
   const method = 'single';
   const submittedAt = '12345678';
+  const status = true;
 
   return {
     orderId,
@@ -11,6 +12,7 @@ const getTransactionDetails = (hash: string) => {
     tokenAddress,
     method,
     submittedAt,
+    status,
     hash,
   };
 };

@@ -8,12 +8,14 @@ interface IProduct {
 
 interface IOrder {
   user: Schema.Types.ObjectId;
+  status: boolean;
   products: IProduct[];
 }
 
 const Order = new Schema<IOrder>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    status: { type: Boolean, required: true },
     products: [
       {
         name: { type: String, required: true },
