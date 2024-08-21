@@ -1,14 +1,16 @@
 import { Schema, model } from 'mongoose';
 
-interface IProduct {
+export interface IProduct {
   name: string;
   logo: string;
+  count: number;
   amount: string;
 }
 
 interface IOrder {
   user: Schema.Types.ObjectId;
   products: IProduct[];
+  amount: string;
 }
 
 const Order = new Schema<IOrder>(
@@ -18,9 +20,11 @@ const Order = new Schema<IOrder>(
       {
         name: { type: String, required: true },
         logo: { type: String, required: true },
+        count: { type: Number, required: true },
         amount: { type: String, required: true },
       },
     ],
+    amount: { type: String, required: true },
   },
   { timestamps: true },
 );

@@ -3,6 +3,7 @@ import { RequestHandler } from 'express';
 import Order from '../../models/Order';
 import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
 import User from '../../models/User';
+import calculateProductsAmount from '../../utils/calculateProductsAmount';
 
 const createNewOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -17,9 +18,12 @@ const createNewOrderHandler: RequestHandler[] = [
       });
     }
 
+    const amount = calculateProductsAmount(products);
+
     const newOrder = new Order({
       user: user._id,
       products,
+      amount,
     });
 
     await newOrder.save();
