@@ -1,10 +1,12 @@
 import { z } from 'zod';
 import { RequestHandler } from 'express';
 
+import User from '../../../models/User';
 import Token from '../../../models/Token';
 import Order from '../../../models/Order';
 import Transaction from '../../../models/Transaction';
 import getTransactionDetails from '../../../utils/contract/getTransactionDetails';
+import { sendComplateOrderEmail, sendComplateOrderUserEmail } from '../../../utils/emailService';
 
 const transactionSchema = z.object({
   hash: z.string({
@@ -57,6 +59,16 @@ const createTransactionHandler: RequestHandler = async (req, res) => {
   });
 
   await newTransaction.save();
+
+  if (order.email) {
+    sendComplateOrderEmail(order.email, order._id.toString());
+  }
+
+  const user = await User.findOne({ _id: order._id });
+
+  if (user?.settings?.isSubscribed) {
+    sendComplateOrderUserEmail(user.email, user.storeName, order.amount);
+  }
 
   return res.status(200).j({ result: newTransaction });
 };

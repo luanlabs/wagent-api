@@ -9,6 +9,7 @@ interface IProduct {
 interface IOrder {
   user: Schema.Types.ObjectId;
   products: IProduct[];
+  email?: string;
 }
 
 const Order = new Schema<IOrder>(
@@ -21,6 +22,7 @@ const Order = new Schema<IOrder>(
         amount: { type: String, required: true },
       },
     ],
+    email: { type: String, required: false },
   },
   { timestamps: true },
 );

@@ -8,6 +8,7 @@ import resetPasswordTemplate from '../templates/resetPasswordTemplate';
 import resetPasswordSuccessTemplate from '../templates/resetPasswordSuccessTemplate';
 import { EmailTitles } from '../constants/emailTitles';
 import complatedOrderSuccessTemplate from '../templates/complatedOrderSuccessTemplate';
+import complatedOrderSuccessUserTemplate from '../templates/complatedOrderSuccessUserTemplate';
 
 const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = getEnvs();
 
@@ -73,6 +74,12 @@ export const sendResetPasswordSuccess = (email: string): void => {
 export const sendComplateOrderEmail = (email: string, orderId: string) => {
   const name = email.split('@')[0];
   const htmlContent = complatedOrderSuccessTemplate(name, orderId);
+
+  sendEmail(email, EmailTitles.ComplateOrder, htmlContent);
+};
+
+export const sendComplateOrderUserEmail = (email: string, name: string, amount: string) => {
+  const htmlContent = complatedOrderSuccessUserTemplate(name, amount);
 
   sendEmail(email, EmailTitles.ComplateOrder, htmlContent);
 };
