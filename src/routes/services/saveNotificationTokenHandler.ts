@@ -7,7 +7,7 @@ const saveNotificationTokenHandler = async (req: Request, res: Response): Promis
     const { token } = req.body;
 
     if (!token) {
-        return res.status(400).json({ success: false, error: 'Token is required' });
+        return res.status(400).json({ message: 'Token is required' });
     }
 
     try {
@@ -16,10 +16,10 @@ const saveNotificationTokenHandler = async (req: Request, res: Response): Promis
 
         const result = await sendNotification(token);
 
-        return res.status(200).json({ success: true, result });
+        return res.status(200).j({ result: result });
     } catch (error) {
         console.error('Error handling notification:', error);
-        return res.status(500).json({ success: false, error: error.message });
+        return res.status(500).j({ error: error.message });
     }
 };
 
