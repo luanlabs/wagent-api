@@ -14,6 +14,7 @@ const getEnvs = () => {
     'LOG_FILE_PATH',
     'ADMIN_PASSWORD',
     'SWAGGER_API_URL',
+    'SERVICE_ACCOUNT_KEY',
   ];
   return enforceEnv(envVariables, { returnValues: true });
 };
