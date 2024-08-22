@@ -7,8 +7,8 @@ import registrationTemplate from '../templates/registrationTemplate';
 import resetPasswordTemplate from '../templates/resetPasswordTemplate';
 import resetPasswordSuccessTemplate from '../templates/resetPasswordSuccessTemplate';
 import { EmailTitles } from '../constants/emailTitles';
-import complatedOrderSuccessTemplate from '../templates/complatedOrderSuccessTemplate';
-import complatedOrderSuccessUserTemplate from '../templates/complatedOrderSuccessUserTemplate';
+import sendPayerCompleteOrderTemplate from '../templates/sendPayerCompleteOrderTemplate';
+import sendUserCompleteOrderTemplate from '../templates/sendUserCompleteOrderTemplate';
 
 const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = getEnvs();
 
@@ -72,13 +72,13 @@ export const sendResetPasswordSuccess = (email: string): void => {
 };
 
 export const sendPayerCompleteOrderEmail = (email: string, orderId: string) => {
-  const htmlContent = complatedOrderSuccessTemplate(orderId);
+  const htmlContent = sendPayerCompleteOrderTemplate(orderId);
 
   sendEmail(email, EmailTitles.CompleteOrder, htmlContent);
 };
 
 export const sendUserCompleteOrderEmail = (email: string, name: string, amount: string) => {
-  const htmlContent = complatedOrderSuccessUserTemplate(name, amount);
+  const htmlContent = sendUserCompleteOrderTemplate(name, amount);
 
   sendEmail(email, EmailTitles.CompleteOrder, htmlContent);
 };
