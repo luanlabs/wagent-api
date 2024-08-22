@@ -1,4 +1,4 @@
-const complatedOrderSuccessTemplate = (name: string, orderId: string) => {
+const complatedOrderSuccessTemplate = (orderId: string) => {
   return `<!DOCTYPE html>
   <html lang="en">
   <head>

@@ -3,5 +3,5 @@ export enum EmailTitles {
   Registration = 'Wagent - Thank you for signing in',
   ResetPassword = 'Wagent - Reset your password',
   ResetPasswordSuccess = 'Wagent - Password has been reset',
-  ComplateOrder = 'Wagent - Order has been complate',
+  CompleteOrder = 'Wagent - Your order is complete',
 }

@@ -26,9 +26,6 @@ const createOrderSchema = z.object({
     .nonempty({
       message: 'Products array must contain at least one product',
     }),
-  email: z.string({
-    invalid_type_error: 'Email must be a string',
-  }),
 });
 
 const apiKeyMiddleware: RequestHandler = (req, res, next) => {

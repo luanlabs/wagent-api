@@ -71,15 +71,14 @@ export const sendResetPasswordSuccess = (email: string): void => {
   sendEmail(email, EmailTitles.ResetPasswordSuccess, htmlContent);
 };
 
-export const sendComplateOrderEmail = (email: string, orderId: string) => {
-  const name = email.split('@')[0];
-  const htmlContent = complatedOrderSuccessTemplate(name, orderId);
+export const sendPayerCompleteOrderEmail = (email: string, orderId: string) => {
+  const htmlContent = complatedOrderSuccessTemplate(orderId);
 
-  sendEmail(email, EmailTitles.ComplateOrder, htmlContent);
+  sendEmail(email, EmailTitles.CompleteOrder, htmlContent);
 };
 
-export const sendComplateOrderUserEmail = (email: string, name: string, amount: string) => {
+export const sendUserCompleteOrderEmail = (email: string, name: string, amount: string) => {
   const htmlContent = complatedOrderSuccessUserTemplate(name, amount);
 
-  sendEmail(email, EmailTitles.ComplateOrder, htmlContent);
+  sendEmail(email, EmailTitles.CompleteOrder, htmlContent);
 };
