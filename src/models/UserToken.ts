@@ -6,7 +6,7 @@ const UserTokenSchema = new mongoose.Schema({
         required: true,
         ref: 'User'
     },
-    notificationToken: {
+    token: {
         type: String,
         required: true,
     },
