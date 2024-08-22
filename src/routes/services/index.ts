@@ -4,6 +4,6 @@ import sendNotificationHandler from './notificationHandler'
 
 const router = express.Router();
 
-router.post('/send-notification', sendNotificationHandler);
+router.post('/notification', sendNotificationHandler);
 
 export default router;
