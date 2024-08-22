@@ -1,4 +1,5 @@
 import admin from '../config/firebaseAdmin';
+import logger from "../config/logger";
 
 interface NotificationMessage {
     token: string;
@@ -17,10 +18,10 @@ const sendNotification = async ({ token, title, body }: NotificationMessage): Pr
 
     try {
         const response = await admin.messaging().send(message);
-        console.log('Successfully sent message:', response);
+        logger.info('Successfully sent message:', response);
         return response;
     } catch (error) {
-        console.error('Error sending message:', error);
+        logger.error('Error sending message:', error);
         throw error;
     }
 };

@@ -1,9 +1,9 @@
 import express from 'express';
 
-import sendNotificationHandler from './notificationHandler'
+import saveNotificationTokenHandler from './saveNotificationTokenHandler'
 
 const router = express.Router();
 
-router.post('/notification', sendNotificationHandler);
+router.post('/notification', saveNotificationTokenHandler);
 
 export default router;
