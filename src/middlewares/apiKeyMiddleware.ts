@@ -26,14 +26,6 @@ const createOrderSchema = z.object({
     .nonempty({
       message: 'Products array must contain at least one product',
     }),
-  callbackApiUrl: z
-    .string({
-      required_error: 'callbackApiUrl is required',
-      invalid_type_error: 'callbackApiUrl must be a string',
-    })
-    .url({
-      message: 'callbackApiUrl must be a valid URL',
-    }),
   redirectUrl: z
     .string({
       required_error: 'redirectUrl is required',

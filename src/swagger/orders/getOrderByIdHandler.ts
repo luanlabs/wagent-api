@@ -40,7 +40,6 @@
  *				                   logo: "kkk",
  *				                   amount: "3",
  *			                   }],
- *                             callbackApiUrl: "http://api.example.com",
  *                             redirectUrl: "http://example.com",
  *                             createdAt: "2024-08-05T09:47:34.956Z",
  *                             updatedAt: "2024-08-05T09:47:34.956Z"

@@ -15,10 +15,6 @@
  *                 type: string
  *                 required: true
  *                 example : ak238tnhcyu2rh7i2t6bc2nbeiy23cge76rb372cn77rcg2
- *               callbackApiUrl:
- *                 type: string
- *                 required: true
- *                 example : http://api.example.com
  *               redirectUrl:
  *                 type: string
  *                 required: true
