@@ -19,7 +19,7 @@ const createNewOrderHandler: RequestHandler[] = [
 
     const newOrder = new Order({
       user: user._id,
-      status: false,
+      status: 'pending',
       products,
     });
 
