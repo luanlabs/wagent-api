@@ -10,10 +10,8 @@ const deleteTokenHandler: RequestHandler[] = [
   async (req, res) => {
     const { symbol } = req.params;
 
-    const lowCaseSymbol = symbol.toLowerCase();
-
     const modifyToken = await Token.findOneAndUpdate(
-      { symbol: lowCaseSymbol, isActive: true },
+      { symbol: new RegExp(`^${symbol}$`, 'i'), isActive: true },
       { isActive: false },
     );
 

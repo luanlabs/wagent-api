@@ -1,13 +1,28 @@
 import { Schema, model } from 'mongoose';
 
-interface IOrder {
-  user: Schema.Types.ObjectId;
-  apiKey: Schema.Types.ObjectId;
+interface IProduct {
+  name: string;
+  logo: string;
+  amount: string;
 }
 
-const Order = new Schema<IOrder>({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  apiKey: { type: Schema.Types.ObjectId, ref: 'ApiKey', required: true },
-});
+interface IOrder {
+  user: Schema.Types.ObjectId;
+  products: IProduct[];
+}
+
+const Order = new Schema<IOrder>(
+  {
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    products: [
+      {
+        name: { type: String, required: true },
+        logo: { type: String, required: true },
+        amount: { type: String, required: true },
+      },
+    ],
+  },
+  { timestamps: true },
+);
 
 export default model<IOrder>('Order', Order);

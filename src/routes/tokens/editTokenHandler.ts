@@ -11,10 +11,8 @@ const editTokenHandler: RequestHandler[] = [
     const { symbol } = req.params;
     const { logo } = req.body;
 
-    const lowCaseSymbol = symbol.toLowerCase();
-
     const modifyToken = await Token.findOneAndUpdate(
-      { symbol: lowCaseSymbol, isActive: true },
+      { symbol: new RegExp(`^${symbol}$`, 'i'), isActive: true },
       { logo },
     );
 

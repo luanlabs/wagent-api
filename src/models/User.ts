@@ -1,27 +1,50 @@
 import { Document, Schema, model } from 'mongoose';
-
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
-import updateApiKey from '../utils/updateApiKey';
+
+export interface IToken {
+  symbol: string;
+}
+
+export interface ISettings {
+  methods: number;
+  minimumCancellableStreamDuration: number;
+  tokens: IToken[];
+  isSubscribed: boolean;
+}
+
+export interface IProfile {
+  name: string;
+  logoSrc: string;
+}
 
 export interface IUser extends Document {
   email: string;
+  apiKey: string;
   password: string;
   storeName: string;
-  storeImage?: string;
+  storeImage: string;
   isVerified?: boolean;
   verificationToken?: string;
+  verificationTokenExpiration?: Date;
   resetPasswordToken?: string;
   resetPasswordExpires?: number;
+  settings?: ISettings;
+  profile?: IProfile;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
 
-const User = new Schema<IUser>(
+const UserSchema = new Schema<IUser>(
   {
     storeName: {
       type: String,
       required: true,
     },
     email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    apiKey: {
       type: String,
       required: true,
       unique: true,
@@ -38,17 +61,31 @@ const User = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    verificationToken: {
+      type: String,
+      required: false,
+    },
+    verificationTokenExpiration: {
+      type: Date,
+      required: false,
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
+    settings: {
+      method: { type: String, enum: ['single', 'stream', 'vesting'], required: false },
+      minDuration: { type: Number, required: false },
+      tokens: [{ symbol: { type: String, required: true } }],
+      emailNotif: { type: Boolean, required: false },
+    },
+    profile: {
+      name: { type: String, required: false },
+      logoSrc: { type: String, required: false },
+    },
   },
   { timestamps: true },
 );
 
-User.pre<IUser>('save', async function (next) {
-  if (this.isModified()) {
-    updateApiKey(this);
-  }
-
+UserSchema.pre<IUser>('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -57,19 +94,9 @@ User.pre<IUser>('save', async function (next) {
   next();
 });
 
-User.pre('findOneAndUpdate', async function (next) {
-  const docToUpdate = await this.model.findOne(this.getQuery());
-
-  if (docToUpdate) {
-    updateApiKey(docToUpdate);
-  }
-
-  next();
-});
-
-User.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
+UserSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
   const isValid = await comparePassword(enteredPassword, this.password);
   return isValid;
 };
 
-export default model<IUser>('User', User);
+export default model<IUser>('User', UserSchema);

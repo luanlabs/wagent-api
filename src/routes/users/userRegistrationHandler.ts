@@ -3,8 +3,7 @@ import { RequestHandler } from 'express';
 import User from '../../models/User';
 import generateToken from '../../utils/generateToken';
 import generateApiKey from "../../utils/generateApiKey";
-import { sendRegistrationEmail } from '../../utils/emailService';
-import { sendVerificationEmail } from '../../utils/emailService';
+import { sendVerificationEmail,sendRegistrationEmail } from '../../utils/emailService';
 import registerValidationMiddleware from '../../middlewares/registerValidationMiddleware';
 
 const userRegistrationHandler: RequestHandler[] = [
@@ -19,18 +18,26 @@ const userRegistrationHandler: RequestHandler[] = [
     }
 
     const verificationToken = generateApiKey();
+    const apiKey = generateApiKey();
 
-    const newUser = new User({ storeName, email, password, verificationToken, isVerified: false });
+    const newUser = new User({
+      storeName,
+      email,
+      password,
+      verificationToken,
+      isVerified: false,
+      apiKey,
+    });
     await newUser.save();
 
-    // sendRegistrationEmail(email);
-    // sendVerificationEmail(email, verificationToken);
+    sendRegistrationEmail(email);
+    sendVerificationEmail(email, verificationToken);
 
     const token = generateToken(newUser.id);
 
     return res.status(201).j({
       result: {
-        message: "Verification email was sent, please check your email."
+        message: 'Verification email was sent, please check your email.',
       },
     });
   },

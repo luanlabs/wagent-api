@@ -14,7 +14,7 @@
  *               symbol:
  *                 type: string
  *                 required: true
- *                 example : usdt
+ *                 example : GBUQL63MMQZL37NBVRHFG3L24PYMK6TYC6I44BR5KK52J5JZTKJA2KRJ
  *               logo:
  *                 type: string
  *                 required: true
@@ -32,6 +32,7 @@
  *                   type: string
  *                   example: {
  *                       _id: "66a73cb095779d04d42b0949",
+ *                       address: "GBUQL63MMQZL37NBVRHFG3L24PYMK6TYC6I44BR5KK52J5JZTKJA2KRJ",
  *                       symbol: "usdt",
  *                       logo: "https://logo.jpg",
  *                       isActive: true,
