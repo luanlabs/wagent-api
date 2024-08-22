@@ -8,7 +8,7 @@ import calculateProductsAmount from '../../utils/calculateProductsAmount';
 const createNewOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
   async (req, res) => {
-    const { apiKey, products } = req.body;
+    const { apiKey, products, amount } = req.body;
 
     const user = await User.findOne({ apiKey }).exec();
 
@@ -18,12 +18,16 @@ const createNewOrderHandler: RequestHandler[] = [
       });
     }
 
-    const amount = calculateProductsAmount(products);
+    let newAmount = '';
+
+    if (!amount) {
+      newAmount = calculateProductsAmount(products);
+    }
 
     const newOrder = new Order({
       user: user._id,
       products,
-      amount,
+      amount: newAmount,
     });
 
     await newOrder.save();

@@ -9,8 +9,8 @@ export interface IProduct {
 
 interface IOrder {
   user: Schema.Types.ObjectId;
-  products: IProduct[];
-  amount: string;
+  products?: IProduct[];
+  amount?: string;
 }
 
 const Order = new Schema<IOrder>(
@@ -18,13 +18,16 @@ const Order = new Schema<IOrder>(
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     products: [
       {
-        name: { type: String, required: true },
-        logo: { type: String, required: true },
-        count: { type: Number, required: true },
-        amount: { type: String, required: true },
+        type: {
+          name: { type: String, required: true },
+          logo: { type: String, required: true },
+          count: { type: Number, required: true },
+          amount: { type: String, required: true },
+        },
+        required: false,
       },
     ],
-    amount: { type: String, required: true },
+    amount: { type: String, required: false },
   },
   { timestamps: true },
 );
