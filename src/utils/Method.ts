@@ -1,15 +1,19 @@
-import { Methods } from '../constants/OrderValue';
+enum Methods {
+  Single = 'single',
+  Stream = 'stream',
+  Vesting = 'vesting',
+}
 
 export type MethodsType = 'single' | 'stream' | 'vesting';
 
-type CombinedMethodsType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+type MethodsNumerical = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 const Single = 1;
 const Stream = 2;
 const Vesting = 4;
 
 class Method {
-  public static fromString(methods: MethodsType[]): CombinedMethodsType {
+  public static fromString(methods: MethodsType[]): MethodsNumerical {
     let combinedMethods = 0;
 
     for (const method of methods) {
@@ -26,10 +30,10 @@ class Method {
       }
     }
 
-    return combinedMethods as CombinedMethodsType;
+    return combinedMethods as MethodsNumerical;
   }
 
-  public static toString(methods: CombinedMethodsType): MethodsType[] {
+  public static toString(methods: MethodsNumerical): MethodsType[] {
     const convertedMethods: MethodsType[] = [];
 
     if (methods & Single) {
