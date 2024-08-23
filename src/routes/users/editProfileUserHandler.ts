@@ -1,10 +1,11 @@
 import { RequestHandler } from 'express';
 
-import User from '../../models/User'
+import User from '../../models/User';
 
 const editUserProfileHandler: RequestHandler = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user;
+
     const { settings, profile } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
