@@ -14,7 +14,7 @@ const transactionSchema = z.object({
 });
 
 const createTransactionHandler: RequestHandler = async (req, res) => {
-  const result = transactionSchema.safeParse(req.params);
+  const result = transactionSchema.safeParse(req.body);
 
   if (result.error) {
     return res.status(400).j({ message: result.error.errors });

@@ -26,13 +26,21 @@ const createOrderSchema = z.object({
     .nonempty({
       message: 'Products array must contain at least one product',
     }),
+  redirectUrl: z
+    .string({
+      required_error: 'redirectUrl is required',
+      invalid_type_error: 'redirectUrl must be a string',
+    })
+    .url({
+      message: 'redirectUrl must be a valid URL',
+    }),
 });
 
 const apiKeyMiddleware: RequestHandler = (req, res, next) => {
   const result = createOrderSchema.safeParse(req.body);
 
   if (!result.success) {
-    return res.status(400).json({  message: result.error.errors } );
+    return res.status(400).json({ message: result.error.errors });
   }
 
   next();
