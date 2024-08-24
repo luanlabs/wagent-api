@@ -32,6 +32,7 @@ export interface IUser extends Document {
   resetPasswordExpires?: number;
   settings?: ISettings;
   profile?: IProfile;
+  isAdmin?: boolean;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -83,6 +84,7 @@ const UserSchema = new Schema<IUser>(
       name: { type: String, required: false },
       logoSrc: { type: String, required: false },
     },
+    isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

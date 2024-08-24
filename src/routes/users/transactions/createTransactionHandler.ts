@@ -29,7 +29,7 @@ const createTransactionHandler: RequestHandler = async (req, res) => {
 
   const { hash, payerEmail } = result.data;
 
-  const { orderId, tokenAddress, method, submittedAt } = getTransactionDetails(hash);
+  const { orderId, tokenAddress, method, submittedAt, status } = getTransactionDetails(hash);
 
   const order = await Order.findOne({ _id: orderId });
 
@@ -53,6 +53,10 @@ const createTransactionHandler: RequestHandler = async (req, res) => {
     return res.status(400).j({
       message: 'Transaction already exists',
     });
+  }
+
+  if (status) {
+    await Order.findOneAndUpdate({ _id: orderId }, { status });
   }
 
   const newTransaction = new Transaction({
