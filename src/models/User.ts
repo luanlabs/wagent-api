@@ -1,12 +1,14 @@
 import { Document, Schema, model } from 'mongoose';
+
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
+import { MethodsType } from '../utils/Method';
 
 export interface IToken {
   symbol: string;
 }
 
 export interface ISettings {
-  methods: number;
+  methods: MethodsType[];
   minimumCancellableStreamDuration: number;
   tokens: IToken[];
   isSubscribed: boolean;
