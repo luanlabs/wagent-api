@@ -1,16 +1,23 @@
 import { z } from 'zod';
 import { RequestHandler } from 'express';
 
+import User from '../../../models/User';
 import Token from '../../../models/Token';
 import Order from '../../../models/Order';
 import Transaction from '../../../models/Transaction';
+import { validateEmail } from '../../../utils/validators';
 import getTransactionDetails from '../../../utils/contract/getTransactionDetails';
+import {
+  sendPayerCompleteOrderEmail,
+  sendUserCompleteOrderEmail,
+} from '../../../utils/emailService';
 
 const transactionSchema = z.object({
   hash: z.string({
     required_error: 'hash is required',
     invalid_type_error: 'hash must be a string',
   }),
+  payerEmail: z.string().refine(validateEmail, 'Enter a valid email').optional(),
 });
 
 const createTransactionHandler: RequestHandler = async (req, res) => {
@@ -20,7 +27,7 @@ const createTransactionHandler: RequestHandler = async (req, res) => {
     return res.status(400).j({ message: result.error.errors });
   }
 
-  const { hash } = result.data;
+  const { hash, payerEmail } = result.data;
 
   const { orderId, tokenAddress, method, submittedAt } = getTransactionDetails(hash);
 
@@ -54,9 +61,20 @@ const createTransactionHandler: RequestHandler = async (req, res) => {
     token: token._id,
     method,
     submittedAt,
+    payerEmail,
   });
 
   await newTransaction.save();
+
+  if (payerEmail) {
+    sendPayerCompleteOrderEmail(payerEmail, order._id.toString());
+  }
+
+  const user = await User.findOne({ _id: order._id });
+
+  if (user?.settings?.isSubscribed) {
+    sendUserCompleteOrderEmail(user.email, user.storeName, order.amount);
+  }
 
   return res.status(200).j({ result: newTransaction });
 };
