@@ -31,6 +31,7 @@ export interface IUser extends Document {
   settings?: ISettings;
   profile?: IProfile;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
+  notificationTokens: string[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -80,6 +81,10 @@ const UserSchema = new Schema<IUser>(
     profile: {
       name: { type: String, required: false },
       logoSrc: { type: String, required: false },
+    },
+    notificationTokens: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true },
