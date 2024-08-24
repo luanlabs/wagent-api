@@ -1,28 +1,20 @@
 import { RequestHandler } from 'express';
-import jwt from 'jsonwebtoken';
-import getEnvs from '../config/getEnvs';
 
 const authMiddleware: RequestHandler = (req, res, next) => {
-  const authorization = req.header('Authorization') as string;
-  const token = authorization.replace('Bearer ', '');
+  const user = req.user;
 
-  if (!token) {
-    return res.status(401).j({ message: 'No token, authorization denied' });
+  if (!user || typeof user == 'string') {
+    return res.status(400).j({
+      message: 'User not found',
+    });
   }
 
-  const { JWT_SECRET } = getEnvs();
-
-  try {
-    const secret = JWT_SECRET;
-
-    const decodedToken = jwt.verify(token, secret);
-
-    if (typeof decodedToken != 'string') {
-      req.user = decodedToken.id;
-      next();
-    }
-  } catch (err) {
-    res.status(401).j({ message: 'Token is not valid' });
+  if (!user.isAdmin) {
+    return res.status(403).j({
+      message: 'Admin verification failed',
+    });
   }
+
+  next();
 };
 export default authMiddleware;

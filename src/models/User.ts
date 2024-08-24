@@ -1,12 +1,14 @@
 import { Document, Schema, model } from 'mongoose';
+
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
+import { MethodsType } from '../utils/Method';
 
 export interface IToken {
   symbol: string;
 }
 
 export interface ISettings {
-  methods: number;
+  methods: MethodsType[];
   minimumCancellableStreamDuration: number;
   tokens: IToken[];
   isSubscribed: boolean;
@@ -30,6 +32,7 @@ export interface IUser extends Document {
   resetPasswordExpires?: number;
   settings?: ISettings;
   profile?: IProfile;
+  isAdmin?: boolean;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
 }
 
@@ -81,6 +84,7 @@ const UserSchema = new Schema<IUser>(
       name: { type: String, required: false },
       logoSrc: { type: String, required: false },
     },
+    isAdmin: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

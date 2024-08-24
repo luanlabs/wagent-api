@@ -11,11 +11,14 @@ interface IOrder {
   user: Schema.Types.ObjectId;
   products?: IProduct[];
   amount?: string;
+  status: 'pending' | 'completed' | 'expired';
+  redirectUrl: string;
 }
 
 const Order = new Schema<IOrder>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    status: { type: String, enum: ['pending', 'completed', 'expired'], required: true },
     products: [
       {
         type: {
@@ -28,6 +31,7 @@ const Order = new Schema<IOrder>(
       },
     ],
     amount: { type: String, required: false },
+    redirectUrl: { type: String, required: true },
   },
   { timestamps: true },
 );

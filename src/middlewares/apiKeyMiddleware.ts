@@ -33,6 +33,14 @@ const createOrderSchema = z
         invalid_type_error: 'amount must be a string',
       })
       .optional(),
+    redirectUrl: z
+      .string({
+        required_error: 'redirectUrl is required',
+        invalid_type_error: 'redirectUrl must be a string',
+      })
+      .url({
+        message: 'redirectUrl must be a valid URL',
+      }),
   })
   .refine((data) => data.products || data.amount, {
     message: 'Either products or amount must be provided',
