@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 
 import User from '../../models/User';
-import generateApiKey from '../../utils/generateApiKey';
+import randomString from '../../utils/randomString';
 import authMiddleware from '../../middlewares/authMiddleware';
 
 const generateNewApiKeyHandler: RequestHandler[] = [
@@ -9,7 +9,7 @@ const generateNewApiKeyHandler: RequestHandler[] = [
   async (req, res) => {
     const { id } = req.params;
 
-    const newApiKey = generateApiKey();
+    const newApiKey = randomString();
 
     const user = await User.findOneAndUpdate({ _id: id }, { apiKey: newApiKey });
 

@@ -6,7 +6,7 @@ enum Methods {
 
 export type MethodsType = 'single' | 'stream' | 'vesting';
 
-type MethodsNumerical = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type MethodsNumerical = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 const Single = 1;
 const Stream = 2;
