@@ -1,3 +1,3 @@
-export enum MaxNotificationTokens{
-    MaxNotificationTokens = 15
+export enum MaxNotificationTokens {
+    Max = 15
 }

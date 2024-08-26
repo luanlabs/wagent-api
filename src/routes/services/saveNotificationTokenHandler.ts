@@ -27,8 +27,8 @@ const saveNotificationTokenHandler = async (req: Request, res: Response): Promis
             return res.status(200).json({ message: 'Token already registered' });
         }
 
-        if (user.notificationTokens.length >= MaxNotificationTokens) {
-            return res.status(400).json({ message: `Maximum of ${MaxNotificationTokens} notification tokens allowed` });
+        if (user.notificationTokens.length >= MaxNotificationTokens.Max) {
+            return res.status(400).json({ message: `Maximum of ${MaxNotificationTokens.Max} notification tokens allowed` });
         }
 
         user.notificationTokens.push(token);
