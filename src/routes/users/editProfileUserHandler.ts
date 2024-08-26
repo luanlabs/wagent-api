@@ -15,11 +15,6 @@ const settingsSchema = z.object({
   isSubscribed: z.boolean(),
 });
 
-const profileSchema = z.object({
-  name: z.string().optional(),
-  logoSrc: z.string().optional(),
-});
-
 const editUserProfileHandler: RequestHandler = async (req, res) => {
   try {
     if (!req.user || typeof req.user === 'string') {
@@ -37,7 +32,6 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
     const { settings, profile } = req.body;
 
     const settingsValidation = settingsSchema.safeParse(settings);
-    const profileValidation = profileSchema.safeParse(profile);
 
     if (!settingsValidation.success) {
       return res.status(400).json({
@@ -50,23 +44,11 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
       });
     }
 
-    if (!profileValidation.success) {
-      return res.status(400).json({
-        result: { success: false },
-        error: {
-          message: 'Invalid profile data',
-          details: profileValidation.error.errors,
-          code: 400,
-        },
-      });
-    }
-
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
         $set: {
           settings: settingsValidation.data,
-          profile: profileValidation.data,
         },
       },
       { new: true, runValidators: true },
