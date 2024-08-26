@@ -6,7 +6,7 @@ import authMiddleware from "../../middlewares/authMiddleware";
 
 const router = express.Router();
 
-router.post('/notification', authMiddleware, saveNotificationTokenHandler);
-router.post('/notification/unsubscribe', authMiddleware, unsubscribeNotificationTokenHandler);
+router.post('/notifications', authMiddleware, saveNotificationTokenHandler);
+router.delete('/notifications', authMiddleware, unsubscribeNotificationTokenHandler);
 
 export default router;
