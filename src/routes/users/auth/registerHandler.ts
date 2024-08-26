@@ -50,6 +50,7 @@ const registerHandler: RequestHandler = async (req, res) => {
     verificationToken,
     verificationTokenExpiration: Date.now() + ONE_HOUR,
     isVerified: false,
+    isSubscribed: true,
   });
 
   await newUser.save();
