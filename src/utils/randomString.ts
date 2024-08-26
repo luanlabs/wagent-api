@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
-const generateApiKey = () => {
+const randomString = () => {
   return crypto.randomBytes(32).toString('hex');
 };
 
-export default generateApiKey;
+export default randomString;

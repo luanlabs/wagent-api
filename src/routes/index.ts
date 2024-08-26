@@ -7,6 +7,7 @@ import swaggerRoutes from './swagger';
 import servicesRoutes from './services';
 import notFoundHandler from './notFoundHandler';
 import errorHandler from './errorHandler';
+import notFoundHandler from './notFoundHandler';
 
 const router = express.Router();
 

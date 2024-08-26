@@ -7,6 +7,7 @@ interface ITransaction {
   method: string;
   token: Schema.Types.ObjectId;
   submittedAt: string;
+  payerEmail: string;
 }
 
 const Transaction = new Schema<ITransaction>({
@@ -16,6 +17,7 @@ const Transaction = new Schema<ITransaction>({
   method: { type: String, required: true },
   token: { type: Schema.Types.ObjectId, ref: 'Token', required: true },
   submittedAt: { type: String, required: true },
+  payerEmail: { type: String, required: false },
 });
 
 export default model<ITransaction>('Transaction', Transaction);

@@ -12,7 +12,7 @@ const getOrderByIdHandler: RequestHandler[] = [
       .populate([
         {
           path: 'user',
-          select: '-__v -password -resetPasswordToken -resetPasswordExpires',
+          select: 'email apiKey storeName storeImage isVerified',
         },
       ])
       .select('-__v')

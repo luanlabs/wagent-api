@@ -30,14 +30,19 @@
  *                                 storeName: "shop",
  *                                 email: "example@email.com",
  *                                 isVerified: true,
+ *                                 apiKey: "501af18b431cc3d93c1934cdade79dc3298911f78dfa1cf8db2da6b39057f645",
  *                                 createdAt: "2024-08-05T09:47:34.956Z",
  *                                 updatedAt: "2024-08-05T09:47:34.956Z",
  *                             },
- *                             apiKey: {
- *                                 _id: "66b09fb78fcfdccc89275898",
- *                                 key: "93b25766c93c1be23e6a065556f39af391b138e334a4eccb5c5a8f30bd36392e",
- *                                 status: "active"
- *                             }
+ * 		                       products: [{
+ *				                   _id: "66bd11ef8fcab0df67da19a9"
+ *				                   name: "kir",
+ *				                   logo: "kkk",
+ *				                   amount: "3",
+ *			                   }],
+ *                             redirectUrl: "http://example.com",
+ *                             createdAt: "2024-08-05T09:47:34.956Z",
+ *                             updatedAt: "2024-08-05T09:47:34.956Z"
  *                         }
  *
  *       500:

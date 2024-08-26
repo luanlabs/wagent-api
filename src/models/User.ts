@@ -1,42 +1,37 @@
 import { Document, Schema, model } from 'mongoose';
+
+import { MethodsNumerical } from '../utils/Method';
 import { hashPassword, comparePassword } from '../utils/hashAndComparePassword';
 
 export interface IToken {
   symbol: string;
 }
 
-export interface ISettings {
-  methods: number;
-  minimumCancellableStreamDuration: number;
-  tokens: IToken[];
-  isSubscribed: boolean;
-}
-
-export interface IProfile {
-  name: string;
-  logoSrc: string;
-}
+export interface ISettings {}
 
 export interface IUser extends Document {
+  name: string;
+  logo: string;
   email: string;
   apiKey: string;
   password: string;
-  storeName: string;
-  storeImage: string;
-  isVerified?: boolean;
+  isAdmin?: boolean;
+  isVerified: boolean;
+  tokens: IToken[];
+  isSubscribed: boolean;
+  methods: MethodsNumerical;
   verificationToken?: string;
-  verificationTokenExpiration?: Date;
+  verificationTokenExpiration?: number;
   resetPasswordToken?: string;
-  resetPasswordExpires?: number;
-  settings?: ISettings;
-  profile?: IProfile;
+  resetPasswordTokenExpiration?: number;
+  minimumCancellableStreamDuration: number;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
   notificationTokens: string[];
 }
 
 const UserSchema = new Schema<IUser>(
   {
-    storeName: {
+    name: {
       type: String,
       required: true,
     },
@@ -54,38 +49,17 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
-    storeImage: {
-      type: String,
-      required: false,
-    },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: {
-      type: String,
-      required: false,
-    },
-    verificationTokenExpiration: {
-      type: Date,
-      required: false,
-    },
+    tokens: [{ symbol: { type: String, required: true } }],
+    isSubscribed: { type: Boolean, required: true },
+    methods: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7], default: 1 },
+    logo: String,
+    isAdmin: Boolean,
+    isVerified: Boolean,
+    verificationToken: String,
+    verificationTokenExpiration: Number,
     resetPasswordToken: String,
-    resetPasswordExpires: Date,
-    settings: {
-      method: { type: String, enum: ['single', 'stream', 'vesting'], required: false },
-      minDuration: { type: Number, required: false },
-      tokens: [{ symbol: { type: String, required: true } }],
-      emailNotif: { type: Boolean, required: false },
-    },
-    profile: {
-      name: { type: String, required: false },
-      logoSrc: { type: String, required: false },
-    },
-    notificationTokens: {
-      type: [String],
-      default: [],
-    },
+    resetPasswordTokenExpiration: Number,
+    minimumCancellableStreamDuration: Number,
   },
   { timestamps: true },
 );
@@ -95,12 +69,15 @@ UserSchema.pre<IUser>('save', async function (next) {
     return next();
   }
 
+  this.email = this.email.toLowerCase();
+
   this.password = await hashPassword(this.password);
   next();
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
   const isValid = await comparePassword(enteredPassword, this.password);
+
   return isValid;
 };
 
