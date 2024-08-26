@@ -41,6 +41,8 @@ const sendEmail = (to: string, subject: string, htmlContent: string): void => {
 
   transporter.sendMail(options, (err, info) => {
     if (err) {
+      console.error(err);
+
       logger.error(`EMAIL: Failed to send email to ${to} - ${err}`);
     } else {
       logger.info(`EMAIL: Email sent to ${to} - ${info.response}`);
