@@ -13,7 +13,12 @@ import sendUserCompleteOrderTemplate from '../templates/sendUserCompleteOrderTem
 const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = getEnvs();
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  logger: true,
+  debug: true,
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS,
