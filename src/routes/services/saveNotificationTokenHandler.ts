@@ -3,8 +3,7 @@ import { Request, Response } from 'express';
 import User from '../../models/User';
 import sendNotification from '../../services/notificationService';
 import logger from "../../config/logger";
-
-const MAX_NOTIFICATION_TOKENS = 5;
+import {MaxNotificationTokens} from "../../constant/MaxNotificationTokens";
 
 const saveNotificationTokenHandler = async (req: Request, res: Response): Promise<Response> => {
     const { token } = req.body;
@@ -28,8 +27,8 @@ const saveNotificationTokenHandler = async (req: Request, res: Response): Promis
             return res.status(200).json({ message: 'Token already registered' });
         }
 
-        if (user.notificationTokens.length >= MAX_NOTIFICATION_TOKENS) {
-            return res.status(400).json({ message: `Maximum of ${MAX_NOTIFICATION_TOKENS} notification tokens allowed` });
+        if (user.notificationTokens.length >= MaxNotificationTokens) {
+            return res.status(400).json({ message: `Maximum of ${MaxNotificationTokens} notification tokens allowed` });
         }
 
         user.notificationTokens.push(token);
