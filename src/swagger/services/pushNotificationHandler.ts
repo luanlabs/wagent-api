@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /services/notification:
+ * /notifications:
  *   post:
  *     summary: Sends a notification to a specified device using a provided token.
  *     tags: [Notifications]
