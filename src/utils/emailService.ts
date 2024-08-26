@@ -14,7 +14,6 @@ const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = getEnvs();
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
-  secure: false,
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS,
