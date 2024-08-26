@@ -20,6 +20,7 @@ const generateNewApiKeyHandler: RequestHandler[] = [
     }
 
     return res.status(200).j({
+      message: 'TODO',
       result: newApiKey,
     });
   },

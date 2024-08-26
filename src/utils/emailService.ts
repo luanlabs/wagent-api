@@ -60,7 +60,7 @@ export const sendVerificationEmail = (email: string, token: string): void => {
 
 export const sendResetPasswordEmail = (email: string, token: string): void => {
   const resetUrl = `${FRONTEND_URL}?token=${token}`;
-  const htmlContent = resetPasswordTemplate(email, token, resetUrl);
+  const htmlContent = resetPasswordTemplate(resetUrl);
 
   sendEmail(email, EmailTitles.ResetPassword, htmlContent);
 };

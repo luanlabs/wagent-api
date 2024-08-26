@@ -25,6 +25,7 @@ const getOrderByIdHandler: RequestHandler[] = [
     }
 
     return res.status(200).j({
+      message: '',
       result: order,
     });
   },

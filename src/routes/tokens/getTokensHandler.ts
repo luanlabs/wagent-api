@@ -15,6 +15,7 @@ const getTokenHandler: RequestHandler = async (_, res) => {
   }
 
   return res.status(200).j({
+    message: 'TODO',
     result: tokens,
   });
 };

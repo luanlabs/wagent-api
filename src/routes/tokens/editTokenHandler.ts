@@ -23,6 +23,7 @@ const editTokenHandler: RequestHandler[] = [
     }
 
     return res.status(200).j({
+      message: 'TODO',
       result: modifyToken,
     });
   },

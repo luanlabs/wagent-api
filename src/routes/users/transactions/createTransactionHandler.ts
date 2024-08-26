@@ -76,11 +76,11 @@ const createTransactionHandler: RequestHandler = async (req, res) => {
 
   const user = await User.findOne({ _id: order._id });
 
-  if (user?.settings?.isSubscribed) {
-    sendUserCompleteOrderEmail(user.email, user.storeName, order.amount);
+  if (user?.isSubscribed) {
+    // sendUserCompleteOrderEmail(user.email, user.name, order.amount?.toString());
   }
 
-  return res.status(200).j({ result: newTransaction });
+  return res.status(200).json({ result: newTransaction });
 };
 
 export default createTransactionHandler;

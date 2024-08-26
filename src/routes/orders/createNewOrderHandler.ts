@@ -35,6 +35,7 @@ const createNewOrderHandler: RequestHandler[] = [
     await newOrder.save();
 
     return res.status(200).j({
+      message: 'TODO',
       result: {
         id: newOrder._id,
       },

@@ -1,5 +1,5 @@
-const registrationTemplate = (email:string,): string => {
-    return `
+const registrationTemplate = (verifyUrl: string): string => {
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,4 +65,3 @@ const registrationTemplate = (email:string,): string => {
 };
 
 export default registrationTemplate;
-

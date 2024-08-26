@@ -14,7 +14,7 @@ const getTransactionsHandler: RequestHandler = async (req, res) => {
   const result = transactionSchema.safeParse(req.params);
 
   if (result.error) {
-    return res.status(400).j({ message: result.error.errors });
+    return res.status(400).json({ message: result.error.errors });
   }
 
   const { hash } = result.data;
@@ -22,12 +22,12 @@ const getTransactionsHandler: RequestHandler = async (req, res) => {
   const transaction = await Transaction.findOne({ hash: new RegExp(`^${hash}$`, 'i') });
 
   if (!transaction) {
-    return res.status(404).j({
+    return res.status(404).json({
       message: 'transaction not found',
     });
   }
 
-  return res.status(200).j({ result: transaction });
+  return res.status(200).json({ result: transaction });
 };
 
 export default getTransactionsHandler;

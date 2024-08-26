@@ -1,5 +1,5 @@
-const registrationTemplate = (email:string,): string => {
-    return `
+const registrationTemplate = (verificationUrl: string): string => {
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +22,7 @@ const registrationTemplate = (email:string,): string => {
                 to inquire about the custom software solutions offered by your company, ABC Tech.</p>
             <p style="color: #333333; font-size: 16px; line-height: 1.5;">We are particularly interested in solutions
                 tailored for small businesses in the retail sector.</p>
-            <a href="${verifyUrl}" style="
+            <a href="${verificationUrl}" style="
             display: inline-block;
             background-color: #073834;
             color: white;
@@ -65,4 +65,3 @@ const registrationTemplate = (email:string,): string => {
 };
 
 export default registrationTemplate;
-
