@@ -7,11 +7,11 @@ const sendNotification = async (tokens: string[]): Promise<string[]> => {
         const message = { token };
         try {
             const response = await admin.messaging().send(message);
-            logger.info('Successfully sent message:', response);
-            responses.push(response);
+            logger.info(`Notification: Sent to ${token}, response: ${response}`);
+            responses.push(`Notification: Sent to ${token}, response: ${response}`);
         } catch (error) {
-            logger.error('Error sending message:', error);
-            responses.push(`Failed to send message to ${token}`);
+            logger.error(`Notification: Failed to send to ${token}, error: ${error}`);
+            responses.push(`Notification: Failed to send to ${token}, error: ${error}`);
         }
     }
     return responses;
