@@ -15,7 +15,7 @@ const requestResetPasswordHandler = async (req: Request, res: Response) => {
   const result = schema.safeParse(req.body);
 
   if (!result.success) {
-    return res.status(400).json({
+    return res.status(400).j({
       message: 'Validation failed',
       error: {
         message: 'Validation failed',
@@ -29,7 +29,7 @@ const requestResetPasswordHandler = async (req: Request, res: Response) => {
   const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } });
 
   if (!user) {
-    return res.status(404).json({
+    return res.status(404).j({
       message: 'Request reset password failed to complete',
       error: {
         message: 'User not found',
@@ -46,7 +46,7 @@ const requestResetPasswordHandler = async (req: Request, res: Response) => {
     user.resetPasswordTokenExpiration &&
     currentTime < user.resetPasswordTokenExpiration - (ONE_HOUR - FIFTEEN_MINUTES)
   ) {
-    return res.status(429).json({
+    return res.status(429).j({
       message: 'You can only request a password reset every 15 minutes.',
     });
   }
@@ -58,7 +58,7 @@ const requestResetPasswordHandler = async (req: Request, res: Response) => {
 
   sendResetPasswordEmail(user.email, user.resetPasswordToken);
 
-  return res.status(200).json({
+  return res.status(200).j({
     message: 'Reset password email was sent',
   });
 };
