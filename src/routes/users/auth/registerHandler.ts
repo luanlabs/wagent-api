@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import User from '../../../models/User';
-import { ONE_HOUR } from '../../../constants/Dates';
+import { ONE_HOUR, FIFTEEN_MINUTES } from '../../../constants/Dates';
 import randomString from '../../../utils/randomString';
 import { emailValidation, passwordValidation } from '../../../utils/zodValidators';
 import { sendVerificationEmail, sendRegistrationEmail } from '../../../utils/emailService';
@@ -17,7 +17,7 @@ const registerHandler: RequestHandler = async (req, res) => {
   const result = schema.safeParse(req.body);
 
   if (!result.success) {
-    return res.status(400).j({
+    return res.status(400).json({
       message: 'Validation failed',
       error: {
         message: 'Validation failed',
@@ -31,7 +31,18 @@ const registerHandler: RequestHandler = async (req, res) => {
   const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } });
 
   if (user) {
-    return res.status(401).j({
+    const currentTime = Date.now();
+
+    if (
+      user.verificationTokenExpiration &&
+      currentTime < user.verificationTokenExpiration - (ONE_HOUR - FIFTEEN_MINUTES)
+    ) {
+      return res.status(429).json({
+        message: 'You can only request a verification email every 15 minutes.',
+      });
+    }
+
+    return res.status(401).json({
       message: 'Registration failed',
       error: {
         message: 'User already exists',
@@ -58,7 +69,7 @@ const registerHandler: RequestHandler = async (req, res) => {
   sendRegistrationEmail(email);
   sendVerificationEmail(email, verificationToken);
 
-  return res.status(201).j({
+  return res.status(201).json({
     message: 'Verification email was sent',
   });
 };
