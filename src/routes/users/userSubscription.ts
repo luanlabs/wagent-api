@@ -2,13 +2,12 @@ import { Request, Response } from 'express';
 
 import User from '../../models/User';
 
-const subscribeUserHandler = async (req: Request, res: Response): Promise<Response> => {
-    const { userId } = req.body;
+const userSubscription = async (req: Request, res: Response): Promise<Response> => {
+    const { userId, subscribe } = req.body;
 
     try {
         if (!userId) {
-            return res.status(400).json({
-                success: false,
+            return res.status(400).j({
                 error: 'User ID is required',
             });
         }
@@ -16,8 +15,7 @@ const subscribeUserHandler = async (req: Request, res: Response): Promise<Respon
         const user = await User.findById(userId);
 
         if (!user) {
-            return res.status(404).json({
-                success: false,
+            return res.status(404).j({
                 error: 'User not found',
             });
         }
@@ -31,20 +29,23 @@ const subscribeUserHandler = async (req: Request, res: Response): Promise<Respon
             };
         }
 
-        user.settings.isSubscribed = true;
+        user.settings.isSubscribed = subscribe;
         await user.save();
+
+        const message = subscribe
+            ? 'User subscribed successfully'
+            : 'User unsubscribed successfully';
 
         return res.status(200).json({
             success: true,
-            message: 'User subscribed successfully',
+            message,
         });
     } catch (error) {
-        console.error('Error subscribing user:', error);
-        return res.status(500).json({
-            success: false,
-            error: 'Failed to subscribe user',
+        console.error('Error handling subscription:', error);
+        return res.status(500).j({
+            error: 'Failed to handle subscription',
         });
     }
 };
 
-export default subscribeUserHandler;
+export default userSubscription;
