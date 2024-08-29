@@ -14,15 +14,16 @@
  *               email:
  *                 type: string
  *                 required: true
- *                 example : example@email.com
- *               storeName:
+ *                 example: example@email.com
+ *               name:
  *                 type: string
  *                 required: true
- *                 example : BigShop
+ *                 description: The name of the user or store.
+ *                 example: BigShop
  *               password:
  *                 type: string
  *                 required: true
- *                 example : 12345678
+ *                 example: 12345678
  *
  *     responses:
  *       201:
@@ -32,18 +33,12 @@
  *             schema:
  *               type: object
  *               properties:
- *                 result:
- *                     type: object
- *                     example: {
- *                         id: "16",
- *                         email: "example@email.com",
- *                         storeName: "BigShop",
- *                         storeImage: "",
- *                         token: "Bearer jqndwjsidbfwbeyribi..."
- *                      }
+ *                 message:
+ *                   type: string
+ *                   example: Verification email was sent
  *
  *       400:
- *         description: Such a user already exists.
+ *         description: Validation failed or user already exists.
  *         content:
  *           application/json:
  *             schema:
@@ -51,16 +46,33 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User Already Exist!
+ *                   example: Validation failed
+ *                 error:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: User already exists
+ *                     extras:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           path:
+ *                             type: string
+ *                             example: email
+ *                           message:
+ *                             type: string
+ *                             example: Invalid email address
  *
  *       500:
- *         description: Internal server error
+ *         description: Internal server error.
  *         content:
  *           application/json:
  *             schema:
- *                 type: object
- *                 properties:
- *                   message:
- *                     type: string
- *                     example: Failed to save new user
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to save new user
  */
