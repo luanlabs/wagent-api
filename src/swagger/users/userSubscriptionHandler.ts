@@ -1,8 +1,8 @@
 /**
  * @swagger
- * /users/unsubscribe:
+ * /users/subscribe:
  *   post:
- *     summary: Unsubscribe a user from email notifications.
+ *     summary: Subscribe or unsubscribe a user.
  *     tags: [User Subscription]
  *     requestBody:
  *       required: true
@@ -13,11 +13,15 @@
  *             properties:
  *               userId:
  *                 type: string
- *                 description: The ID of the user to unsubscribe.
+ *                 description: The ID of the user to modify the subscription status.
  *                 example: "60d21bb67c0d8c6f6c3f4d8c"
+ *               subscribe:
+ *                 type: boolean
+ *                 description: Pass `true` to subscribe or `false` to unsubscribe the user.
+ *                 example: true
  *     responses:
  *       200:
- *         description: User unsubscribed successfully.
+ *         description: User subscription status modified successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -28,7 +32,7 @@
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "User unsubscribed successfully"
+ *                   example: "User subscribed successfully"
  *       400:
  *         description: Bad request due to missing or invalid user ID.
  *         content:
@@ -67,5 +71,5 @@
  *                   example: false
  *                 error:
  *                   type: string
- *                   example: "Failed to unsubscribe user"
+ *                   example: "Failed to handle subscription"
  */
