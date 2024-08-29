@@ -28,6 +28,7 @@ const addNewTokenHandler: RequestHandler[] = [
     await newToken.save();
 
     return res.status(201).j({
+      message: 'TODO',
       result: newToken,
     });
   },

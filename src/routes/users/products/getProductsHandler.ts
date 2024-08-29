@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 
 const getProductsHandler: RequestHandler = (req, res) => {
   return res.status(200).j({
+    message: 'TODO',
     result: [
       {
         id: '5',

@@ -1,9 +1,12 @@
 import { RequestHandler } from 'express';
 
 interface ICustomResponse {
-  message?: object | string;
+  message: object | string;
   result?: object | string;
-  error?: object | string;
+  error?: {
+    message: string;
+    extras?: any;
+  };
 }
 
 declare module 'express-serve-static-core' {

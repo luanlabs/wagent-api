@@ -4,8 +4,8 @@ import usersRoutes from './users';
 import ordersRoutes from './orders';
 import tokensRoutes from './tokens';
 import swaggerRoutes from './swagger';
-import notFoundHandler from './notFoundHandler';
 import errorHandler from './errorHandler';
+import notFoundHandler from './notFoundHandler';
 
 const router = express.Router();
 

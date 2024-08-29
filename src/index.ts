@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 
 import db from './config/db';
-import router from './routes';
+import routes from './routes';
 import log from './config/logger';
 import getEnvs from './config/getEnvs';
 import customResponseHandler from './middlewares/customResponseHandler';
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(customResponseHandler);
-app.use(router);
+app.use(routes);
 
 app.listen(PORT, () => {
   log.info(`App started with port: ${PORT}`);
