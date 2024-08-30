@@ -1,34 +1,20 @@
 import express from 'express';
 
-import requestPasswordReset from '../../middlewares/requestPasswordReset';
-import resetPassword from '../../middlewares/resetPassword';
-import userLoginHandler from './userLoginHandler';
-import userRegistrationHandler from './userRegistrationHandler';
+import authRoutes from './auth';
 import productsRoutes from './products';
 import transactionsRoutes from './transactions';
+import userSubscription from './userSubscription';
 import editProfileUserHandler from './editProfileUserHandler';
-import verifyEmail from '../../middlewares/verifyEmail';
-import passwordValidationMiddleware from '../../middlewares/passwordValidationMiddleWare';
-import validateEditProfileToken from '../../middlewares/validateEditProfileToken';
-import validateResetToken from '../../middlewares/validateResetToken';
-import validateVerifyToken from '../../middlewares/validateVerifyToken';
-import userSubscription from "./userSubscription";
 import generateNewApiKeyHandler from './generateNewApiKeyHandler';
+import validateEditProfileToken from '../../middlewares/validateEditProfileToken';
 
 const router = express.Router();
 
+router.use('/auth', authRoutes);
 router.use('/products', productsRoutes);
 router.use('/transactions', transactionsRoutes);
-
-router.post('/auth', userRegistrationHandler);
-router.post('/auth/login', userLoginHandler);
-router.post('/auth/password', passwordValidationMiddleware, resetPassword);
 router.put('/:id/settings', validateEditProfileToken, editProfileUserHandler);
 router.put('/:id/apiKey', generateNewApiKeyHandler);
-router.post('/auth/reset', requestPasswordReset);
-router.get('/auth/verify', verifyEmail);
-router.get('/auth/reset/verify', validateResetToken);
-router.get('/auth/verify', validateVerifyToken);
 router.post('/subscribe', userSubscription);
 
 export default router;
