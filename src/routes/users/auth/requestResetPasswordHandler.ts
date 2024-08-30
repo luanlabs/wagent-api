@@ -2,10 +2,11 @@ import { z } from 'zod';
 import { Request, Response } from 'express';
 
 import User from '../../../models/User';
-import { ONE_HOUR, FIFTEEN_MINUTES } from '../../../constants/Dates';
 import randomString from '../../../utils/randomString';
 import { emailValidation } from '../../../utils/zodValidators';
 import { sendResetPasswordEmail } from '../../../utils/emailService';
+import canRequestPasswordResetToken from '../../../utils/tokenHelpers';
+import { ONE_HOUR } from '../../../constants/Dates';
 
 const schema = z.object({
   email: emailValidation,
@@ -40,19 +41,14 @@ const requestResetPasswordHandler = async (req: Request, res: Response) => {
     });
   }
 
-  const currentTime = Date.now();
-  
-  if (
-    user.resetPasswordTokenExpiration &&
-    currentTime < user.resetPasswordTokenExpiration - (ONE_HOUR - FIFTEEN_MINUTES)
-  ) {
+  if (!canRequestPasswordResetToken(user)) {
     return res.status(429).j({
       message: 'You can only request a password reset every 15 minutes.',
     });
   }
 
   user.resetPasswordToken = randomString();
-  user.resetPasswordTokenExpiration = currentTime + ONE_HOUR;
+  user.resetPasswordTokenExpiration = Date.now() + ONE_HOUR;
 
   await user.save();
 
