@@ -3,15 +3,15 @@ import { z } from 'zod';
 
 import User, { IUser } from '../../models/User';
 
-const settingsSchema = z.object({
-  methods: z.number(),
-  minimumCancellableStreamDuration: z.number(),
+const userUpdateSchema = z.object({
+  methods: z.number().min(1).max(7).optional(),
+  minimumCancellableStreamDuration: z.number().positive().optional(),
   tokens: z.array(
     z.object({
-      symbol: z.string(),
+      symbol: z.string().min(1),
     }),
-  ),
-  isSubscribed: z.boolean(),
+  ).optional(),
+  isSubscribed: z.boolean().optional(),
 });
 
 const editUserProfileHandler: RequestHandler = async (req, res) => {
@@ -23,20 +23,25 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
     }
 
     const { _id } = req.user as IUser;
-    const { settings } = req.body;
+    const userUpdates = req.body;
 
-    const settingsValidation = settingsSchema.safeParse(settings);
-    if (!settingsValidation.success) {
+    const validation = userUpdateSchema.safeParse(userUpdates);
+    if (!validation.success) {
       return res.status(400).j({
-        message: 'Invalid settings data',
+        message: 'Invalid data',
       });
     }
+
+    const { methods, minimumCancellableStreamDuration, tokens, isSubscribed } = validation.data;
 
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
         $set: {
-          settings: settingsValidation.data,
+          ...(methods !== undefined && { methods }),
+          ...(minimumCancellableStreamDuration !== undefined && { minimumCancellableStreamDuration }),
+          ...(tokens !== undefined && { tokens }),
+          ...(isSubscribed !== undefined && { isSubscribed }),
         },
       },
       { new: true, runValidators: true },
@@ -49,9 +54,7 @@ const editUserProfileHandler: RequestHandler = async (req, res) => {
     }
 
     return res.status(200).j({
-      message: {
-        user: updatedUser,
-      },
+      message: 'User settings updated successfully',
     });
   } catch (error) {
     console.error('Error updating user profile:', error);

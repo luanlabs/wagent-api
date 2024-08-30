@@ -2,23 +2,17 @@
  * @swagger
  * /users/{id}/settings:
  *   put:
- *     summary: Edit user settings.
+ *     summary: Update user profile settings
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
- *       - name: id
- *         in: path
- *         description: The ID of the user whose settings are to be edited.
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
- *           example: "60d21bb67c0d8c6f6c3f4d8c"
- *       - name: Authorization
- *         in: header
- *         description: JWT Token.
- *         required: true
- *         schema:
- *           type: string
- *           example: Bearer JWT_ID
+ *         description: The ID of the user whose settings are being updated
  *     requestBody:
  *       required: true
  *       content:
@@ -26,56 +20,37 @@
  *           schema:
  *             type: object
  *             properties:
- *               settings:
- *                 type: object
- *                 required: true
- *                 properties:
- *                   methods:
- *                     type: number
- *                     description: The method ID associated with the user.
- *                     example: 1
- *                   minimumCancellableStreamDuration:
- *                     type: number
- *                     description: Minimum duration for cancellable streams.
- *                     example: 30
- *                   tokens:
- *                     type: array
- *                     items:
- *                       type: object
- *                       properties:
- *                         symbol:
- *                           type: string
- *                           description: Token symbol.
- *                           example: "usdt"
- *                   isSubscribed:
- *                     type: boolean
- *                     description: Subscription status of the user.
- *                     example: true
+ *               methods:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 7
+ *                 example: 3
+ *               minimumCancellableStreamDuration:
+ *                 type: number
+ *                 minimum: 1
+ *                 example: 15
+ *               tokens:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     symbol:
+ *                       type: string
+ *                       example: "BTC"
+ *               isSubscribed:
+ *                 type: boolean
+ *                 example: true
  *     responses:
  *       200:
- *         description: Successful editing of the user settings.
+ *         description: User settings updated successfully.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 result:
- *                   type: object
- *                   properties:
- *                     user:
- *                       type: object
- *                       description: Updated user object.
- *                       example: {
- *                         "_id": "60d21bb67c0d8c6f6c3f4d8c",
- *                         "settings": {
- *                           "methods": 1,
- *                           "minimumCancellableStreamDuration": 30,
- *                           "tokens": [
- *                             { "symbol": "usdt" }
- *                           ],
- *                           "isSubscribed": true
- *                         }
- *                       }
+ *                 message:
+ *                   type: string
+ *                   example: User settings updated successfully
  *       400:
  *         description: Invalid settings data.
  *         content:
@@ -85,7 +60,17 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Invalid settings data"
+ *                   example: Invalid settings data
+ *       401:
+ *         description: User information is not available.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User information is not available
  *       404:
  *         description: User not found.
  *         content:
@@ -95,7 +80,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "User not found"
+ *                   example: User not found
  *       500:
  *         description: Internal server error.
  *         content:
@@ -105,5 +90,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Internal server error"
+ *                   example: Internal server error
  */
