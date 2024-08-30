@@ -8,7 +8,7 @@ const userSubscription = async (req: Request, res: Response): Promise<Response> 
   try {
     if (!userId) {
       return res.status(400).j({
-        error: 'User ID is required',
+        message: 'User ID is required',
       });
     }
 
@@ -16,7 +16,7 @@ const userSubscription = async (req: Request, res: Response): Promise<Response> 
 
     if (!user) {
       return res.status(404).j({
-        error: 'User not found',
+        message: 'User not found',
       });
     }
 
@@ -41,7 +41,7 @@ const userSubscription = async (req: Request, res: Response): Promise<Response> 
   } catch (error) {
     console.error('Error handling subscription:', error);
     return res.status(500).j({
-      error: 'Failed to handle subscription',
+      message: 'Failed to handle subscription',
     });
   }
 };
