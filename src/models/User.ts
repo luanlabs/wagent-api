@@ -7,13 +7,6 @@ export interface IToken {
   symbol: string;
 }
 
-export interface ISettings {
-  methods: number;
-  minimumCancellableStreamDuration: number;
-  tokens: IToken[];
-  isSubscribed: boolean;
-}
-
 export interface IUser extends Document {
   name: string;
   logo: string;
@@ -25,7 +18,6 @@ export interface IUser extends Document {
   tokens: IToken[];
   isSubscribed: boolean;
   methods: MethodsNumerical;
-  settings?: ISettings;
   verificationToken?: string;
   verificationTokenExpiration?: number;
   resetPasswordToken?: string;
@@ -53,12 +45,6 @@ const UserSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
-    },
-    settings: {
-      methods: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7], default: 1, required: true },
-      minimumCancellableStreamDuration: { type: Number, required: false },
-      tokens: [{ symbol: { type: String, required: true } }],
-      isSubscribed: { type: Boolean, required: false },
     },
     tokens: [{ symbol: { type: String, required: true } }],
     isSubscribed: { type: Boolean, required: true },

@@ -20,22 +20,12 @@ const userSubscription = async (req: Request, res: Response): Promise<Response> 
       });
     }
 
-    if (!user.settings) {
-      user.settings = {
-        methods: 0,
-        minimumCancellableStreamDuration: 0,
-        tokens: [],
-        isSubscribed: false,
-      };
-    }
-
-    user.settings.isSubscribed = subscribe;
+    user.isSubscribed = subscribe;
     await user.save();
 
     const message = subscribe ? 'User subscribed successfully' : 'User unsubscribed successfully';
 
-    return res.status(200).json({
-      success: true,
+    return res.status(200).j({
       message,
     });
   } catch (error) {
