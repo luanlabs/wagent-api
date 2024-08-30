@@ -5,82 +5,72 @@ import User from '../../../models/User';
 import Token from '../../../models/Token';
 import Order from '../../../models/Order';
 import Transaction from '../../../models/Transaction';
-import { validateEmail } from '../../../utils/validators';
 import getTransactionDetails from '../../../utils/contract/getTransactionDetails';
 import {
   sendPayerCompleteOrderEmail,
   sendUserCompleteOrderEmail,
 } from '../../../utils/emailService';
+import validateRequestValueMiddleware from '../../../middlewares/validateRequestValueMiddleware';
+import { createTransactionSchema } from '../../../schemas/transactionSchema';
 
-const transactionSchema = z.object({
-  hash: z.string({
-    required_error: 'hash is required',
-    invalid_type_error: 'hash must be a string',
-  }),
-  payerEmail: z.string().refine(validateEmail, 'Enter a valid email').optional(),
-});
+const createTransactionHandler: RequestHandler[] = [
+  validateRequestValueMiddleware(createTransactionSchema),
+  async (req, res) => {
+    const { hash, payerEmail } = req.body;
 
-const createTransactionHandler: RequestHandler = async (req, res) => {
-  const result = transactionSchema.safeParse(req.body);
+    const { orderId, tokenAddress, method, submittedAt, status } = getTransactionDetails(hash);
 
-  if (result.error) {
-    return res.status(400).j({ message: result.error.errors });
-  }
+    const order = await Order.findOne({ _id: orderId });
 
-  const { hash, payerEmail } = result.data;
+    if (!order) {
+      return res.status(404).j({
+        message: 'Order not found',
+      });
+    }
 
-  const { orderId, tokenAddress, method, submittedAt, status } = getTransactionDetails(hash);
+    const token = await Token.findOne({ address: tokenAddress });
 
-  const order = await Order.findOne({ _id: orderId });
+    if (!token) {
+      return res.status(404).j({
+        message: 'Token not found',
+      });
+    }
 
-  if (!order) {
-    return res.status(404).j({
-      message: 'Order not found',
+    const transaction = await Transaction.findOne({ order: order._id });
+
+    if (transaction) {
+      return res.status(400).j({
+        message: 'Transaction already exists',
+      });
+    }
+
+    if (status) {
+      await Order.findOneAndUpdate({ _id: orderId }, { status });
+    }
+
+    const newTransaction = new Transaction({
+      hash,
+      order: order._id,
+      token: token._id,
+      method,
+      submittedAt,
+      payerEmail,
     });
-  }
 
-  const token = await Token.findOne({ address: tokenAddress });
+    await newTransaction.save();
 
-  if (!token) {
-    return res.status(404).j({
-      message: 'Token not found',
-    });
-  }
+    if (payerEmail) {
+      sendPayerCompleteOrderEmail(payerEmail, order._id.toString());
+    }
 
-  const transaction = await Transaction.findOne({ order: order._id });
+    const user = await User.findOne({ _id: order._id });
 
-  if (transaction) {
-    return res.status(400).j({
-      message: 'Transaction already exists',
-    });
-  }
+    if (user?.isSubscribed) {
+      // sendUserCompleteOrderEmail(user.email, user.name, order.amount?.toString());
+    }
 
-  if (status) {
-    await Order.findOneAndUpdate({ _id: orderId }, { status });
-  }
-
-  const newTransaction = new Transaction({
-    hash,
-    order: order._id,
-    token: token._id,
-    method,
-    submittedAt,
-    payerEmail,
-  });
-
-  await newTransaction.save();
-
-  if (payerEmail) {
-    sendPayerCompleteOrderEmail(payerEmail, order._id.toString());
-  }
-
-  const user = await User.findOne({ _id: order._id });
-
-  if (user?.isSubscribed) {
-    // sendUserCompleteOrderEmail(user.email, user.name, order.amount?.toString());
-  }
-
-  return res.status(200).json({ result: newTransaction });
-};
+    return res.status(200).json({ result: newTransaction });
+  },
+];
 
 export default createTransactionHandler;
