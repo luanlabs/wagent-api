@@ -2,17 +2,17 @@
  * @swagger
  * /users/{id}/settings:
  *   put:
- *     summary: Edit Profile & Settings.
+ *     summary: Update user profile settings
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         description: JWT Token
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
- *           example: Bearer JWT_ID
- *
+ *         description: The ID of the user whose settings are being updated
  *     requestBody:
  *       required: true
  *       content:
@@ -20,67 +20,75 @@
  *           schema:
  *             type: object
  *             properties:
- *               settings:
- *                 type: object
- *                 required: true
- *                 properties:
- *                   method:
- *                     type: string
- *                     required: true
- *                     example : single
- *                     enum:
- *                       - single
- *                       - stream
- *                       - vesting
- *                   tokens:
- *                     type: array
- *                     required: true
- *                     items:
- *                       type: object
- *                       properties:
- *                         symbol:
- *                           type: string
- *                           example: usdt
- *                   minDuration:
- *                     type: number
- *                     example: 25
- *                   emailNotif:
- *                     type: boolean
- *                     example: true
- *               profile:
- *                 type: object
- *                 required: true
- *                 properties:
- *                   name:
- *                     type: string
- *                     example: Jac
- *                   logoSrc:
- *                     type: string
- *                     example: https://image.com
- *
- *
+ *               methods:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 7
+ *                 example: 3
+ *               minimumCancellableStreamDuration:
+ *                 type: number
+ *                 minimum: 1
+ *                 example: 15
+ *               tokens:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     symbol:
+ *                       type: string
+ *                       example: "BTC"
+ *               isSubscribed:
+ *                 type: boolean
+ *                 example: true
  *     responses:
- *       201:
- *         description: Successful editing of the profile.
+ *       200:
+ *         description: User settings updated successfully.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 result:
- *                     type: object
- *                     example: {
- *                         success: true
- *                      }
- *
- *       500:
- *         description: Internal server error
+ *                 message:
+ *                   type: string
+ *                   example: User settings updated successfully
+ *       400:
+ *         description: Invalid settings data.
  *         content:
  *           application/json:
  *             schema:
- *                 type: object
- *                 properties:
- *                   message:
- *                     type: string
- *                     example: Failed to edit profile
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid settings data
+ *       401:
+ *         description: User information is not available.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User information is not available
+ *       404:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
  */

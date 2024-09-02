@@ -7,8 +7,6 @@ export interface IToken {
   symbol: string;
 }
 
-export interface ISettings {}
-
 export interface IUser extends Document {
   name: string;
   logo: string;

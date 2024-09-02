@@ -1,77 +1,67 @@
 import { RequestHandler } from 'express';
-
 import { z } from 'zod';
 
 import User, { IUser } from '../../models/User';
 
-const settingsSchema = z.object({
-  methods: z.number(),
-  minimumCancellableStreamDuration: z.number(),
+const userUpdateSchema = z.object({
+  methods: z.number().min(1).max(7).optional(),
+  minimumCancellableStreamDuration: z.number().positive().optional(),
   tokens: z.array(
     z.object({
-      symbol: z.string(),
+      symbol: z.string().min(1),
     }),
-  ),
-  isSubscribed: z.boolean(),
-});
-
-const profileSchema = z.object({
-  name: z.string().optional(),
-  logoSrc: z.string().optional(),
+  ).optional(),
+  isSubscribed: z.boolean().optional(),
 });
 
 const editUserProfileHandler: RequestHandler = async (req, res) => {
   try {
     if (!req.user || typeof req.user === 'string') {
-      return res.status(401).json({
-        result: { success: false },
-        error: {
-          message: 'User information is not available',
-          code: 401,
-        },
+      return res.status(401).j({
+        message: 'User information is not available',
       });
     }
 
     const { _id } = req.user as IUser;
+    const userUpdates = req.body;
 
-    const { settings, profile } = req.body;
-
-    const settingsValidation = settingsSchema.safeParse(settings);
-    const profileValidation = profileSchema.safeParse(profile);
-
-    if (!settingsValidation.success) {
-      return res.status(400).json({
-        result: { success: false },
-        error: {
-          message: 'Invalid settings data',
-          details: settingsValidation.error.errors,
-          code: 400,
-        },
+    const validation = userUpdateSchema.safeParse(userUpdates);
+    if (!validation.success) {
+      return res.status(400).j({
+        message: 'Invalid data',
       });
     }
 
-    if (!profileValidation.success) {
-      return res.status(400).json({
-        result: { success: false },
-        error: {
-          message: 'Invalid profile data',
-          details: profileValidation.error.errors,
-          code: 400,
-        },
-      });
-    }
+    const { methods, minimumCancellableStreamDuration, tokens, isSubscribed } = validation.data;
 
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
         $set: {
-          settings: settingsValidation.data,
-          profile: profileValidation.data,
+          ...(methods !== undefined && { methods }),
+          ...(minimumCancellableStreamDuration !== undefined && { minimumCancellableStreamDuration }),
+          ...(tokens !== undefined && { tokens }),
+          ...(isSubscribed !== undefined && { isSubscribed }),
         },
       },
       { new: true, runValidators: true },
     );
-  } catch (e) {}
+
+    if (!updatedUser) {
+      return res.status(404).j({
+        message: 'User not found',
+      });
+    }
+
+    return res.status(200).j({
+      message: 'User settings updated successfully',
+    });
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    return res.status(500).j({
+      message: 'Internal server error',
+    });
+  }
 };
 
 export default editUserProfileHandler;
