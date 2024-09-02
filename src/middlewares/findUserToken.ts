@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { RequestHandler } from 'express';
 
-import { IUser } from '../models/User';
+import User, { IUser } from '../models/User';
 import getEnvs from '../config/getEnvs';
 
-const findUserToken: RequestHandler = (req, res, next) => {
+const findUserToken: RequestHandler = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
     const { JWT_SECRET } = getEnvs();
@@ -23,17 +23,17 @@ const findUserToken: RequestHandler = (req, res, next) => {
       });
     }
 
-    const decodedToken = jwt.verify(token.toString(), JWT_SECRET);
+    const decodedToken = jwt.verify(token[1], JWT_SECRET);
 
-    if (typeof decodedToken !== 'object' || !decodedToken || !('userId' in decodedToken)) {
+    if (typeof decodedToken !== 'object' || !decodedToken || !('id' in decodedToken)) {
       return res.status(401).j({
         message: 'Invalid token payload',
       });
     }
 
-    req.user = {
-      _id: decodedToken.userId,
-    } as IUser;
+    const user = await User.findById(decodedToken.id);
+
+    req.user = user as IUser;
 
     next();
   } catch (error) {

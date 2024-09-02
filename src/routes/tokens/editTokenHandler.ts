@@ -1,12 +1,15 @@
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
-import editTokenMiddleware from '../../middlewares/editTokenMiddleware';
-import adminAuthMIddleware from '../../middlewares/adminAuthMIddleware';
+import findUserToken from '../../middlewares/findUserToken';
+import authMiddleware from '../../middlewares/authMiddleware';
+import validateRequestValueMiddleware from '../../middlewares/validateRequestValueMiddleware';
+import { editTokenSchema } from '../../schemas/tokenSchema';
 
 const editTokenHandler: RequestHandler[] = [
-  adminAuthMIddleware,
-  editTokenMiddleware,
+  findUserToken,
+  authMiddleware,
+  validateRequestValueMiddleware(editTokenSchema),
   async (req, res) => {
     const { symbol } = req.params;
     const { logo } = req.body;

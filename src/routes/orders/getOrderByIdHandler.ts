@@ -1,10 +1,11 @@
 import { RequestHandler } from 'express';
 
 import Order from '../../models/Order';
-import getOrderMiddleware from '../../middlewares/getOrderMiddleware';
+import validateRequestValueMiddleware from '../../middlewares/validateRequestValueMiddleware';
+import { getOrderSchema } from '../../schemas/orderSchema';
 
 const getOrderByIdHandler: RequestHandler[] = [
-  getOrderMiddleware,
+  validateRequestValueMiddleware(getOrderSchema),
   async (req, res) => {
     const { id } = req.params;
 

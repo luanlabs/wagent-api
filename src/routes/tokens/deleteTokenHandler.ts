@@ -1,12 +1,15 @@
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
-import adminAuthMIddleware from '../../middlewares/adminAuthMIddleware';
-import deleteTokenMiddleware from '../../middlewares/deleteTokenMiddleware';
+import findUserToken from '../../middlewares/findUserToken';
+import authMiddleware from '../../middlewares/authMiddleware';
+import validateRequestValueMiddleware from '../../middlewares/validateRequestValueMiddleware';
+import { deleteTokenSchema } from '../../schemas/tokenSchema';
 
 const deleteTokenHandler: RequestHandler[] = [
-  adminAuthMIddleware,
-  deleteTokenMiddleware,
+  findUserToken,
+  authMiddleware,
+  validateRequestValueMiddleware(deleteTokenSchema),
   async (req, res) => {
     const { symbol } = req.params;
 
