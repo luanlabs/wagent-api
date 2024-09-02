@@ -1,21 +1,23 @@
 import express from 'express';
 
-import loginHandler from './loginHandler';
-import verifyHandler from './verifyHandler';
-import registerHandler from './registerHandler';
-import requestVerifyHandler from './requestVerifyHandler';
-import resetPasswordHandler from './resetPasswordHandler';
-import requestResetPasswordHandler from './requestResetPasswordHandler';
-import validateResetPasswordHandler from './validateResetPasswordHandler';
+import loginHandler from './login';
+import verifyHandler from './verify';
+import registerHandler from './register';
+import resetPasswordHandler from './resetPassword';
+import requestResetPasswordHandler from './requestResetPassword';
+import validateResetPasswordHandler from './validateResetPassword';
+import requestVerificationTokenHandler from './requestVerificationToken';
 
 const router = express.Router();
 
 router.post('/', registerHandler);
 router.post('/login', loginHandler);
+
 router.put('/reset', resetPasswordHandler);
-router.get('/reset', validateResetPasswordHandler);
 router.post('/reset', requestResetPasswordHandler);
+router.get('/reset/:token', validateResetPasswordHandler);
+
 router.put('/verify', verifyHandler);
-router.post('/verify', requestVerifyHandler);
+router.post('/verify', requestVerificationTokenHandler);
 
 export default router;

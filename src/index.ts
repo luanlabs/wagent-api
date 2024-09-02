@@ -7,12 +7,12 @@ import compression from 'compression';
 import db from './config/db';
 import routes from './routes';
 import log from './config/logger';
-import getEnvs from './config/getEnvs';
+import envs from './config/envs';
 import customResponseHandler from './middlewares/customResponseHandler';
 
 const app = express();
 
-const { DB_URI, DB_NAME, PORT } = getEnvs();
+const { DB_URI, DB_NAME, PORT } = envs();
 
 db(DB_URI, DB_NAME);
 

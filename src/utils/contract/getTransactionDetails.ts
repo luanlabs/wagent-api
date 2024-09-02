@@ -1,19 +1,17 @@
 const getTransactionDetails = (hash: string) => {
-  const orderId = '66b0a00e8fcfdccc8927589d';
-  const playerAddress = 'Gx....';
-  const tokenAddress = 'CX....';
   const method = 'single';
-  const submittedAt = '12345678';
-  const status = true;
+  const status = 'completed';
+  const submittedAt = 12345678;
+  const tokenAddress = 'CX....';
+  const payerAddress = 'Gx....';
 
   return {
-    orderId,
-    playerAddress,
-    tokenAddress,
-    method,
-    submittedAt,
-    status,
     hash,
+    method,
+    status,
+    submittedAt,
+    payerAddress,
+    tokenAddress,
   };
 };
 

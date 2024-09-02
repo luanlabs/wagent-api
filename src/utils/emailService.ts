@@ -1,16 +1,16 @@
 import nodemailer from 'nodemailer';
 
+import envs from '../config/envs';
 import logger from '../config/logger';
-import getEnvs from '../config/getEnvs';
+import { EmailTitles } from '../constants/emailTitles';
 import verifyEmailTemplate from '../templates/verifyEmailTemplate';
 import registrationTemplate from '../templates/registrationTemplate';
 import resetPasswordTemplate from '../templates/resetPasswordTemplate';
 import resetPasswordSuccessTemplate from '../templates/resetPasswordSuccessTemplate';
-import { EmailTitles } from '../constants/emailTitles';
-import sendPayerCompleteOrderTemplate from '../templates/sendPayerCompleteOrderTemplate';
 import sendUserCompleteOrderTemplate from '../templates/sendUserCompleteOrderTemplate';
+import sendPayerCompleteOrderTemplate from '../templates/sendPayerCompleteOrderTemplate';
 
-const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = getEnvs();
+const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = envs();
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -25,15 +25,13 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((err, _) => {
   if (err) {
-    console.log(err);
-
     logger.error('EMAIL: Failed to verify connection');
   } else {
     logger.info('EMAIL: Connected');
   }
 });
 
-const sendEmail = (to: string, subject: string, htmlContent: string): void => {
+const sendEmail = (to: string, subject: string, htmlContent: string) => {
   const options = {
     from: EMAIL_USER,
     to,
@@ -43,49 +41,47 @@ const sendEmail = (to: string, subject: string, htmlContent: string): void => {
 
   transporter.sendMail(options, (err, info) => {
     if (err) {
-      console.error(err);
-
-      logger.error(`EMAIL: Failed to send email to ${to} - ${err}`);
+      logger.error(`EMAIL: Failed to send email to ${to} - Error: ${err}`);
     } else {
       logger.info(`EMAIL: Email sent to ${to} - ${info.response}`);
     }
   });
 };
 
-export const sendRegistrationEmail = (email: string): void => {
-  const htmlContent = registrationTemplate(email);
+export const sendRegistrationEmail = (email: string) => {
+  const html = registrationTemplate(email);
 
-  sendEmail(email, EmailTitles.Registration, htmlContent);
+  sendEmail(email, EmailTitles.Registration, html);
 };
 
-export const sendVerificationEmail = (email: string, token: string): void => {
-  const verifyUrl = `${FRONTEND_URL}?token=${token}`;
-  const htmlContent = verifyEmailTemplate(verifyUrl);
+export const sendVerificationEmail = (email: string, token: string) => {
+  const verifyUrl = `${FRONTEND_URL}/verify/${token}`;
+  const html = verifyEmailTemplate(verifyUrl);
 
-  sendEmail(email, EmailTitles.Verification, htmlContent);
+  sendEmail(email, EmailTitles.Verification, html);
 };
 
-export const sendResetPasswordEmail = (email: string, token: string): void => {
-  const resetUrl = `${FRONTEND_URL}?token=${token}`;
-  const htmlContent = resetPasswordTemplate(resetUrl);
+export const sendResetPasswordEmail = (email: string, token: string) => {
+  const resetUrl = `${FRONTEND_URL}/password/reset/${token}`;
+  const html = resetPasswordTemplate(resetUrl);
 
-  sendEmail(email, EmailTitles.ResetPassword, htmlContent);
+  sendEmail(email, EmailTitles.ResetPassword, html);
 };
 
-export const sendResetPasswordSuccess = (email: string): void => {
-  const htmlContent = resetPasswordSuccessTemplate(email);
+export const sendResetPasswordSuccess = (email: string) => {
+  const html = resetPasswordSuccessTemplate(email);
 
-  sendEmail(email, EmailTitles.ResetPasswordSuccess, htmlContent);
+  sendEmail(email, EmailTitles.ResetPasswordSuccess, html);
 };
 
 export const sendPayerCompleteOrderEmail = (email: string, orderId: string) => {
-  const htmlContent = sendPayerCompleteOrderTemplate(orderId);
+  const html = sendPayerCompleteOrderTemplate(orderId);
 
-  sendEmail(email, EmailTitles.CompleteOrder, htmlContent);
+  sendEmail(email, EmailTitles.CompleteOrder, html);
 };
 
 export const sendUserCompleteOrderEmail = (email: string, name: string, amount: string) => {
-  const htmlContent = sendUserCompleteOrderTemplate(name, amount);
+  const html = sendUserCompleteOrderTemplate(name, amount);
 
-  sendEmail(email, EmailTitles.CompleteOrder, htmlContent);
+  sendEmail(email, EmailTitles.CompleteOrder, html);
 };

@@ -1,14 +1,14 @@
 import express from 'express';
 
-import addNewTokenHandler from './addNewTokenHandler';
-import editTokenHandler from './editTokenHandler';
-import getTokenHandler from './getTokensHandler';
-import deleteTokenHandler from './deleteTokenHandler';
+import getTokenHandler from './getTokens';
+import editTokenHandler from './editToken';
+import createTokenHandler from './createToken';
+import deleteTokenHandler from './deleteToken';
 
 const router = express.Router();
 
 router.get('/', getTokenHandler);
-router.post('/', addNewTokenHandler);
+router.post('/', createTokenHandler);
 router.put('/:symbol', editTokenHandler);
 router.delete('/:symbol', deleteTokenHandler);
 

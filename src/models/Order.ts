@@ -4,15 +4,15 @@ export interface IProduct {
   name: string;
   logo: string;
   count: number;
-  amount: string;
+  amount: number;
 }
 
 interface IOrder {
-  user: Schema.Types.ObjectId;
-  products?: IProduct[];
-  amount?: string;
-  status: 'pending' | 'completed' | 'expired';
+  amount: string;
   redirectUrl: string;
+  products?: IProduct[];
+  user: Schema.Types.ObjectId;
+  status: 'pending' | 'completed' | 'expired';
 }
 
 const Order = new Schema<IOrder>(
@@ -30,7 +30,7 @@ const Order = new Schema<IOrder>(
         required: false,
       },
     ],
-    amount: { type: String, required: false },
+    amount: { type: String, required: true },
     redirectUrl: { type: String, required: true },
   },
   { timestamps: true },

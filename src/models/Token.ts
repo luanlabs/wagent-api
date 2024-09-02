@@ -1,22 +1,15 @@
 import { Schema, model } from 'mongoose';
 
 export interface IToken {
-  address?: string;
-  symbol: string;
   logo: string;
-  isActive?: boolean;
+  symbol: string;
+  address: string;
 }
 
 const Token = new Schema<IToken>({
-  address: { type: String, required: false, unique: true },
-  symbol: { type: String, required: true },
-  logo: { type: String, required: true },
-  isActive: { type: Boolean, required: false, default: true },
+  logo: { type: String, required: true, unique: true },
+  symbol: { type: String, required: true, unique: true },
+  address: { type: String, required: true, unique: true },
 });
-
-Token.index(
-  { symbol: 1, isActive: 1 },
-  { unique: true, partialFilterExpression: { isActive: true } },
-);
 
 export default model<IToken>('Token', Token);

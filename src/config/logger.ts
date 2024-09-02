@@ -1,8 +1,8 @@
 import bunyan from 'bunyan';
 
-import getEnvs from './getEnvs';
+import envs from './envs';
 
-const { LOG_FILE_PATH } = getEnvs();
+const { LOG_FILE_PATH } = envs();
 
 const streams: bunyan.Stream[] = [
   {

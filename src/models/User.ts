@@ -18,8 +18,8 @@ export interface IUser extends Document {
   tokens: IToken[];
   isSubscribed: boolean;
   methods: MethodsNumerical;
-  verificationToken?: string;
-  verificationTokenExpiration?: number;
+  verificationToken: string;
+  verificationTokenExpiration: number;
   resetPasswordToken?: string;
   resetPasswordTokenExpiration?: number;
   minimumCancellableStreamDuration: number;

@@ -4,12 +4,12 @@ const calculateProductsAmount = (products: IProduct[]) => {
   let amount = 0;
 
   for (const product of products) {
-    const productsAmount = product.count * Number(product.amount);
+    const productsAmount = product.count * product.amount;
 
     amount += productsAmount;
   }
 
-  return amount.toFixed(5);
+  return amount;
 };
 
 export default calculateProductsAmount;
