@@ -24,6 +24,7 @@ export interface IUser extends Document {
   resetPasswordTokenExpiration?: number;
   minimumCancellableStreamDuration: number;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
+  notificationTokens: string[];
 }
 
 const UserSchema = new Schema<IUser>(
