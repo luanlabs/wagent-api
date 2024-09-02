@@ -1,10 +1,19 @@
+import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import findUserToken from '../../middlewares/findUserToken';
 import authMiddleware from '../../middlewares/authMiddleware';
 import validateRequestValueMiddleware from '../../middlewares/validateRequestValueMiddleware';
-import { deleteTokenSchema } from '../../schemas/tokenSchema';
+
+const deleteTokenSchema = {
+  params: z.object({
+    symbol: z.string({
+      required_error: 'symbol is required',
+      invalid_type_error: 'symbol must be a string',
+    }),
+  }),
+};
 
 const deleteTokenHandler: RequestHandler[] = [
   findUserToken,

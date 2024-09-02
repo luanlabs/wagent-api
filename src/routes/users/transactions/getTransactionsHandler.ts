@@ -1,8 +1,17 @@
+import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import Transaction from '../../../models/Transaction';
 import validateRequestValueMiddleware from '../../../middlewares/validateRequestValueMiddleware';
-import { getTransactionSchema } from '../../../schemas/transactionSchema';
+
+const getTransactionSchema = {
+  params: z.object({
+    hash: z.string({
+      required_error: 'hash is required',
+      invalid_type_error: 'hash must be a string',
+    }),
+  }),
+};
 
 const getTransactionsHandler: RequestHandler[] = [
   validateRequestValueMiddleware(getTransactionSchema),

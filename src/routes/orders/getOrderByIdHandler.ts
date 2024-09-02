@@ -1,8 +1,22 @@
+import { z } from 'zod';
+import mongoose from 'mongoose';
 import { RequestHandler } from 'express';
 
 import Order from '../../models/Order';
 import validateRequestValueMiddleware from '../../middlewares/validateRequestValueMiddleware';
-import { getOrderSchema } from '../../schemas/orderSchema';
+
+const getOrderSchema = {
+  params: z.object({
+    id: z
+      .string({
+        required_error: 'id is required',
+        invalid_type_error: 'id must be a string',
+      })
+      .refine((value) => mongoose.Types.ObjectId.isValid(value), {
+        message: 'id must be a valid ObjectId',
+      }),
+  }),
+};
 
 const getOrderByIdHandler: RequestHandler[] = [
   validateRequestValueMiddleware(getOrderSchema),

@@ -5,13 +5,23 @@ import User from '../../../models/User';
 import Token from '../../../models/Token';
 import Order from '../../../models/Order';
 import Transaction from '../../../models/Transaction';
+import { validateEmail } from '../../../utils/validators';
 import getTransactionDetails from '../../../utils/contract/getTransactionDetails';
+import validateRequestValueMiddleware from '../../../middlewares/validateRequestValueMiddleware';
 import {
   sendPayerCompleteOrderEmail,
   sendUserCompleteOrderEmail,
 } from '../../../utils/emailService';
-import validateRequestValueMiddleware from '../../../middlewares/validateRequestValueMiddleware';
-import { createTransactionSchema } from '../../../schemas/transactionSchema';
+
+const createTransactionSchema = {
+  body: z.object({
+    hash: z.string({
+      required_error: 'hash is required',
+      invalid_type_error: 'hash must be a string',
+    }),
+    payerEmail: z.string().refine(validateEmail, 'Enter a valid email').optional(),
+  }),
+};
 
 const createTransactionHandler: RequestHandler[] = [
   validateRequestValueMiddleware(createTransactionSchema),

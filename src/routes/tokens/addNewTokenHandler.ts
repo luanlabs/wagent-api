@@ -1,10 +1,23 @@
+import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
 import validateRequestValueMiddleware from '../../middlewares/validateRequestValueMiddleware';
 import authMiddleware from '../../middlewares/authMiddleware';
 import findUserToken from '../../middlewares/findUserToken';
-import { addTokenSchema } from '../../schemas/tokenSchema';
+
+const addTokenSchema = {
+  body: z.object({
+    symbol: z.string({
+      required_error: 'symbol is required',
+      invalid_type_error: 'symbol must be a string',
+    }),
+    logo: z.string({
+      required_error: 'logo is required',
+      invalid_type_error: 'logo must be a string',
+    }),
+  }),
+};
 
 const addNewTokenHandler: RequestHandler[] = [
   findUserToken,
