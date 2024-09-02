@@ -6,6 +6,7 @@ import { ONE_HOUR } from '../../../constants/Dates';
 import randomString from '../../../utils/randomString';
 import { emailValidation, passwordValidation } from '../../../utils/zodValidators';
 import { sendVerificationEmail, sendRegistrationEmail } from '../../../utils/emailService';
+import canRequestVerificationToken from '../../../utils/tokenHelpers';
 
 const schema = z.object({
   email: emailValidation,
@@ -31,36 +32,44 @@ const registerHandler: RequestHandler = async (req, res) => {
   const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } });
 
   if (user) {
-    return res.status(401).j({
-      message: 'Registration failed',
-      error: {
-        message: 'User already exists',
-      },
+    if (!canRequestVerificationToken(user)) {
+      return res.status(429).j({
+        message: 'You can only request a verification email every 15 minutes.',
+      });
+    }
+
+    if (user) {
+      return res.status(401).j({
+        message: 'Registration failed',
+        error: {
+          message: 'User already exists',
+        },
+      });
+    }
+
+    const apiKey = randomString();
+    const verificationToken = randomString();
+
+    const newUser = new User({
+      name,
+      email,
+      apiKey,
+      password,
+      verificationToken,
+      verificationTokenExpiration: Date.now() + ONE_HOUR,
+      isVerified: false,
+      isSubscribed: true,
+    });
+
+    await newUser.save();
+
+    sendRegistrationEmail(email);
+    sendVerificationEmail(email, verificationToken);
+
+    return res.status(201).j({
+      message: 'Verification email was sent',
     });
   }
-
-  const apiKey = randomString();
-  const verificationToken = randomString();
-
-  const newUser = new User({
-    name,
-    email,
-    apiKey,
-    password,
-    verificationToken,
-    verificationTokenExpiration: Date.now() + ONE_HOUR,
-    isVerified: false,
-    isSubscribed: true,
-  });
-
-  await newUser.save();
-
-  sendRegistrationEmail(email);
-  sendVerificationEmail(email, verificationToken);
-
-  return res.status(201).j({
-    message: 'Verification email was sent',
-  });
 };
 
 export default registerHandler;
