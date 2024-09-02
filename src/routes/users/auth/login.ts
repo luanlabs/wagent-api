@@ -6,7 +6,6 @@ import { sign } from '../../../utils/jwt';
 import validatorMiddleware from '../../../middlewares/validatorMiddleware';
 import { emailValidation, passwordValidation } from '../../../utils/zodValidators';
 
-// TODO: create a new route GET /users to get the user info
 const loginHandler: RequestHandler[] = [
   validatorMiddleware({
     body: z.object({
