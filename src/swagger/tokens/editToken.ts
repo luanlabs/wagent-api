@@ -2,7 +2,7 @@
  * @swagger
  * /tokens/{address}:
  *   put:
- *     summary: Modifying the active tokens.
+ *     summary: Changes the logo and other fields of a token
  *     tags: [Tokens]
  *     parameters:
  *       - name: symbol
@@ -12,6 +12,15 @@
  *         schema:
  *           type: string
  *           format: string
+ *       - name: authorization
+ *         in: header
+ *         description: JWT Token
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer JWT_ID
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -22,11 +31,11 @@
  *               logo:
  *                 type: string
  *                 required: true
- *                 example : https://logo.jpg
+ *                 example : https://bing.com/logo.jpg
  *
  *     responses:
  *       200:
- *         description: Token modifyed successfully.
+ *         description: Token has been changed
  *         content:
  *           application/json:
  *             schema:
@@ -35,16 +44,13 @@
  *                 result:
  *                   type: string
  *                   example: {
- *                       _id: "66a73cb095779d04d42b0949",
  *                       address: "GBUQL63MMQZL37NBVRHFG3L24PYMK6TYC6I44BR5KK52J5JZTKJA2KRJ",
  *                       symbol: "usdt",
- *                       logo: "https://logo.jpg",
- *                       isActive: true,
- *                       __v: 0
+ *                       logo: "https://bing.com/logo.jpg",
  *                   }
  *
- *       400:
- *         description: Token not exists.
+ *       404:
+ *         description: Token does not exist.
  *         content:
  *           application/json:
  *             schema:
@@ -52,7 +58,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Token not exists
+ *                   example: Token does not exist
  *
  *       500:
  *         description: Internal server error

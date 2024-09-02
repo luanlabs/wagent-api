@@ -1,20 +1,20 @@
 /**
  * @swagger
- * /users/auth/verify:
+ * /users/auth/reset/:token:
  *   get:
- *     summary: Verify Email using a token.
- *     tags: [Verify]
+ *     summary: Verifies the reset token. Is used to check if the token is valid before asking for a new password from user
+ *     tags: [AAA]
  *     parameters:
  *       - in: query
  *         name: token
  *         schema:
  *           type: string
  *         required: true
- *         description: Verification token
- *         example: "some-verification-token"
+ *         description: Reset token
+ *         example: "abcdefg"
  *     responses:
  *       200:
- *         description: Email verified successfully.
+ *         description: Token is valid
  *         content:
  *           application/json:
  *             schema:
@@ -22,9 +22,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Email verified successfully
- *       400:
- *         description: Invalid or expired token.
+ *                   example: "Token is valid"
+ *       404:
+ *         description: Token is invalid
  *         content:
  *           application/json:
  *             schema:
@@ -35,12 +35,10 @@
  *                   properties:
  *                     message:
  *                       type: string
- *                       example: Invalid or expired token
- *                     code:
- *                       type: integer
- *                       example: 400
+ *                       example: "Token is invalid"
+ *
  *       500:
- *         description: Internal server error.
+ *         description: Error occurred
  *         content:
  *           application/json:
  *             schema:
@@ -51,8 +49,5 @@
  *                   properties:
  *                     message:
  *                       type: string
- *                       example: Error occurred!
- *                     code:
- *                       type: integer
- *                       example: 500
+ *                       example: "Error occurred!"
  */

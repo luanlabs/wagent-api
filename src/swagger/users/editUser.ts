@@ -1,18 +1,19 @@
 /**
  * @swagger
- * /users/{id}/settings:
+ * /users/:
  *   put:
- *     summary: Update user profile settings
+ *     summary: Edits the user setting and profile
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: id
+ *       - name: authorization
+ *         in: header
+ *         description: JWT Token
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the user whose settings are being updated
+ *           example: Bearer JWT_ID
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -32,14 +33,20 @@
  *               tokens:
  *                 type: array
  *                 items:
- *                   type: object
- *                   properties:
- *                     symbol:
- *                       type: string
- *                       example: "BTC"
+ *                   type: string
+ *                   example:
+ *                     - USDT
+ *                     - USDC
+ *                     - ETH
  *               isSubscribed:
  *                 type: boolean
  *                 example: true
+ *               name:
+ *                 type: string
+ *                 example: "A New Name For My Shop"
+ *               logo:
+ *                 type: string
+ *                 example: "https://google.com/1.jpg"
  *     responses:
  *       200:
  *         description: User settings updated successfully.
@@ -61,16 +68,6 @@
  *                 message:
  *                   type: string
  *                   example: Invalid settings data
- *       401:
- *         description: User information is not available.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: User information is not available
  *       404:
  *         description: User not found.
  *         content:

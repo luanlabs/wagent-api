@@ -12,6 +12,15 @@
  *         schema:
  *           type: string
  *           format: string
+ *       - name: authorization
+ *         in: header
+ *         description: JWT Token
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer JWT_ID
+ *     security:
+ *       - bearerAuth: []
  *
  *     responses:
  *       200:
@@ -25,8 +34,8 @@
  *                   type: string
  *                   example: "Token deleted successfully"
  *
- *       400:
- *         description: Token not exists.
+ *       404:
+ *         description: Token does not exists.
  *         content:
  *           application/json:
  *             schema:
@@ -34,7 +43,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Token not exists
+ *                   example: Token does not exists
  *
  *       500:
  *         description: Internal server error

@@ -2,9 +2,9 @@
  * @swagger
  * /users/auth/reset:
  *   post:
- *     summary: Request Password Reset
- *     tags: [Users]
- *     description: Allows a user to request a password reset. Users can only request a reset once every 15 minutes.
+ *     summary: Request Password Reset - Sends an email to the user
+ *     tags: [AAA]
+ *     description: Allows a user to request a password reset. Users can only request a reset once every 5 minutes.
  *     requestBody:
  *       required: true
  *       content:
@@ -15,7 +15,7 @@
  *               email:
  *                 type: string
  *                 required: true
- *                 example: user@example.com
+ *                 example: user@gmail.com
  *     responses:
  *       200:
  *         description: Password reset link sent.
@@ -85,7 +85,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: You can only request a password reset every 15 minutes.
+ *                   example: You can only request a password reset every 5 minutes.
  *       500:
  *         description: Error occurred.
  *         content:

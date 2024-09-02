@@ -3,7 +3,7 @@
  * /users/subscribe:
  *   post:
  *     summary: Subscribe or unsubscribe a user.
- *     tags: [User Subscription]
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
@@ -27,9 +27,6 @@
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
  *                 message:
  *                   type: string
  *                   example: "User subscribed successfully"
@@ -40,9 +37,6 @@
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
  *                 error:
  *                   type: string
  *                   example: "User ID is required"
@@ -53,9 +47,6 @@
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
  *                 error:
  *                   type: string
  *                   example: "User not found"
@@ -66,9 +57,6 @@
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
  *                 error:
  *                   type: string
  *                   example: "Failed to handle subscription"

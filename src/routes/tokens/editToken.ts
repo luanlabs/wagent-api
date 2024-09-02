@@ -30,8 +30,8 @@ const editTokenHandler: RequestHandler[] = [
     const token = await Token.findOneAndUpdate({ symbol: new RegExp(symbol, 'i') }, { logo });
 
     if (!token) {
-      return res.status(400).j({
-        message: 'Token not exists',
+      return res.status(404).j({
+        message: 'Token does not exist',
       });
     }
 

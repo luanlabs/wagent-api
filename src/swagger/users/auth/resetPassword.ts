@@ -1,9 +1,9 @@
 /**
  * @swagger
- * /users/auth/password:
- *   post:
- *     summary: Reset Password
- *     tags: [Users]
+ * /users/auth/reset:
+ *   put:
+ *     summary: Reset password with a new one using the received reset token from email
+ *     tags: [AAA]
  *     requestBody:
  *       required: true
  *       content:
@@ -18,7 +18,7 @@
  *               password:
  *                 type: string
  *                 required: true
- *                 example: "newPassword123"
+ *                 example: "Ab@1234567"
  *     responses:
  *       200:
  *         description: Password has been reset
@@ -43,9 +43,7 @@
  *                     message:
  *                       type: string
  *                       example: "Invalid or expired token"
- *                     code:
- *                       type: integer
- *                       example: 404
+ *
  *       500:
  *         description: Error occurred
  *         content:
@@ -59,7 +57,4 @@
  *                     message:
  *                       type: string
  *                       example: "Error occurred!"
- *                     code:
- *                       type: integer
- *                       example: 500
  */

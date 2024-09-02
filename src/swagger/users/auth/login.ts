@@ -3,7 +3,7 @@
  * /users/auth/login:
  *   post:
  *     summary: User login.
- *     tags: [Users]
+ *     tags: [AAA]
  *     requestBody:
  *       required: true
  *       content:
@@ -14,11 +14,11 @@
  *               email:
  *                 type: string
  *                 required: true
- *                 example: example@email.com
+ *                 example: example@gmail.com
  *               password:
  *                 type: string
  *                 required: true
- *                 example: 12345678
+ *                 example: Aa@12345678
  *
  *     responses:
  *       200:
@@ -36,39 +36,10 @@
  *                   properties:
  *                     token:
  *                       type: string
- *                       example: Bearer jqndwjsidbfwbeyribi...
- *                     name:
- *                       type: string
- *                       example: BigShop
- *                     logo:
- *                       type: string
- *                       example: https://example.com/logo.png
- *                     email:
- *                       type: string
- *                       example: example@email.com
- *                     apiKey:
- *                       type: string
- *                       example: api_key_12345
- *                     tokens:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           symbol:
- *                             type: string
- *                             example: usdt
- *                     methods:
- *                       type: number
- *                       example: 1
- *                     isSubscribed:
- *                       type: boolean
- *                       example: true
- *                     minimumCancellableStreamDuration:
- *                       type: number
- *                       example: 60
+ *                       example: jqndwjsidbfwbeyribikdfhkdfhdk
  *
  *       400:
- *         description: Validation failed due to invalid credentials.
+ *         description: Validation failed due to invalid fields.
  *         content:
  *           application/json:
  *             schema:
@@ -111,6 +82,23 @@
  *                     message:
  *                       type: string
  *                       example: User not found
+ *
+ *       401:
+ *         description: User is not verified
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Login failed
+ *                 error:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: User is not verified
  *
  *       500:
  *         description: Internal server error.

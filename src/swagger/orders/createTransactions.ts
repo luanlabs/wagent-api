@@ -1,9 +1,18 @@
 /**
  * @swagger
- * /orders/:
+ * /orders/{id}/transactions:
  *   post:
  *     summary: Show User’s Order & Payment Options.
  *     tags: [Orders]
+ *     parameters:
+ *       - name: id
+ *         in: params
+ *         description: Order ID
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: akfdbkghk4434re
+ *
  *     requestBody:
  *       required: true
  *       content:
@@ -11,18 +20,18 @@
  *           schema:
  *             type: object
  *             properties:
- *               apiKey:
+ *               hash:
  *                 type: string
- *                 required: true
- *                 example : ak238tnhcyu2rh7i2t6bc2nbeiy23cge76rb372cn77rcg2
- *               redirectUrl:
+ *                 example: 3rk4tkbnk4kj
+ *
+ *               payerEmail:
  *                 type: string
- *                 required: true
- *                 example : http://example.com
+ *                 required: false
+ *                 example: example@gmail.com
  *
  *     responses:
  *       200:
- *         description:  Payment retrieved successfully.
+ *         description: Transaction has been submitted
  *         content:
  *           application/json:
  *             schema:
@@ -31,7 +40,12 @@
  *                 result:
  *                     type: object
  *                     example: {
- *                         id: 5
+ *                             id: "49574974fkdhfjkdk",
+ *                             hash: "fhkfb49t5t4hrk",
+ *                             payerEmail: "example@gmail.com",
+ *                             submittedAt: 1725314912575,
+ *                             order: {},
+ *                             token: {}
  *                      }
  *
  *       500:
@@ -43,5 +57,5 @@
  *                 properties:
  *                   message:
  *                     type: string
- *                     example: Failed to get payment
+ *                     example: Failed
  */

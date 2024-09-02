@@ -15,6 +15,7 @@ const getUserDetailsHandler: RequestHandler[] = [
         logo: user.logo,
         email: user.email,
         apiKey: user.apiKey,
+        // todo
         tokens: user.tokens,
         isAdmin: user.isAdmin,
         methods: user.methods,

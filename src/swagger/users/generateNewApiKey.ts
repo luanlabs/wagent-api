@@ -1,18 +1,11 @@
 /**
  * @swagger
- * /users/{id}/apiKey:
+ * /users/api-key:
  *   post:
- *     summary: Generate new apiKey.
+ *     summary: Generate new API key.
  *     tags: [Users]
  *     parameters:
- *       - name: id
- *         in: path
- *         description: User ID
- *         required: true
- *         schema:
- *           type: string
- *           format: string
- *       - name: Authorization
+ *       - name: authorization
  *         in: header
  *         description: JWT Token
  *         required: true
@@ -22,7 +15,7 @@
  *
  *     responses:
  *       200:
- *         description: Generate new apiKey successful.
+ *         description: User apikey has been changed
  *         content:
  *           application/json:
  *             schema:
@@ -32,19 +25,8 @@
  *                     type: object
  *                     example: "93b25766c93c1be23e6a065556f39af391b138e334a4eccb5c5a8f30bd36392e"
  *
- *       400:
- *         description: Invalid credentials.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Invalid credentials
- *
  *       404:
- *         description: User not exist.
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -52,7 +34,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User not exist
+ *                   example: User not found
  *
  *       500:
  *         description: Internal server error
@@ -63,5 +45,5 @@
  *                 properties:
  *                   message:
  *                     type: string
- *                     example: Failed to login user
+ *                     example: Something happened
  */

@@ -9,6 +9,7 @@ const getUserTransactionsHandler: RequestHandler[] = [
   async (req, res) => {
     const user = req.user as IUser;
 
+    // todo:
     const transactions = await Transaction.find({ 'order.user._id': user._id });
 
     return res.j({

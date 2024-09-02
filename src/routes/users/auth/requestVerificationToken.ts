@@ -19,7 +19,7 @@ const requestVerificationTokenHandler: RequestHandler[] = [
     const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } });
 
     if (!user) {
-      return res.status(401).j({
+      return res.status(404).j({
         message: 'Request verification token failed',
         error: {
           message: 'User not found',

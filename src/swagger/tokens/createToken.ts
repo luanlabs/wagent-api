@@ -1,9 +1,19 @@
 /**
  * @swagger
- * /tokens/:
+ * /tokens:
  *   post:
- *     summary: Adding a new token.
+ *     summary: Creates a new token
  *     tags: [Tokens]
+ *     parameters:
+ *       - name: authorization
+ *         in: header
+ *         description: JWT Token
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer JWT_ID
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -14,15 +24,19 @@
  *               symbol:
  *                 type: string
  *                 required: true
- *                 example : GBUQL63MMQZL37NBVRHFG3L24PYMK6TYC6I44BR5KK52J5JZTKJA2KRJ
+ *                 example: USDT
  *               logo:
  *                 type: string
  *                 required: true
- *                 example : https://logo.jpg
+ *                 example: https://bing.com/logo.jpg
+ *               address:
+ *                 type: string
+ *                 required: true
+ *                 example: GAUQAPCGTQB7EJUZBSQ43YXDH4IXA3JIABNB43YPEEE564I3UQNHIAAP
  *
  *     responses:
  *       201:
- *         description:  The token was saved successfully.
+ *         description: Token has been created
  *         content:
  *           application/json:
  *             schema:
@@ -34,9 +48,7 @@
  *                       _id: "66a73cb095779d04d42b0949",
  *                       address: "GBUQL63MMQZL37NBVRHFG3L24PYMK6TYC6I44BR5KK52J5JZTKJA2KRJ",
  *                       symbol: "usdt",
- *                       logo: "https://logo.jpg",
- *                       isActive: true,
- *                       __v: 0
+ *                       logo: "https://bing.com/logo.jpg",
  *                   }
  *
  *       400:

@@ -32,7 +32,7 @@ const requestResetPasswordHandler: RequestHandler[] = [
     }
 
     if (!canRequestToken(user.resetPasswordTokenExpiration)) {
-      return res.status(401).j({
+      return res.status(429).j({
         message: 'You can only request a password reset every 5 minutes.',
       });
     }

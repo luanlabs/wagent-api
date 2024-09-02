@@ -2,8 +2,8 @@
  * @swagger
  * /users/auth:
  *   post:
- *     summary: Register New User.
- *     tags: [Users]
+ *     summary: Register a new user
+ *     tags: [AAA]
  *     requestBody:
  *       required: true
  *       content:
@@ -14,16 +14,17 @@
  *               email:
  *                 type: string
  *                 required: true
- *                 example: example@email.com
+ *                 example: example@gmail.com
  *               name:
  *                 type: string
  *                 required: true
  *                 description: The name of the user or store.
- *                 example: BigShop
+ *                 example: MyShop
  *               password:
  *                 type: string
  *                 required: true
- *                 example: 12345678
+ *                 example: Aa@123455678
+ *                 description: A password combination of letters numbers and symbols
  *
  *     responses:
  *       201:
@@ -37,8 +38,26 @@
  *                   type: string
  *                   example: Verification email was sent
  *
+ *       401:
+ *         description: Registration failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Registration failed
+ *                 error:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: User already exists
+ *
+ *
  *       400:
- *         description: Validation failed or user already exists.
+ *         description: Registration failed because of validation
  *         content:
  *           application/json:
  *             schema:
@@ -52,7 +71,7 @@
  *                   properties:
  *                     message:
  *                       type: string
- *                       example: User already exists
+ *                       example: Something is missing
  *                     extras:
  *                       type: array
  *                       items:
@@ -74,5 +93,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Failed to save new user
+ *                   example: Failed to login user
  */
