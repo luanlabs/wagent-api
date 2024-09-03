@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { RequestHandler } from 'express';
 
+import Token from '../../models/Token';
+import UserToken from '../../models/UserToken';
 import User, { IUser } from '../../models/User';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
-import UserToken from '../../models/UserToken';
-import Token from '../../models/Token';
 
 const editUserHandler: RequestHandler[] = [
   authorizationMiddleware,
@@ -24,7 +24,6 @@ const editUserHandler: RequestHandler[] = [
       req.body;
 
     const reqUser = req.user as IUser;
-
     const user = await User.findById(reqUser._id);
 
     if (!user) {
@@ -54,22 +53,22 @@ const editUserHandler: RequestHandler[] = [
     }
 
     if (tokens) {
-      const userTokens = await UserToken.find({ user: user._id });
+      await UserToken.deleteMany({ user: user._id });
 
-      for (const token of tokens) {
-        const isAlreadySelected = userTokens.find((x) => x.token === token);
-        const tokenExists = await Token.findById(token);
+      const usertokens = [];
+
+      for (const tokenId of tokens) {
+        const tokenExists = await Token.findById(tokenId);
 
         if (tokenExists) {
-          const userToken = await UserToken.find({ user: user._id, token });
-
-          if (!userToken) {
-            const newUserToken = new UserToken({ user: user._id, token });
-
-            await newUserToken.save();
-          }
+          usertokens.push({
+            user: user._id,
+            token: tokenId,
+          });
         }
       }
+
+      await UserToken.insertMany(usertokens);
     }
 
     return res.status(200).j({
