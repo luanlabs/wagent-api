@@ -7,9 +7,9 @@ import Token from '../../models/Token';
 import Order from '../../models/Order';
 import Transaction from '../../models/Transaction';
 import { emailValidation } from '../../utils/zodValidators';
-import { sendPayerCompleteOrderEmail } from '../../utils/emailService';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import getTransactionDetails from '../../utils/contract/getTransactionDetails';
+import { sendPayerCompleteOrderEmail, sendUserCompleteOrderEmail } from '../../utils/emailService';
 
 const createTransactionHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -70,7 +70,6 @@ const createTransactionHandler: RequestHandler[] = [
 
     const tx = new Transaction({
       hash,
-      // todo: change method to number
       method,
       payerEmail,
       submittedAt,
@@ -89,7 +88,7 @@ const createTransactionHandler: RequestHandler[] = [
 
     if (user?.isSubscribed) {
       // todo: send full details
-      // sendUserCompleteOrderEmail(user.email, user.name, order.amount?.toString());
+      sendUserCompleteOrderEmail(user.email, user.name, order.amount?.toString());
     }
 
     return res.status(200).j({

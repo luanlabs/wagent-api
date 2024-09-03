@@ -4,6 +4,8 @@ import { RequestHandler } from 'express';
 import User, { IUser } from '../../models/User';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
+import UserToken from '../../models/UserToken';
+import Token from '../../models/Token';
 
 const editUserHandler: RequestHandler[] = [
   authorizationMiddleware,
@@ -52,10 +54,22 @@ const editUserHandler: RequestHandler[] = [
     }
 
     if (tokens) {
-      // for (const token of tokens) {
-      // todo
-      // addTokenToUser(token);
-      // }
+      const userTokens = await UserToken.find({ user: user._id });
+
+      for (const token of tokens) {
+        const isAlreadySelected = userTokens.find((x) => x.token === token);
+        const tokenExists = await Token.findById(token);
+
+        if (tokenExists) {
+          const userToken = await UserToken.find({ user: user._id, token });
+
+          if (!userToken) {
+            const newUserToken = new UserToken({ user: user._id, token });
+
+            await newUserToken.save();
+          }
+        }
+      }
     }
 
     return res.status(200).j({
