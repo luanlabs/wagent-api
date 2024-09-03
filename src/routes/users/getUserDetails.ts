@@ -2,11 +2,14 @@ import { RequestHandler } from 'express';
 
 import { IUser } from '../../models/User';
 import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
+import getUserTokens from '../../utils/getUserTokens';
 
 const getUserDetailsHandler: RequestHandler[] = [
   authorizationMiddleware,
-  (req, res) => {
+  async (req, res) => {
     const user = req.user as IUser;
+
+    const tokens = await getUserTokens(user.id);
 
     return res.j({
       message: 'User details',
@@ -16,7 +19,7 @@ const getUserDetailsHandler: RequestHandler[] = [
         email: user.email,
         apiKey: user.apiKey,
         // todo
-        tokens: user.tokens,
+        tokens: tokens,
         isAdmin: user.isAdmin,
         methods: user.methods,
         isVerified: user.isVerified,

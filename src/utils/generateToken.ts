@@ -1,5 +1,5 @@
 import randomString from './randomString';
-import { ONE_HOUR } from '../constants/dates';
+import { ONE_HOUR } from '../constants/Dates';
 
 const generateToken = () => {
   return {
