@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import { IToken } from './Token';
 
 export interface IProduct {
   name: string;
@@ -14,7 +13,6 @@ interface IOrder {
   products?: IProduct[];
   user: Schema.Types.ObjectId;
   status: 'pending' | 'completed' | 'expired';
-  tokens?: IToken[];
 }
 
 const Order = new Schema<IOrder>(

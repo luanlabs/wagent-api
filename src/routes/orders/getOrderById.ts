@@ -26,7 +26,7 @@ const getOrderByIdHandler: RequestHandler[] = [
       .populate([
         {
           path: 'user',
-          select: 'name logo',
+          select: 'name logo methods',
         },
       ])
       .select('-__v')
@@ -38,13 +38,14 @@ const getOrderByIdHandler: RequestHandler[] = [
       });
     }
 
-    const orderObject = order.toObject();
-
-    orderObject.tokens = await getUserTokens(order.user);
+    const response = {
+      ...order.toObject(),
+      token: await getUserTokens(order.user),
+    };
 
     return res.status(200).j({
       message: 'Order',
-      result: orderObject,
+      result: response,
     });
   },
 ];

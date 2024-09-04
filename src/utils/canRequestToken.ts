@@ -1,4 +1,4 @@
-import { FIVE_MINUTES, ONE_DAY } from '../constants/Dates';
+import { FIVE_MINUTES, ONE_DAY } from '../constants/dates';
 
 const canRequestToken = (tokenExpirationTimestamp?: number): boolean => {
   if (!tokenExpirationTimestamp) {
