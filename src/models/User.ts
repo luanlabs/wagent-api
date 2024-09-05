@@ -15,7 +15,6 @@ export interface IUser extends Document {
   password: string;
   isAdmin?: boolean;
   isVerified: boolean;
-  tokens: IToken[];
   isSubscribed: boolean;
   methods: MethodsNumerical;
   verificationToken: string;
@@ -47,7 +46,6 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
-    tokens: [{ symbol: { type: String, required: true } }],
     isSubscribed: { type: Boolean, required: true },
     methods: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7], default: 1 },
     logo: String,

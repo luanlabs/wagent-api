@@ -4,6 +4,7 @@ import { RequestHandler } from 'express';
 
 import Order from '../../models/Order';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
+import getUserTokens from '../../utils/getUserTokens';
 
 const getOrderByIdHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -25,7 +26,7 @@ const getOrderByIdHandler: RequestHandler[] = [
       .populate([
         {
           path: 'user',
-          select: 'name logo',
+          select: 'name logo methods',
         },
       ])
       .select('-__v')
@@ -37,9 +38,14 @@ const getOrderByIdHandler: RequestHandler[] = [
       });
     }
 
+    const response = {
+      ...order.toObject(),
+      token: await getUserTokens(order.user),
+    };
+
     return res.status(200).j({
       message: 'Order',
-      result: order,
+      result: response,
     });
   },
 ];
