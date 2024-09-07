@@ -36,7 +36,7 @@ const createTransactionHandler: RequestHandler[] = [
     const { hash, payerEmail } = req.body;
 
     // todo: how to check if THIS order is paid?
-    const { status, method, submittedAt, tokenAddress } = getTransactionDetails(hash);
+    const { status, method, submittedAt, tokenAddress, payerAddress } = getTransactionDetails(hash);
 
     const order = await Order.findById(id);
 
@@ -71,24 +71,45 @@ const createTransactionHandler: RequestHandler[] = [
     const tx = new Transaction({
       hash,
       method,
-      payerEmail,
+      payerAddress,
       submittedAt,
       order: order._id,
       token: token._id,
     });
 
+    const user = await User.findOne({ _id: order.user });
+
+    if (!user) {
+      return res.status(400).j({
+        message: 'User not exist',
+      });
+    }
+
     await tx.save();
 
     if (payerEmail) {
-      // todo: send full details
-      sendPayerCompleteOrderEmail(payerEmail, order._id.toString());
+      sendPayerCompleteOrderEmail(
+        payerEmail,
+        order._id.toString(),
+        order.amount,
+        token.symbol,
+        method,
+        user.name,
+        new Date(submittedAt).toUTCString(),
+      );
     }
 
-    const user = await User.findOne({ _id: order._id });
-
-    if (user?.isSubscribed) {
-      // todo: send full details
-      sendUserCompleteOrderEmail(user.email, user.name, order.amount?.toString());
+    if (user.isSubscribed) {
+      sendUserCompleteOrderEmail(
+        user.email,
+        order._id.toString(),
+        payerAddress,
+        order.amount,
+        token.symbol,
+        method,
+        user.name,
+        new Date(submittedAt).toUTCString(),
+      );
     }
 
     return res.status(200).j({

@@ -9,6 +9,7 @@ import routes from './routes';
 import log from './config/logger';
 import envs from './config/envs';
 import customResponseHandler from './middlewares/customResponseHandler';
+import { sendRegistrationEmail } from './utils/emailService';
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(customResponseHandler);
 app.use(routes);
+
+// sendRegistrationEmail('mahdi32135@gmail.com', 'Mahdishop');
 
 app.listen(PORT, () => {
   log.info(`APP: Started on :${PORT}`);

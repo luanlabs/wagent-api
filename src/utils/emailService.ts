@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-transporter.verify((err, _) => {
+transporter.verify((err) => {
   if (err) {
     logger.error('EMAIL: Failed to verify connection');
   } else {
@@ -74,14 +74,39 @@ export const sendResetPasswordSuccess = (email: string) => {
   sendEmail(email, EmailTitles.ResetPasswordSuccess, html);
 };
 
-export const sendPayerCompleteOrderEmail = (email: string, orderId: string) => {
-  const html = sendPayerCompleteOrderTemplate(orderId);
+export const sendPayerCompleteOrderEmail = (
+  email: string,
+  orderId: string,
+  amount: string,
+  token: string,
+  method: string,
+  name: string,
+  submittedAt: string,
+) => {
+  const html = sendPayerCompleteOrderTemplate(orderId, amount, token, method, name, submittedAt);
 
   sendEmail(email, EmailTitles.CompleteOrder, html);
 };
 
-export const sendUserCompleteOrderEmail = (email: string, name: string, amount: string) => {
-  const html = sendUserCompleteOrderTemplate(name, amount);
+export const sendUserCompleteOrderEmail = (
+  email: string,
+  orderId: string,
+  payer: string,
+  amount: string,
+  token: string,
+  method: string,
+  name: string,
+  submittedAt: string,
+) => {
+  const html = sendUserCompleteOrderTemplate(
+    orderId,
+    payer,
+    amount,
+    token,
+    method,
+    name,
+    submittedAt,
+  );
 
   sendEmail(email, EmailTitles.CompleteOrder, html);
 };

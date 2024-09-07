@@ -1,7 +1,7 @@
 const getTransactionDetails = (hash: string) => {
   const method = 'single';
   const status = 'completed';
-  const submittedAt = 12345678;
+  const submittedAt = 1725405139234;
   const tokenAddress = 'CX....';
   const payerAddress = 'Gx....';
 
