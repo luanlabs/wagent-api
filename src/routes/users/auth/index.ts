@@ -15,7 +15,7 @@ router.post('/login', loginHandler);
 
 router.put('/reset', resetPasswordHandler);
 router.post('/reset', requestResetPasswordHandler);
-router.get('/reset/:token', validateResetPasswordHandler);
+router.get('forget-password/reset/:token', validateResetPasswordHandler);
 
 router.put('/verify', verifyHandler);
 router.post('/verify', requestVerificationTokenHandler);
