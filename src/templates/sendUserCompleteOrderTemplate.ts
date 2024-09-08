@@ -1,4 +1,4 @@
-import { SocialMediaLinks } from '../constants/emailTitles';
+import { SocialMediaLinks, unsubscribeLink } from '../constants/emailValues';
 
 const complatedOrderSuccessUserTemplate = (
   orderId: string,
@@ -37,7 +37,7 @@ const complatedOrderSuccessUserTemplate = (
   
       </div>
       <div style="text-align: left; color: #999999; font-size: 12px;">
-          <p>If these emails get annoying, please feel free to <a href="https://wagent.app/subscribe" style="color: #003C31; text-decoration: none;">unsubscribe</a>.
+          <p>If these emails get annoying, please feel free to <a href="${unsubscribeLink}" style="color: #003C31; text-decoration: none;">unsubscribe</a>.
           </p>
           <div style="margin-top: 56px">
               <a href="${SocialMediaLinks.X}" style="margin-right: 10px;width: 17px;height: 17px;">

@@ -1,4 +1,4 @@
-import { SocialMediaLinks } from '../constants/emailTitles';
+import { SocialMediaLinks } from '../constants/emailValues';
 
 const complatedOrderSuccessTemplate = (
   orderId: string,

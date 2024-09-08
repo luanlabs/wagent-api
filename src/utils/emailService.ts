@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 import envs from '../config/envs';
 import logger from '../config/logger';
-import { EmailTitles } from '../constants/emailTitles';
+import { EmailTitles } from '../constants/emailValues';
 import verifyEmailTemplate from '../templates/verifyEmailTemplate';
 import registrationTemplate from '../templates/registrationTemplate';
 import resetPasswordTemplate from '../templates/resetPasswordTemplate';
@@ -48,28 +48,28 @@ const sendEmail = (to: string, subject: string, htmlContent: string) => {
   });
 };
 
-export const sendRegistrationEmail = (email: string) => {
-  const html = registrationTemplate(email);
+export const sendRegistrationEmail = (email: string, name: string) => {
+  const html = registrationTemplate(name);
 
   sendEmail(email, EmailTitles.Registration, html);
 };
 
-export const sendVerificationEmail = (email: string, token: string) => {
+export const sendVerificationEmail = (email: string, token: string, name: string) => {
   const verifyUrl = `${FRONTEND_URL}/verify/${token}`;
-  const html = verifyEmailTemplate(verifyUrl);
+  const html = verifyEmailTemplate(name, verifyUrl);
 
   sendEmail(email, EmailTitles.Verification, html);
 };
 
-export const sendResetPasswordEmail = (email: string, token: string) => {
+export const sendResetPasswordEmail = (email: string, token: string, name: string) => {
   const resetUrl = `${FRONTEND_URL}/password/reset/${token}`;
-  const html = resetPasswordTemplate(resetUrl);
+  const html = resetPasswordTemplate(name, resetUrl);
 
   sendEmail(email, EmailTitles.ResetPassword, html);
 };
 
-export const sendResetPasswordSuccess = (email: string) => {
-  const html = resetPasswordSuccessTemplate(email);
+export const sendResetPasswordSuccess = (email: string, name: string) => {
+  const html = resetPasswordSuccessTemplate(name);
 
   sendEmail(email, EmailTitles.ResetPasswordSuccess, html);
 };

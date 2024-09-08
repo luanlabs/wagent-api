@@ -53,8 +53,8 @@ const registerHandler: RequestHandler[] = [
     // todo: ADD tokens to the newly created user
     // todo: Add basic settings if needed
 
-    sendRegistrationEmail(email);
-    sendVerificationEmail(email, token);
+    sendRegistrationEmail(email, name);
+    sendVerificationEmail(email, token, name);
 
     return res.status(201).j({
       message: 'Verification email was sent',
