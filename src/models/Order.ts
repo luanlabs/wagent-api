@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 export interface IProduct {
   name: string;
-  logo: string;
+  logo?: string;
   count: number;
   amount: number;
 }
@@ -23,7 +23,7 @@ const Order = new Schema<IOrder>(
       {
         type: {
           name: { type: String, required: true },
-          logo: { type: String, required: true },
+          logo: { type: String, required: false },
           count: { type: Number, required: true },
           amount: { type: String, required: true },
         },
