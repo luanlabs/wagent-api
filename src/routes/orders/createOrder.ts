@@ -9,6 +9,7 @@ import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import calculateProductsAmount from '../../utils/calculateProductsAmount';
 import getUserTokens from '../../utils/getUserTokens';
 import mongoose from 'mongoose';
+import { FIFTEEN_MINUTES } from '../../constants/dates';
 
 const createOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -71,6 +72,7 @@ const createOrderHandler: RequestHandler[] = [
       user: user._id,
       status: 'pending',
       amount: totalAmount,
+      expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
     });
 
     await order.save();
