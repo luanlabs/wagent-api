@@ -62,12 +62,6 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    if (status === 'completed') {
-      order.status = 'completed';
-
-      await order.save();
-    }
-
     const tx = new Transaction({
       hash,
       method,
@@ -78,6 +72,12 @@ const createTransactionHandler: RequestHandler[] = [
     });
 
     await tx.save();
+
+    if (status === 'completed') {
+      order.status = 'completed';
+
+      await order.save();
+    }
 
     if (payerEmail) {
       // todo: send full details
