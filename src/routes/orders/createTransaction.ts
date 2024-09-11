@@ -71,6 +71,7 @@ const createTransactionHandler: RequestHandler[] = [
     const tx = new Transaction({
       hash,
       method,
+      payerEmail,
       payerAddress,
       submittedAt,
       order: order._id,

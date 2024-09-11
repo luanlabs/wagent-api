@@ -10,7 +10,7 @@ export enum EmailTitles {
 
 export enum SocialMediaLinks {
   X = 'https://x.com/wagent',
-  Github = 'https://github.com/luanlabs/wagent-interface',
+  Github = 'https://github.com/luanlabs',
   Discord = 'https://discord.com/invite/wagent',
 }
 

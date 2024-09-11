@@ -1,4 +1,4 @@
-import { SocialMediaLinks } from '../constants/emailValues';
+import { SocialMediaLinks } from '../constants/email';
 
 const resetPasswordSuccessTemplate = (name: string): string => {
   return `

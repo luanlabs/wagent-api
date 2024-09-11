@@ -1,4 +1,4 @@
-import { SocialMediaLinks, unsubscribeLink } from '../constants/emailValues';
+import { SocialMediaLinks, unsubscribeLink } from '../constants/email';
 
 const registrationTemplate = (name: string): string => {
   return `

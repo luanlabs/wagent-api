@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 import envs from '../config/envs';
 import logger from '../config/logger';
-import { EmailTitles } from '../constants/emailValues';
+import { EmailTitles } from '../constants/email';
 import verifyEmailTemplate from '../templates/verifyEmailTemplate';
 import registrationTemplate from '../templates/registrationTemplate';
 import resetPasswordTemplate from '../templates/resetPasswordTemplate';
