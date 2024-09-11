@@ -32,7 +32,7 @@ const registerHandler: RequestHandler[] = [
 
     const apiKey = randomString();
     const { token, expiration } = generateToken();
-    const { token: subscribeToken } = generateToken();
+    const subscribeToken = randomString();
 
     const newUser = new User({
       name,

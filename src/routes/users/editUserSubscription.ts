@@ -3,7 +3,6 @@ import { RequestHandler } from 'express';
 
 import User from '../../models/User';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
-import generateToken from '../../utils/generateToken';
 
 const userSubscriptionHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -23,10 +22,7 @@ const userSubscriptionHandler: RequestHandler[] = [
       });
     }
 
-    const { token: subscribeToken } = generateToken();
-
     user.isSubscribed = isSubscribed;
-    user.subscribeToken = subscribeToken;
 
     await user.save();
 
