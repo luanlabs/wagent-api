@@ -9,11 +9,11 @@ export interface IToken {
 
 export interface IUser extends Document {
   name: string;
-  logo: string;
+  logo?: string;
   email: string;
   apiKey: string;
   password: string;
-  isAdmin?: boolean;
+  isAdmin: boolean;
   isVerified: boolean;
   isSubscribed: boolean;
   methods: MethodsNumerical;
@@ -21,6 +21,7 @@ export interface IUser extends Document {
   verificationTokenExpiration: number;
   resetPasswordToken?: string;
   resetPasswordTokenExpiration?: number;
+  subscribeToken: string;
   minimumCancellableStreamDuration: number;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
   notificationTokens: string[];
@@ -28,34 +29,21 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    apiKey: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    isSubscribed: { type: Boolean, required: true },
+    name: { type: String, required: true },
+    logo: { type: String, required: false },
+    email: { type: String, required: true, unique: true },
+    apiKey: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    isAdmin: { type: Boolean, required: false, default: false },
+    isVerified: { type: Boolean, required: true, default: false },
+    isSubscribed: { type: Boolean, required: true, default: true },
     methods: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7], default: 1 },
-    logo: String,
-    isAdmin: Boolean,
-    isVerified: Boolean,
-    verificationToken: String,
-    verificationTokenExpiration: Number,
-    resetPasswordToken: String,
-    resetPasswordTokenExpiration: Number,
-    minimumCancellableStreamDuration: Number,
+    verificationToken: { type: String, required: true },
+    verificationTokenExpiration: { type: Number, required: true },
+    resetPasswordToken: { type: String, required: false },
+    resetPasswordTokenExpiration: { type: Number, required: false },
+    subscribeToken: { type: String, required: true },
+    minimumCancellableStreamDuration: { type: Number, required: true },
   },
   { timestamps: true },
 );

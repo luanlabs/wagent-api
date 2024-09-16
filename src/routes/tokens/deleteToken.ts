@@ -5,6 +5,7 @@ import Token from '../../models/Token';
 import adminMiddleware from '../../middlewares/adminMiddleware';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
+import UserToken from '../../models/UserToken';
 
 const deleteTokenHandler: RequestHandler[] = [
   authorizationMiddleware,
@@ -29,6 +30,8 @@ const deleteTokenHandler: RequestHandler[] = [
         message: 'Token does not exist',
       });
     }
+
+    await UserToken.deleteMany({ token: modifyToken._id });
 
     return res.status(200).j({
       message: 'Token deleted successfully.',

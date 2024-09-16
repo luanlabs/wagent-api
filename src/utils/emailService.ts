@@ -62,7 +62,7 @@ export const sendVerificationEmail = (email: string, token: string) => {
 };
 
 export const sendResetPasswordEmail = (email: string, token: string) => {
-  const resetUrl = `${FRONTEND_URL}/password/reset/${token}`;
+  const resetUrl = `${FRONTEND_URL}/forget-password/reset/${token}`;
   const html = resetPasswordTemplate(resetUrl);
 
   sendEmail(email, EmailTitles.ResetPassword, html);

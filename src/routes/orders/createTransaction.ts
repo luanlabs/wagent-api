@@ -63,18 +63,6 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    if (status === 'completed') {
-      order.status = 'completed';
-
-      await order.save();
-
-      const shopOwner = await User.findById(order.user);
-
-      if (shopOwner && shopOwner.notificationTokens.length > 0) {
-        await sendNotification(shopOwner.notificationTokens, order.amount);
-      }
-    }
-
     const tx = new Transaction({
       hash,
       method,
@@ -85,6 +73,18 @@ const createTransactionHandler: RequestHandler[] = [
     });
 
     await tx.save();
+
+    if (status === 'completed') {
+      order.status = 'completed';
+
+      await order.save();
+      
+      const shopOwner = await User.findById(order.user);
+
+      if (shopOwner && shopOwner.notificationTokens.length > 0) {
+        await sendNotification(shopOwner.notificationTokens, order.amount);
+      }
+    }
 
     if (payerEmail) {
       // todo: send full details

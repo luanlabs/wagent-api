@@ -8,13 +8,13 @@ const userSubscriptionHandler: RequestHandler[] = [
   validatorMiddleware({
     body: z.object({
       isSubscribed: z.boolean(),
-      userId: z.string().min(5),
+      token: z.string().min(5),
     }),
   }),
   async (req, res) => {
-    const { userId, isSubscribed } = req.body;
+    const { token, isSubscribed } = req.body;
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({ subscribeToken: token });
 
     if (!user) {
       return res.status(404).j({
