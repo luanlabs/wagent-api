@@ -11,10 +11,10 @@
  *           schema:
  *             type: object
  *             properties:
- *               userId:
+ *               token:
  *                 type: string
- *                 description: The ID of the user to modify the subscription status.
- *                 example: "60d21bb67c0d8c6f6c3f4d8c"
+ *                 description: The token of the user to modify the subscription status.
+ *                 example: "5135564e0d0f32ad99a89040cf6569b95994e6c9c9a19dc90121d15f4ac6bdb5"
  *               subscribe:
  *                 type: boolean
  *                 description: Pass `true` to subscribe or `false` to unsubscribe the user.
@@ -31,7 +31,7 @@
  *                   type: string
  *                   example: "User subscribed successfully"
  *       400:
- *         description: Bad request due to missing or invalid user ID.
+ *         description: Bad request due to missing or invalid user token.
  *         content:
  *           application/json:
  *             schema:
@@ -39,7 +39,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "User ID is required"
+ *                   example: "User token is required"
  *       404:
  *         description: User not found.
  *         content:

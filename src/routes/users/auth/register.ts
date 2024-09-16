@@ -32,18 +32,19 @@ const registerHandler: RequestHandler[] = [
 
     const apiKey = randomString();
     const { token, expiration } = generateToken();
+    const subscribeToken = randomString();
 
     const newUser = new User({
       name,
       email,
       apiKey,
       password,
+      subscribeToken,
       verificationToken: token,
       verificationTokenExpiration: expiration,
       isAdmin: false,
       isVerified: false,
       isSubscribed: true,
-      tokens: [],
       methods: 1,
       minimumCancellableStreamDuration: 0,
     });
