@@ -7,6 +7,9 @@ import { float, uint } from '../../utils/zodValidators';
 import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import calculateProductsAmount from '../../utils/calculateProductsAmount';
+import getUserTokens from '../../utils/getUserTokens';
+import mongoose from 'mongoose';
+import { FIFTEEN_MINUTES } from '../../constants/dates';
 
 const createOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -53,6 +56,14 @@ const createOrderHandler: RequestHandler[] = [
 
     const user = req.user as IUser;
 
+    const tokens = await getUserTokens(user._id as mongoose.Schema.Types.ObjectId);
+
+    if (!tokens.length) {
+      return res.status(400).j({
+        message: 'No token has been added for the user',
+      });
+    }
+
     const totalAmount: number = amount || calculateProductsAmount(products);
 
     const order = new Order({
@@ -61,6 +72,7 @@ const createOrderHandler: RequestHandler[] = [
       user: user._id,
       status: 'pending',
       amount: totalAmount,
+      expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
     });
 
     await order.save();

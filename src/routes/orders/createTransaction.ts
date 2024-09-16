@@ -10,6 +10,7 @@ import { emailValidation } from '../../utils/zodValidators';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import getTransactionDetails from '../../utils/contract/getTransactionDetails';
 import { sendPayerCompleteOrderEmail, sendUserCompleteOrderEmail } from '../../utils/emailService';
+import sendNotification from '../../utils/sendNotification';
 
 const createTransactionHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -62,12 +63,6 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    if (status === 'completed') {
-      order.status = 'completed';
-
-      await order.save();
-    }
-
     const tx = new Transaction({
       hash,
       method,
@@ -87,6 +82,18 @@ const createTransactionHandler: RequestHandler[] = [
     }
 
     await tx.save();
+
+    if (status === 'completed') {
+      order.status = 'completed';
+
+      await order.save();
+      
+      const shopOwner = await User.findById(order.user);
+
+      if (shopOwner && shopOwner.notificationTokens.length > 0) {
+        await sendNotification(shopOwner.notificationTokens, order.amount);
+      }
+    }
 
     if (payerEmail) {
       sendPayerCompleteOrderEmail(

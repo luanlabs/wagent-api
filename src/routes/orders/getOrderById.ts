@@ -38,6 +38,12 @@ const getOrderByIdHandler: RequestHandler[] = [
       });
     }
 
+    if (order.expiredTimestamp < Date.now()) {
+      order.status = 'expired';
+
+      await order.save();
+    }
+
     const response = {
       ...order.toObject(),
       token: await getUserTokens(order.user),

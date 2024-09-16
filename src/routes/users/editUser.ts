@@ -71,6 +71,8 @@ const editUserHandler: RequestHandler[] = [
       await UserToken.insertMany(usertokens);
     }
 
+    await user.save();
+
     return res.status(200).j({
       message: 'User settings updated successfully',
     });
