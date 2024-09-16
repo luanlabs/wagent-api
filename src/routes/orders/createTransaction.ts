@@ -69,8 +69,9 @@ const createTransactionHandler: RequestHandler[] = [
       await order.save();
 
       const shopOwner = await User.findById(order.user);
+
       if (shopOwner && shopOwner.notificationTokens.length > 0) {
-        await sendNotification(shopOwner.notificationTokens);
+        await sendNotification(shopOwner.notificationTokens, order.amount);
       }
     }
 

@@ -1,11 +1,11 @@
 import logger from '../config/logger';
 import admin from '../config/firebase';
 
-const sendNotification = async (tokens: string[]) => {
+const sendNotification = async (tokens: string[], amount: string) => {
   const responses = [];
 
   for (const token of tokens) {
-    const message = { token };
+    const message = { token, body: `An order was submitted to your account with $${amount} price` };
 
     try {
       const response = await admin.messaging().send(message);
