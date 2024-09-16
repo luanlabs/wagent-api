@@ -46,6 +46,7 @@ const registerHandler: RequestHandler[] = [
       isVerified: false,
       isSubscribed: true,
       methods: 1,
+      notificationTokens: [],
       minimumCancellableStreamDuration: 0,
     });
 
