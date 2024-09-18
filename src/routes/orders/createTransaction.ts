@@ -37,7 +37,8 @@ const createTransactionHandler: RequestHandler[] = [
     const { hash, payerEmail } = req.body;
 
     // todo: how to check if THIS order is paid?
-    const { status, method, submittedAt, tokenAddress } = await getTransactionDetails(hash);
+    const { status, method, submittedAt, tokenAddress, payerAddress } =
+      await getTransactionDetails(hash);
 
     const order = await Order.findById(id);
 
@@ -68,6 +69,7 @@ const createTransactionHandler: RequestHandler[] = [
       method,
       payerEmail,
       submittedAt,
+      payerAddress,
       order: order._id,
       token: token._id,
     });
