@@ -64,17 +64,19 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    const tx = new Transaction({
-      hash,
-      method,
-      payerEmail,
-      submittedAt,
-      payerAddress,
-      order: order._id,
-      token: token._id,
-    });
+    let tx;
 
     try {
+      tx = new Transaction({
+        hash,
+        method,
+        payerEmail,
+        submittedAt,
+        payerAddress,
+        order: order._id,
+        token: token._id,
+      });
+
       await tx.save();
     } catch (e) {
       return res.status(502).j({
