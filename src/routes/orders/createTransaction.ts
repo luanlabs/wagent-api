@@ -37,7 +37,7 @@ const createTransactionHandler: RequestHandler[] = [
     const { hash, payerEmail } = req.body;
 
     // todo: how to check if THIS order is paid?
-    const { status, method, submittedAt, tokenAddress } = getTransactionDetails(hash);
+    const { status, method, submittedAt, tokenAddress } = await getTransactionDetails(hash);
 
     const order = await Order.findById(id);
 
@@ -47,7 +47,7 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    const token = await Token.findOne({ address: tokenAddress });
+    const token = await Token.findOne({ address: { $regex: new RegExp(tokenAddress, 'i') } });
 
     if (!token) {
       return res.status(404).j({
@@ -78,7 +78,7 @@ const createTransactionHandler: RequestHandler[] = [
       order.status = 'completed';
 
       await order.save();
-      
+
       const shopOwner = await User.findById(order.user);
 
       if (shopOwner && shopOwner.notificationTokens.length > 0) {
