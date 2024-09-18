@@ -74,7 +74,16 @@ const createTransactionHandler: RequestHandler[] = [
       token: token._id,
     });
 
-    await tx.save();
+    try {
+      await tx.save();
+    } catch (e) {
+      return res.status(502).j({
+        message: 'Something went wrong!',
+        error: {
+          message: e.message,
+        },
+      });
+    }
 
     if (status === 'completed') {
       order.status = 'completed';
