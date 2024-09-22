@@ -10,7 +10,7 @@ export interface IProduct {
 interface IOrder {
   amount: string;
   user: Schema.Types.ObjectId;
-  status: 'pending' | 'completed' | 'expired';
+  status: 'pending' | 'completed' | 'expired' | 'cancelled';
   expiredTimestamp: number;
   redirectUrl: string;
   products?: IProduct[];
@@ -20,7 +20,11 @@ const Order = new Schema<IOrder>(
   {
     amount: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    status: { type: String, enum: ['pending', 'completed', 'expired'], required: true },
+    status: {
+      type: String,
+      enum: ['pending', 'completed', 'expired', 'cancelled'],
+      required: true,
+    },
     expiredTimestamp: { type: Number, required: true },
     redirectUrl: { type: String, required: true },
     products: [

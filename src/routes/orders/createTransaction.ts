@@ -48,6 +48,12 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
+    if (order.status == 'cancelled') {
+      return res.status(404).j({
+        message: 'The order has been cancelled',
+      });
+    }
+
     const token = await Token.findOne({ address: { $regex: new RegExp(tokenAddress, 'i') } });
 
     if (!token) {
