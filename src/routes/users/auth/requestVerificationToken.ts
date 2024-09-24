@@ -43,7 +43,7 @@ const requestVerificationTokenHandler: RequestHandler[] = [
 
     await user.save();
 
-    sendVerificationEmail(email, token);
+    sendVerificationEmail(email, token, user.name);
 
     return res.status(201).j({
       message: 'Verification email was sent',

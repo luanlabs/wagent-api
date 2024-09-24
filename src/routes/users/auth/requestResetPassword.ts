@@ -44,7 +44,7 @@ const requestResetPasswordHandler: RequestHandler[] = [
 
     await user.save();
 
-    sendResetPasswordEmail(email, token);
+    sendResetPasswordEmail(email, token, user.name);
 
     return res.status(200).j({
       message: 'Reset password email was sent',

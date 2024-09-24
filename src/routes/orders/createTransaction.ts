@@ -6,11 +6,11 @@ import User from '../../models/User';
 import Token from '../../models/Token';
 import Order from '../../models/Order';
 import Transaction from '../../models/Transaction';
+import sendNotification from '../../utils/sendNotification';
 import { emailValidation } from '../../utils/zodValidators';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import getTransactionDetails from '../../utils/contract/getTransactionDetails';
 import { sendPayerCompleteOrderEmail, sendUserCompleteOrderEmail } from '../../utils/emailService';
-import sendNotification from '../../utils/sendNotification';
 
 const createTransactionHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -36,7 +36,6 @@ const createTransactionHandler: RequestHandler[] = [
     const { id } = req.params;
     const { hash, payerEmail } = req.body;
 
-    // todo: how to check if THIS order is paid?
     const { status, method, submittedAt, tokenAddress, payerAddress } =
       await getTransactionDetails(hash);
 
@@ -69,6 +68,8 @@ const createTransactionHandler: RequestHandler[] = [
         message: 'Transaction already exists',
       });
     }
+
+    const user = await User.findOne({ _id: order.user });
 
     let tx;
 
@@ -106,15 +107,28 @@ const createTransactionHandler: RequestHandler[] = [
     }
 
     if (payerEmail) {
-      // todo: send full details
-      sendPayerCompleteOrderEmail(payerEmail, order._id.toString());
+      sendPayerCompleteOrderEmail(
+        payerEmail,
+        order._id.toString(),
+        order.amount,
+        token.symbol,
+        method,
+        user?.name || '',
+        new Date(submittedAt).toUTCString(),
+      );
     }
 
-    const user = await User.findOne({ _id: order._id });
-
     if (user?.isSubscribed) {
-      // todo: send full details
-      sendUserCompleteOrderEmail(user.email, user.name, order.amount?.toString());
+      sendUserCompleteOrderEmail(
+        user?.email || '',
+        order._id.toString(),
+        payerAddress,
+        order.amount,
+        token.symbol,
+        method,
+        user.name,
+        new Date(submittedAt).toUTCString(),
+      );
     }
 
     return res.status(200).j({

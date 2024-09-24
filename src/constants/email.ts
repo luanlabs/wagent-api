@@ -1,3 +1,5 @@
+import envs from '../config/envs';
+
 export enum EmailTitles {
   Verification = 'Wagent - Verify your email!',
   Registration = 'Wagent - Thank you for signing in',
@@ -5,3 +7,13 @@ export enum EmailTitles {
   ResetPasswordSuccess = 'Wagent - Password has been reset',
   CompleteOrder = 'Wagent - Your order is complete',
 }
+
+export enum SocialMediaLinks {
+  X = 'https://x.com/wagent',
+  Github = 'https://github.com/luanlabs',
+  Discord = 'https://discord.com/invite/wagent',
+}
+
+const { FRONTEND_URL } = envs();
+
+export const unsubscribeLink = `${FRONTEND_URL}/unsubscribe`;

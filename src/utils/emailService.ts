@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 
 import envs from '../config/envs';
 import logger from '../config/logger';
-import { EmailTitles } from '../constants/emailTitles';
+import { EmailTitles } from '../constants/email';
 import verifyEmailTemplate from '../templates/verifyEmailTemplate';
 import registrationTemplate from '../templates/registrationTemplate';
 import resetPasswordTemplate from '../templates/resetPasswordTemplate';
@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-transporter.verify((err, _) => {
+transporter.verify((err) => {
   if (err) {
     logger.error('EMAIL: Failed to verify connection');
   } else {
@@ -48,40 +48,65 @@ const sendEmail = (to: string, subject: string, htmlContent: string) => {
   });
 };
 
-export const sendRegistrationEmail = (email: string) => {
-  const html = registrationTemplate(email);
+export const sendRegistrationEmail = (email: string, name: string) => {
+  const html = registrationTemplate(name);
 
   sendEmail(email, EmailTitles.Registration, html);
 };
 
-export const sendVerificationEmail = (email: string, token: string) => {
+export const sendVerificationEmail = (email: string, token: string, name: string) => {
   const verifyUrl = `${FRONTEND_URL}/verify/${token}`;
-  const html = verifyEmailTemplate(verifyUrl);
+  const html = verifyEmailTemplate(name, verifyUrl);
 
   sendEmail(email, EmailTitles.Verification, html);
 };
 
-export const sendResetPasswordEmail = (email: string, token: string) => {
-  const resetUrl = `${FRONTEND_URL}/forget-password/reset/${token}`;
-  const html = resetPasswordTemplate(resetUrl);
+export const sendResetPasswordEmail = (email: string, token: string, name: string) => {
+  const resetUrl = `${FRONTEND_URL}/password/reset/${token}`;
+  const html = resetPasswordTemplate(name, resetUrl);
 
   sendEmail(email, EmailTitles.ResetPassword, html);
 };
 
-export const sendResetPasswordSuccess = (email: string) => {
-  const html = resetPasswordSuccessTemplate(email);
+export const sendResetPasswordSuccess = (email: string, name: string) => {
+  const html = resetPasswordSuccessTemplate(name);
 
   sendEmail(email, EmailTitles.ResetPasswordSuccess, html);
 };
 
-export const sendPayerCompleteOrderEmail = (email: string, orderId: string) => {
-  const html = sendPayerCompleteOrderTemplate(orderId);
+export const sendPayerCompleteOrderEmail = (
+  email: string,
+  orderId: string,
+  amount: string,
+  token: string,
+  method: string,
+  name: string,
+  submittedAt: string,
+) => {
+  const html = sendPayerCompleteOrderTemplate(orderId, amount, token, method, name, submittedAt);
 
   sendEmail(email, EmailTitles.CompleteOrder, html);
 };
 
-export const sendUserCompleteOrderEmail = (email: string, name: string, amount: string) => {
-  const html = sendUserCompleteOrderTemplate(name, amount);
+export const sendUserCompleteOrderEmail = (
+  email: string,
+  orderId: string,
+  payer: string,
+  amount: string,
+  token: string,
+  method: string,
+  name: string,
+  submittedAt: string,
+) => {
+  const html = sendUserCompleteOrderTemplate(
+    orderId,
+    payer,
+    amount,
+    token,
+    method,
+    name,
+    submittedAt,
+  );
 
   sendEmail(email, EmailTitles.CompleteOrder, html);
 };
