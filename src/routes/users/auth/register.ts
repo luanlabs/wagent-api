@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import User from '../../../models/User';
+import Token from '../../../models/Token';
+import UserToken from '../../../models/UserToken';
 import randomString from '../../../utils/randomString';
 import generateToken from '../../../utils/generateToken';
 import validatorMiddleware from '../../../middlewares/validatorMiddleware';
@@ -52,8 +54,19 @@ const registerHandler: RequestHandler[] = [
 
     await newUser.save();
 
-    // todo: ADD tokens to the newly created user
-    // todo: Add basic settings if needed
+    try {
+      const usertokens = [];
+      const tokens = await Token.find();
+
+      for (const token of tokens) {
+        usertokens.push({
+          user: newUser._id,
+          token: token._id,
+        });
+      }
+
+      await UserToken.insertMany(usertokens);
+    } catch (e) {}
 
     sendRegistrationEmail(email, name);
     sendVerificationEmail(email, token, name);

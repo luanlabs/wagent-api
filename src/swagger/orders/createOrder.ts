@@ -48,7 +48,7 @@
  *                 result:
  *                     type: object
  *                     example: {
- *                         id: "43ktrhgkfnfnd33"
+ *                         id: "43ktrhgkfnfnd33",
  *                         url: "https://pay.wagent.app/43ktrhgkfnfnd33"
  *                      }
  *
