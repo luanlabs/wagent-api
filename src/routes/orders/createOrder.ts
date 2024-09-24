@@ -1,15 +1,16 @@
 import { z } from 'zod';
+import mongoose from 'mongoose';
 import { RequestHandler } from 'express';
 
+import envs from '../../config/envs';
 import Order from '../../models/Order';
 import { IUser } from '../../models/User';
+import getUserTokens from '../../utils/getUserTokens';
 import { float, uint } from '../../utils/zodValidators';
+import { FIFTEEN_MINUTES } from '../../constants/dates';
 import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import calculateProductsAmount from '../../utils/calculateProductsAmount';
-import getUserTokens from '../../utils/getUserTokens';
-import mongoose from 'mongoose';
-import { FIFTEEN_MINUTES } from '../../constants/dates';
 
 const createOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -40,6 +41,7 @@ const createOrderHandler: RequestHandler[] = [
     }),
   }),
   async (req, res) => {
+    const { PAYMENT_URL } = envs();
     const { amount, products, redirectUrl } = req.body;
 
     if (!amount && !products) {
@@ -81,6 +83,7 @@ const createOrderHandler: RequestHandler[] = [
       message: 'Order has been created',
       result: {
         id: order._id,
+        url: `${PAYMENT_URL}/${order._id}`,
       },
     });
   },
