@@ -6,11 +6,11 @@ import User from '../../models/User';
 import Token from '../../models/Token';
 import Order from '../../models/Order';
 import Transaction from '../../models/Transaction';
+import sendNotification from '../../utils/sendNotification';
 import { emailValidation } from '../../utils/zodValidators';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import getTransactionDetails from '../../utils/contract/getTransactionDetails';
 import { sendPayerCompleteOrderEmail, sendUserCompleteOrderEmail } from '../../utils/emailService';
-import sendNotification from '../../utils/sendNotification';
 
 const createTransactionHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -36,8 +36,8 @@ const createTransactionHandler: RequestHandler[] = [
     const { id } = req.params;
     const { hash, payerEmail } = req.body;
 
-    // todo: how to check if THIS order is paid?
-    const { status, method, submittedAt, tokenAddress, payerAddress } = getTransactionDetails(hash);
+    const { status, method, submittedAt, tokenAddress, payerAddress } =
+      await getTransactionDetails(hash);
 
     const order = await Order.findById(id);
 
@@ -47,7 +47,13 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    const token = await Token.findOne({ address: tokenAddress });
+    if (order.status == 'cancelled') {
+      return res.status(404).j({
+        message: 'The order has been cancelled',
+      });
+    }
+
+    const token = await Token.findOne({ address: { $regex: new RegExp(tokenAddress, 'i') } });
 
     if (!token) {
       return res.status(404).j({
@@ -63,31 +69,36 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    const tx = new Transaction({
-      hash,
-      method,
-      payerEmail,
-      payerAddress,
-      submittedAt,
-      order: order._id,
-      token: token._id,
-    });
-
     const user = await User.findOne({ _id: order.user });
 
-    if (!user) {
-      return res.status(400).j({
-        message: 'User not exist',
+    let tx;
+
+    try {
+      tx = new Transaction({
+        hash,
+        method,
+        payerEmail,
+        submittedAt,
+        payerAddress,
+        order: order._id,
+        token: token._id,
+      });
+
+      await tx.save();
+    } catch (e) {
+      return res.status(502).j({
+        message: 'Something went wrong!',
+        error: {
+          message: e.message,
+        },
       });
     }
-
-    await tx.save();
 
     if (status === 'completed') {
       order.status = 'completed';
 
       await order.save();
-      
+
       const shopOwner = await User.findById(order.user);
 
       if (shopOwner && shopOwner.notificationTokens.length > 0) {
@@ -102,14 +113,14 @@ const createTransactionHandler: RequestHandler[] = [
         order.amount,
         token.symbol,
         method,
-        user.name,
+        user?.name || '',
         new Date(submittedAt).toUTCString(),
       );
     }
 
-    if (user.isSubscribed) {
+    if (user?.isSubscribed) {
       sendUserCompleteOrderEmail(
-        user.email,
+        user?.email || '',
         order._id.toString(),
         payerAddress,
         order.amount,

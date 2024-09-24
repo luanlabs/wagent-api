@@ -44,6 +44,7 @@ const UserSchema = new Schema<IUser>(
     resetPasswordTokenExpiration: { type: Number, required: false },
     subscribeToken: { type: String, required: true },
     minimumCancellableStreamDuration: { type: Number, required: true },
+    notificationTokens: [{ type: String }],
   },
   { timestamps: true },
 );

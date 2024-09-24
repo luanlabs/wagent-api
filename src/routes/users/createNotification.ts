@@ -26,7 +26,8 @@ const createNotificationTokenHandler: RequestHandler[] = [
     }
 
     if (user.notificationTokens.length >= MAXIMUM_NOTIFICATION_TOKENS) {
-      user.notificationTokens[0] = token;
+      user.notificationTokens.pop();
+      user.notificationTokens.unshift(token);
     } else {
       user.notificationTokens.push(token);
     }
