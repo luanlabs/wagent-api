@@ -17,6 +17,11 @@ const transporter = nodemailer.createTransport({
   port: 465,
   logger: true,
   debug: true,
+  // secureConnection: false,
+  connectionTimeout: 10000,
+  tls: {
+    ciphers: 'SSLv3',
+  },
   secure: true,
   requireTLS: true,
   auth: {
