@@ -15,15 +15,14 @@ const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = envs();
 const transporter = nodemailer.createTransport({
   host: 'smtp.hostinger.com',
   port: 465,
+  secure: true,
   logger: true,
   debug: true,
-  // secureConnection: false,
-  connectionTimeout: 10000,
   tls: {
-    ciphers: 'SSLv3',
+    rejectUnauthorized: false,
   },
-  secure: true,
-  requireTLS: true,
+  connectionTimeout: 10000,
+  requireTLS: false,
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS,
