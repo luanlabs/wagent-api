@@ -7,19 +7,24 @@ import UserToken from '../../../models/UserToken';
 import randomString from '../../../utils/randomString';
 import generateToken from '../../../utils/generateToken';
 import validatorMiddleware from '../../../middlewares/validatorMiddleware';
-import { emailValidation, passwordValidation } from '../../../utils/zodValidators';
+import {
+  emailValidation,
+  addressValidation,
+  passwordValidation,
+} from '../../../utils/zodValidators';
 import { sendVerificationEmail, sendRegistrationEmail } from '../../../utils/emailService';
 
 const registerHandler: RequestHandler[] = [
   validatorMiddleware({
     body: z.object({
       email: emailValidation,
+      address: addressValidation,
       password: passwordValidation,
       name: z.string().min(3, 'Store name is required'),
     }),
   }),
   async (req, res) => {
-    const { email, name, password } = req.body;
+    const { name, email, address, password } = req.body;
 
     const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } });
 
@@ -40,6 +45,7 @@ const registerHandler: RequestHandler[] = [
       name,
       email,
       apiKey,
+      address,
       password,
       subscribeToken,
       verificationToken: token,

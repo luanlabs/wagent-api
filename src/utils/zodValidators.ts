@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { validateEmail, validatePassword } from './validators';
+import { validAddress, validateEmail, validatePassword } from './validators';
 
 export const emailValidation = z.string().refine(validateEmail, 'Enter a valid email');
 export const passwordValidation = z
@@ -17,3 +17,5 @@ export const float = (title: string) =>
   z.coerce
     .number({ message: `${title} must be a number` })
     .nonnegative('Number must be greater than or equal to 0');
+
+export const addressValidation = z.string().refine(validAddress, 'Enter a valid Stellar address');

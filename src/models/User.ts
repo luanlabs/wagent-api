@@ -12,6 +12,7 @@ export interface IUser extends Document {
   logo?: string;
   email: string;
   apiKey: string;
+  address: string;
   password: string;
   isAdmin: boolean;
   isVerified: boolean;
@@ -38,8 +39,8 @@ const UserSchema = new Schema<IUser>(
     isVerified: { type: Boolean, required: true, default: false },
     isSubscribed: { type: Boolean, required: true, default: true },
     methods: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7], default: 1 },
-    verificationToken: { type: String, required: true },
-    verificationTokenExpiration: { type: Number, required: true },
+    verificationToken: { type: String, required: false },
+    verificationTokenExpiration: { type: Number, required: false },
     resetPasswordToken: { type: String, required: false },
     resetPasswordTokenExpiration: { type: Number, required: false },
     subscribeToken: { type: String, required: true },
