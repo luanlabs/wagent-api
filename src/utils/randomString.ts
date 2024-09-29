@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
-const randomString = () => {
-  return crypto.randomBytes(32).toString('hex');
+const randomString = (num?: number) => {
+  return crypto.randomBytes(num || 32).toString('hex');
 };
 
 export default randomString;

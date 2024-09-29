@@ -37,9 +37,9 @@ const registerHandler: RequestHandler[] = [
       });
     }
 
-    const apiKey = randomString();
-    const { token, expiration } = generateToken();
+    const apiKey = randomString(15);
     const subscribeToken = randomString();
+    const { token, expiration } = generateToken();
 
     const newUser = new User({
       name,

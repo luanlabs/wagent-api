@@ -7,7 +7,7 @@ import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
 const generateNewApiKeyHandler: RequestHandler[] = [
   authorizationMiddleware,
   async (req, res) => {
-    const newApiKey = randomString();
+    const newApiKey = randomString(15);
 
     const reqUser = req.user as IUser;
     const user = await User.findByIdAndUpdate(reqUser._id, { apiKey: newApiKey });
