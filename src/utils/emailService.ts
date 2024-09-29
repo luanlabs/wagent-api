@@ -15,6 +15,8 @@ const { EMAIL_USER, EMAIL_PASS, FRONTEND_URL } = envs();
 const transporter = nodemailer.createTransport({
   host: 'smtp.hostinger.com',
   port: 465,
+  logger: true,
+  debug: true,
   secure: true,
   requireTLS: true,
   auth: {
