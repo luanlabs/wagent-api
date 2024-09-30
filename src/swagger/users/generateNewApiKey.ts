@@ -1,17 +1,19 @@
 /**
  * @swagger
  * /users/api-key:
- *   post:
+ *   put:
  *     summary: Generate new API key.
  *     tags: [Users]
  *     parameters:
  *       - name: authorization
- *         in: header
- *         description: JWT Token
- *         required: true
+ *         in: headers
+ *         description: JWT Token (Required if using tools other than Swagger UI.)
+ *         required: false
  *         schema:
  *           type: string
  *           example: Bearer JWT_ID
+ *     security:
+ *       - bearerAuth: []
  *
  *     responses:
  *       200:

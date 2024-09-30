@@ -5,13 +5,15 @@
  *     summary: Retrieves the transactions related to this user (merchant)
  *     tags: [Users]
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         description: JWT Token
- *         required: true
+ *       - name: authorization
+ *         in: headers
+ *         description: JWT Token (Required if using tools other than Swagger UI.)
+ *         required: false
  *         schema:
  *           type: string
  *           example: Bearer JWT_ID
+ *     security:
+ *       - bearerAuth: []
  *
  *     responses:
  *       200:
@@ -26,7 +28,7 @@
  *                     properties:
  *                       _id:
  *                         type: string
- *                         example: "fkhkghgkrhtkrhtrk"
+ *                         example: "66f7148c2757a843f703de35"
  *
  *                       method:
  *                         type: number

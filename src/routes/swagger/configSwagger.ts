@@ -23,7 +23,28 @@ const configSwagger = () => {
         version: '0.1.0',
         description: 'Wagent API',
       },
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            description: 'JWT Token for authenticating requests',
+          },
+          apiKeyAuth: {
+            type: 'apiKey',
+            in: 'header',
+            name: 'apiKey',
+            description: 'API key for authenticating requests',
+          },
+        },
+      },
       servers,
+      security: [
+        {
+          apiKeyAuth: [],
+        },
+      ],
     },
     apis: ['./src/swagger/**/*.ts'],
   };

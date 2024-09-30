@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /users/subscribe:
+ * /users/subscription:
  *   post:
  *     summary: Subscribe or unsubscribe a user.
  *     tags: [Users]

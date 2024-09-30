@@ -6,12 +6,15 @@
  *     tags: [Orders]
  *     parameters:
  *       - name: apiKey
- *         in: header
- *         description: API key
- *         required: true
+ *         in: headers
+ *         description: API key (Required if using tools other than Swagger UI.)
+ *         required: false
  *         schema:
  *           type: string
  *           example: abdcdefg1234
+ *     security:
+ *       - apiKeyAuth: []
+ *
  *     requestBody:
  *       required: true
  *       content:
