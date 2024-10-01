@@ -6,10 +6,8 @@ import { verify } from '../utils/jwt';
 const authorizationMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    console.log(authorization);
 
     if (!authorization) {
-      console.log(1);
       return res.status(401).j({
         message: 'Authorization token is required',
       });

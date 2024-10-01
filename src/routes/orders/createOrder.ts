@@ -68,15 +68,13 @@ const createOrderHandler: RequestHandler[] = [
 
     const totalAmount: number = amount || calculateProductsAmount(products);
 
-    const timestamp = user.minimumCancellableStreamDuration | FIFTEEN_MINUTES;
-
     const order = new Order({
       products,
       redirectUrl,
       user: user._id,
       status: 'pending',
       amount: totalAmount,
-      expiredTimestamp: Date.now() + timestamp,
+      expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
     });
 
     await order.save();
