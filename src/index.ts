@@ -9,6 +9,7 @@ import routes from './routes';
 import log from './config/logger';
 import envs from './config/envs';
 import customResponseHandler from './middlewares/customResponseHandler';
+import checkExpiredTime from './utils/orders/checkExpiredTime';
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.disable('x-powered-by');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+checkExpiredTime();
 
 app.use(customResponseHandler);
 app.use(routes);
