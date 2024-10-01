@@ -1,12 +1,12 @@
 /**
  * @swagger
- * /orders/{id}:
+ * /orders/{id}/:
  *   get:
  *     summary: Show User’s Order & Payment Options.
  *     tags: [Orders]
  *     parameters:
  *       - name: id
- *         in: params
+ *         in: path
  *         description: Order ID
  *         required: true
  *         schema:

@@ -18,8 +18,8 @@ export interface IUser extends Document {
   isVerified: boolean;
   isSubscribed: boolean;
   methods: MethodsNumerical;
-  verificationToken: string;
-  verificationTokenExpiration: number;
+  verificationToken?: string;
+  verificationTokenExpiration?: number;
   resetPasswordToken?: string;
   resetPasswordTokenExpiration?: number;
   subscribeToken: string;

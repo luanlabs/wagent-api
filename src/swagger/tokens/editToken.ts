@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /tokens/{address}:
+ * /tokens/{symbol}:
  *   put:
  *     summary: Changes the logo and other fields of a token
  *     tags: [Tokens]
@@ -12,10 +12,11 @@
  *         schema:
  *           type: string
  *           format: string
+ *           example: usdt
  *       - name: authorization
- *         in: header
- *         description: JWT Token
- *         required: true
+ *         in: headers
+ *         description: JWT Token (Required if using tools other than Swagger UI.)
+ *         required: false
  *         schema:
  *           type: string
  *           example: Bearer JWT_ID

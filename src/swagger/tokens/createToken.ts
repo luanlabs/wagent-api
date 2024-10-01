@@ -6,9 +6,9 @@
  *     tags: [Tokens]
  *     parameters:
  *       - name: authorization
- *         in: header
- *         description: JWT Token
- *         required: true
+ *         in: headers
+ *         description: JWT Token (Required if using tools other than Swagger UI.)
+ *         required: false
  *         schema:
  *           type: string
  *           example: Bearer JWT_ID

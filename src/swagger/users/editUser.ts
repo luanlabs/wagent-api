@@ -6,14 +6,12 @@
  *     tags: [Users]
  *     parameters:
  *       - name: authorization
- *         in: header
- *         description: JWT Token
- *         required: true
+ *         in: headers
+ *         description: JWT Token (Required if using tools other than Swagger UI.)
+ *         required: false
  *         schema:
  *           type: string
  *           example: Bearer JWT_ID
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -32,12 +30,9 @@
  *                 example: 15
  *               tokens:
  *                 type: array
- *                 items:
- *                   type: string
- *                   example:
- *                     - USDT
- *                     - USDC
- *                     - ETH
+ *                 example: [
+ *                    ""
+ *                 ]
  *               isSubscribed:
  *                 type: boolean
  *                 example: true
@@ -47,6 +42,9 @@
  *               logo:
  *                 type: string
  *                 example: "https://google.com/1.jpg"
+ *     security:
+ *       - bearerAuth: []
+ *
  *     responses:
  *       200:
  *         description: User settings updated successfully.

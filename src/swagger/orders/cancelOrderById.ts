@@ -6,7 +6,7 @@
  *     tags: [Orders]
  *     parameters:
  *       - name: id
- *         in: params
+ *         in: path
  *         description: Order ID
  *         required: true
  *         schema:
