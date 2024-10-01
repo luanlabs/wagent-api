@@ -1,10 +1,10 @@
-import { TEN_SECONDS } from '../../constants/dates';
-import ordersStatusToExpired from './ordersStatusToExpired';
+import { ONE_MINUTES } from '../../constants/dates';
+import orderStatusToExpired from './ordersStatusToExpired';
 
 const checkExpiredTime = () => {
   setInterval(() => {
-    ordersStatusToExpired();
-  }, TEN_SECONDS);
+    orderStatusToExpired();
+  }, ONE_MINUTES);
 };
 
 export default checkExpiredTime;

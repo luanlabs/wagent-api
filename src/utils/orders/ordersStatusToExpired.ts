@@ -8,8 +8,6 @@ const ordersStatusToExpired = async () => {
   for (const order of orders) {
     order.status = 'expired';
     order.save();
-
-    console.log('complate ', order._id);
   }
 };
 
