@@ -3,9 +3,9 @@ import { RequestHandler } from 'express';
 
 import User from '../../../models/User';
 import { sign } from '../../../utils/jwt';
+import verifyGoogleToken from '../../../utils/google/verifyGoogleToken';
 import validatorMiddleware from '../../../middlewares/validatorMiddleware';
 import { emailValidation, passwordValidation } from '../../../utils/zodValidators';
-import verifyToken from '../../../utils/google/verifyToken';
 
 const loginHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -50,7 +50,7 @@ const loginHandler: RequestHandler[] = [
     }
 
     if (user.isGoogleAuthenticatorEnable) {
-      const isVerify = verifyToken(user.googleSecretKey!, googleToken);
+      const isVerify = verifyGoogleToken(user.googleSecretKey!, googleToken);
 
       if (!isVerify) {
         return res.status(401).j({

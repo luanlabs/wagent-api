@@ -1,6 +1,6 @@
 import speakeasy from 'speakeasy';
 
-const verifyToken = (secretKey: string, token: string) => {
+const verifyGoogleToken = (secretKey: string, token: string) => {
   const verified = speakeasy.totp.verify({
     secret: secretKey,
     encoding: 'base32',
@@ -11,4 +11,4 @@ const verifyToken = (secretKey: string, token: string) => {
   return verified;
 };
 
-export default verifyToken;
+export default verifyGoogleToken;

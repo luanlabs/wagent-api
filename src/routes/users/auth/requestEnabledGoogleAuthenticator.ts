@@ -28,7 +28,6 @@ const requestEnabledGoogleAuthenticatorHandler: RequestHandler[] = [
     const qrcode = await generateQrCode(secretKey);
 
     user.googleSecretKey = secretKey.base32;
-    user.googleSecretKeyQr = qrcode;
 
     await user.save();
 
@@ -36,7 +35,7 @@ const requestEnabledGoogleAuthenticatorHandler: RequestHandler[] = [
       message: 'Send request enable google authenticator successfully',
       result: {
         secretKey: user.googleSecretKey,
-        qrcode: user.googleSecretKeyQr,
+        qrcode,
       },
     });
   },

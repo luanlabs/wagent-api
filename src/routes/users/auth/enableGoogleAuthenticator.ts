@@ -2,9 +2,9 @@ import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import User, { IUser } from '../../../models/User';
-import verifyToken from '../../../utils/google/verifyToken';
-import authorizationMiddleware from '../../../middlewares/authorizationMiddleware';
+import verifyGoogleToken from '../../../utils/google/verifyGoogleToken';
 import validatorMiddleware from '../../../middlewares/validatorMiddleware';
+import authorizationMiddleware from '../../../middlewares/authorizationMiddleware';
 
 const enableGoogleAuthenticatorHandler: RequestHandler[] = [
   authorizationMiddleware,
@@ -30,7 +30,7 @@ const enableGoogleAuthenticatorHandler: RequestHandler[] = [
       });
     }
 
-    const isVerifyToken = verifyToken(user.googleSecretKey!, googleToken);
+    const isVerifyToken = verifyGoogleToken(user.googleSecretKey!, googleToken);
 
     if (!isVerifyToken) {
       return res.status(400).j({

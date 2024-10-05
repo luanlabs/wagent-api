@@ -27,7 +27,6 @@ export interface IUser extends Document {
   matchPassword: (enteredPassword: string) => Promise<boolean>;
   notificationTokens: string[];
   googleSecretKey?: string;
-  googleSecretKeyQr?: string;
   isGoogleAuthenticatorEnable?: boolean;
 }
 
@@ -50,7 +49,6 @@ const UserSchema = new Schema<IUser>(
     minimumCancellableStreamDuration: { type: Number, required: true },
     notificationTokens: [{ type: String }],
     googleSecretKey: { type: String, required: false },
-    googleSecretKeyQr: { type: String, required: false },
     isGoogleAuthenticatorEnable: { type: Boolean, required: false },
   },
   { timestamps: true },
