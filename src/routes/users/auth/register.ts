@@ -56,6 +56,7 @@ const registerHandler: RequestHandler[] = [
       methods: 1,
       notificationTokens: [],
       minimumCancellableStreamDuration: 0,
+      isGoogleAuthenticatorEnable: false,
     });
 
     await newUser.save();
