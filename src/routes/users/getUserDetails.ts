@@ -18,8 +18,8 @@ const getUserDetailsHandler: RequestHandler[] = [
         logo: user.logo,
         email: user.email,
         apiKey: user.apiKey,
-        // todo
         tokens: tokens,
+        address: user.address,
         isAdmin: user.isAdmin,
         methods: user.methods,
         isVerified: user.isVerified,
