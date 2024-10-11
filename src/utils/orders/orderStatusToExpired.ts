@@ -5,13 +5,13 @@ const orderStatusToExpired = async (orderId: Types.ObjectId) => {
   const order = await Order.findById(orderId);
 
   if (!order) {
-    return undefined;
+    return;
   }
 
   if (order.status === 'pending') {
     order.status = 'expired';
 
-    order.save();
+    await order.save();
   }
 };
 
