@@ -7,13 +7,15 @@ import resetPasswordHandler from './resetPassword';
 import requestResetPasswordHandler from './requestResetPassword';
 import validateResetPasswordHandler from './validateResetPassword';
 import requestVerificationTokenHandler from './requestVerificationToken';
-import requestEnabledGoogleAuthenticatorHandler from './requestEnabledGoogleAuthenticator';
-import enableGoogleAuthenticatorHandler from './enableGoogleAuthenticator';
+import requestEnabledAuthenticatorHandler from './requestEnabledAuthenticator';
+import enableAuthenticatorHandler from './enableAuthenticator';
+import loginWithAthenticarorHandler from './loginWithAuthenticator';
 
 const router = express.Router();
 
 router.post('/', registerHandler);
 router.post('/login', loginHandler);
+router.post('/login/authenticator', loginWithAthenticarorHandler);
 
 router.put('/reset', resetPasswordHandler);
 router.post('/reset', requestResetPasswordHandler);
@@ -22,7 +24,7 @@ router.get('/reset/:token', validateResetPasswordHandler);
 router.put('/verify', verifyHandler);
 router.post('/verify', requestVerificationTokenHandler);
 
-router.post('/google', requestEnabledGoogleAuthenticatorHandler);
-router.put('/google', enableGoogleAuthenticatorHandler);
+router.post('/authenticator', requestEnabledAuthenticatorHandler);
+router.put('/authenticator', enableAuthenticatorHandler);
 
 export default router;

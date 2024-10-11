@@ -4,7 +4,7 @@ const generateSecretKey = (name: string) => {
   const secretKey = speakeasy.generateSecret({
     length: 32,
     name: `Wagent: ${name}`,
-    google_auth_qr: true,
+    otpauth_url: true,
   });
 
   return secretKey;

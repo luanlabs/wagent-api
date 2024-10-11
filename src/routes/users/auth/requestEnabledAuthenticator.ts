@@ -1,11 +1,11 @@
 import { RequestHandler } from 'express';
 
 import User, { IUser } from '../../../models/User';
-import generateSecretKey from '../../../utils/google/generateSecretKey';
+import generateSecretKey from '../../../utils/authenticator/generateSecretKey';
 import authorizationMiddleware from '../../../middlewares/authorizationMiddleware';
-import generateQrCode from '../../../utils/google/generateQrCode';
+import generateQrCode from '../../../utils/authenticator/generateQrCode';
 
-const requestEnabledGoogleAuthenticatorHandler: RequestHandler[] = [
+const requestEnabledAuthenticatorHandler: RequestHandler[] = [
   authorizationMiddleware,
   async (req, res) => {
     const reqUser = req.user as IUser;
@@ -17,9 +17,9 @@ const requestEnabledGoogleAuthenticatorHandler: RequestHandler[] = [
       });
     }
 
-    if (user.googleSecretKey) {
+    if (user.isAuthenticatorEnable) {
       return res.status(400).j({
-        message: 'User already secret key google authenticator',
+        message: 'User already enabled authenticator',
       });
     }
 
@@ -27,18 +27,18 @@ const requestEnabledGoogleAuthenticatorHandler: RequestHandler[] = [
 
     const qrcode = await generateQrCode(secretKey);
 
-    user.googleSecretKey = secretKey.base32;
+    user.authenticatorSecretKey = secretKey.base32;
 
     await user.save();
 
     return res.status(200).j({
       message: 'Send request enable google authenticator successfully',
       result: {
-        secretKey: user.googleSecretKey,
+        secretKey: user.authenticatorSecretKey,
         qrcode,
       },
     });
   },
 ];
 
-export default requestEnabledGoogleAuthenticatorHandler;
+export default requestEnabledAuthenticatorHandler;

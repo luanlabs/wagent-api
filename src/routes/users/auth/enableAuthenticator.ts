@@ -2,19 +2,19 @@ import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import User, { IUser } from '../../../models/User';
-import verifyGoogleToken from '../../../utils/google/verifyGoogleToken';
+import verifyAuthenticatorToken from '../../../utils/authenticator/verifyAuthenticatorToken';
 import validatorMiddleware from '../../../middlewares/validatorMiddleware';
 import authorizationMiddleware from '../../../middlewares/authorizationMiddleware';
 
-const enableGoogleAuthenticatorHandler: RequestHandler[] = [
+const enableAuthenticatorHandler: RequestHandler[] = [
   authorizationMiddleware,
   validatorMiddleware({
     body: z.object({
-      googleToken: z.string().min(6).max(6),
+      token: z.string().min(6).max(6),
     }),
   }),
   async (req, res) => {
-    const { googleToken } = req.body;
+    const { token } = req.body;
     const reqUser = req.user as IUser;
     const user = await User.findById(reqUser._id);
 
@@ -24,13 +24,13 @@ const enableGoogleAuthenticatorHandler: RequestHandler[] = [
       });
     }
 
-    if (user.isGoogleAuthenticatorEnable) {
+    if (user.isAuthenticatorEnable) {
       return res.status(400).j({
-        message: 'User already enabled google authenticator',
+        message: 'User already enabled authenticator',
       });
     }
 
-    const isVerifyToken = verifyGoogleToken(user.googleSecretKey!, googleToken);
+    const isVerifyToken = verifyAuthenticatorToken(user.authenticatorSecretKey!, token);
 
     if (!isVerifyToken) {
       return res.status(400).j({
@@ -41,12 +41,12 @@ const enableGoogleAuthenticatorHandler: RequestHandler[] = [
       });
     }
 
-    user.isGoogleAuthenticatorEnable = true;
+    user.isAuthenticatorEnable = true;
 
     await user.save();
 
     return res.status(200).j({
-      message: 'Enable google authenticator successfully',
+      message: 'Enable authenticator successfully',
       result: {
         isVerify: true,
       },
@@ -54,4 +54,4 @@ const enableGoogleAuthenticatorHandler: RequestHandler[] = [
   },
 ];
 
-export default enableGoogleAuthenticatorHandler;
+export default enableAuthenticatorHandler;
