@@ -34,7 +34,7 @@ const loginWithAthenticarorHandler: RequestHandler[] = [
 
     if (!isVerifyToken) {
       return res.status(400).j({
-        message: 'Google authenticator token invalid',
+        message: 'Authenticator token invalid',
         result: {
           isVerify: false,
         },

@@ -32,7 +32,7 @@ const requestEnabledAuthenticatorHandler: RequestHandler[] = [
     await user.save();
 
     return res.status(200).j({
-      message: 'Send request enable google authenticator successfully',
+      message: 'Send request enable Authenticator successfully',
       result: {
         secretKey: user.authenticatorSecretKey,
         qrcode,
