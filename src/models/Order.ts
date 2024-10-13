@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 import { FIFTEEN_MINUTES } from '../constants/dates';
+import orderStatusToExpired from '../utils/orders/orderStatusToExpired';
 
 export interface IProduct {
   name: string;
@@ -46,11 +47,7 @@ const Order = new Schema<IOrder>(
 
 Order.post('save', async function (order) {
   setTimeout(() => {
-    if (order.status === 'pending') {
-      order.status = 'expired';
-
-      order.save();
-    }
+    orderStatusToExpired(order._id);
   }, FIFTEEN_MINUTES);
 });
 
