@@ -5,12 +5,11 @@ import { RequestHandler } from 'express';
 import envs from '../../config/envs';
 import Order from '../../models/Order';
 import { IUser } from '../../models/User';
+import { uint } from '../../utils/zodValidators';
 import getUserTokens from '../../utils/getUserTokens';
-import { float, uint } from '../../utils/zodValidators';
 import { FIFTEEN_MINUTES } from '../../constants/dates';
 import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
-import calculateProductsAmount from '../../utils/calculateProductsAmount';
 
 const createOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -20,7 +19,7 @@ const createOrderHandler: RequestHandler[] = [
         .array(
           z.object({
             count: uint('count'),
-            amount: float('amount'),
+            amount: uint('amount'),
             logo: z.string().optional(),
             name: z.string({
               required_error: 'Product name is required',
@@ -29,7 +28,8 @@ const createOrderHandler: RequestHandler[] = [
           }),
         )
         .optional(),
-      amount: float('amount').optional(),
+      amount: uint('amount'),
+      currency: z.string().optional(),
       redirectUrl: z
         .string({
           required_error: 'redirectUrl is required',
@@ -42,19 +42,7 @@ const createOrderHandler: RequestHandler[] = [
   }),
   async (req, res) => {
     const { PAYMENT_URL } = envs();
-    const { amount, products, redirectUrl } = req.body;
-
-    if (!amount && !products) {
-      return res.status(400).j({
-        message: 'Either amount or products is required',
-      });
-    }
-
-    if (amount && products) {
-      return res.status(400).j({
-        message: 'Both amount and products are not allowed',
-      });
-    }
+    const { amount, products, currency, redirectUrl } = req.body;
 
     const user = req.user as IUser;
 
@@ -66,16 +54,21 @@ const createOrderHandler: RequestHandler[] = [
       });
     }
 
-    const totalAmount: number = amount || calculateProductsAmount(products);
-
-    const order = new Order({
-      products,
+    const orderObj = {
+      amount,
       redirectUrl,
       user: user._id,
       status: 'pending',
-      amount: totalAmount,
+      currency: currency || 'USD',
       expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
-    });
+    };
+
+    if (products) {
+      // @ts-ignore
+      orderObj.products = products;
+    }
+
+    const order = new Order(orderObj);
 
     await order.save();
 

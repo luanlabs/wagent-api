@@ -13,6 +13,7 @@ export interface IProduct {
 interface IOrder {
   amount: string;
   user: Schema.Types.ObjectId;
+  currency: string;
   status: 'pending' | 'completed' | 'expired' | 'cancelled';
   expiredTimestamp: number;
   redirectUrl: string;
@@ -30,6 +31,7 @@ const Order = new Schema<IOrder>(
     },
     expiredTimestamp: { type: Number, required: true },
     redirectUrl: { type: String, required: true },
+    currency: { type: String, default: 'USD' },
     products: [
       {
         type: {

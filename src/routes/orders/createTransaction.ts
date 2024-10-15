@@ -61,8 +61,6 @@ const createTransactionHandler: RequestHandler[] = [
       });
     }
 
-    // const transaction = await Transaction.findOne({ order: order._id });
-
     const transaction = await Transaction.findOne({
       $or: [
         {
