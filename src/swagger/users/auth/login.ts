@@ -19,6 +19,10 @@
  *                 type: string
  *                 required: true
  *                 example: Aa@12345678
+ *               authToken:
+ *                 type: string
+ *                 required: false
+ *                 example: 245731
  *
  *     responses:
  *       200:

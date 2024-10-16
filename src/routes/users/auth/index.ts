@@ -9,13 +9,11 @@ import validateResetPasswordHandler from './validateResetPassword';
 import requestVerificationTokenHandler from './requestVerificationToken';
 import requestEnabledAuthenticatorHandler from './requestEnabledAuthenticator';
 import enableAuthenticatorHandler from './enableAuthenticator';
-import loginWithAthenticarorHandler from './loginWithAuthenticator';
 
 const router = express.Router();
 
 router.post('/', registerHandler);
 router.post('/login', loginHandler);
-router.post('/login/authenticator', loginWithAthenticarorHandler);
 
 router.put('/reset', resetPasswordHandler);
 router.post('/reset', requestResetPasswordHandler);

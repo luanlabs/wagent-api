@@ -5,6 +5,7 @@ import User from '../../../models/User';
 import { sign } from '../../../utils/jwt';
 import validatorMiddleware from '../../../middlewares/validatorMiddleware';
 import { emailValidation, passwordValidation } from '../../../utils/zodValidators';
+import verifyAuthenticatorToken from '../../../utils/authenticator/verifyAuthenticatorToken';
 
 const loginHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -15,7 +16,7 @@ const loginHandler: RequestHandler[] = [
     }),
   }),
   async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, authToken } = req.body;
 
     const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } });
 
@@ -48,15 +49,39 @@ const loginHandler: RequestHandler[] = [
       });
     }
 
-    const token = sign(user.id);
-
     const isEnabledAuthenticator = user.isAuthenticatorEnable || false;
+
+    if (isEnabledAuthenticator) {
+      if (!authToken) {
+        return res.status(401).j({
+          message: 'Login failed',
+          error: {
+            message: 'Auth token is required',
+          },
+        });
+      }
+
+      const isVerifiedAuthentocator = verifyAuthenticatorToken(
+        user.authenticatorSecretKey!,
+        authToken,
+      );
+
+      if (!isVerifiedAuthentocator) {
+        return res.status(400).j({
+          message: 'Login failed',
+          error: {
+            message: 'The authentication token is incorrect',
+          },
+        });
+      }
+    }
+
+    const token = sign(user.id);
 
     return res.status(200).j({
       message: 'Login was successful',
       result: {
         token,
-        isEnabledAuthenticator,
       },
     });
   },
