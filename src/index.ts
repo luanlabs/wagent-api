@@ -6,10 +6,12 @@ import compression from 'compression';
 
 import db from './config/db';
 import routes from './routes';
-import log from './config/logger';
 import envs from './config/envs';
-import customResponseHandler from './middlewares/customResponseHandler';
+import log from './config/logger';
+import saveCurrencies from './utils/saveCurrencies';
 import checkExpiredTime from './utils/orders/checkExpiredTime';
+import customResponseHandler from './middlewares/customResponseHandler';
+import getCurrencyRates from './utils/getCurrencyRates';
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+getCurrencyRates();
+// saveCurrencies();
 checkExpiredTime();
 
 app.use(customResponseHandler);

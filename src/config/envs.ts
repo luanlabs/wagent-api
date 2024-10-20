@@ -14,6 +14,7 @@ const envs = () => {
     'LOG_FILE_PATH',
     'ADMIN_PASSWORD',
     'SWAGGER_API_URL',
+    'CURRENCY_BEACON_API_KEY',
     'FIREBASE_CONFIG_FILE_PATH',
   ];
 

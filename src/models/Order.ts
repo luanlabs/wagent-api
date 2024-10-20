@@ -10,7 +10,8 @@ export interface IProduct {
   amount: number;
 }
 
-interface IOrder {
+export interface IOrder {
+  initialAmount: string;
   amount: string;
   user: Schema.Types.ObjectId;
   currency: string;
@@ -23,6 +24,7 @@ interface IOrder {
 const Order = new Schema<IOrder>(
   {
     amount: { type: String, required: true },
+    initialAmount: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     status: {
       type: String,

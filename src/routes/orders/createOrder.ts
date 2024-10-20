@@ -3,12 +3,14 @@ import mongoose from 'mongoose';
 import { RequestHandler } from 'express';
 
 import envs from '../../config/envs';
-import Order from '../../models/Order';
 import { IUser } from '../../models/User';
 import { uint } from '../../utils/zodValidators';
+import Order, { IOrder } from '../../models/Order';
 import getUserTokens from '../../utils/getUserTokens';
 import { FIFTEEN_MINUTES } from '../../constants/dates';
 import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
+import checkCurrencyExists from '../../utils/checkCurrencyExists';
+import convertCurrencyToUsd from '../../utils/convertCurrencyToUsd';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 
 const createOrderHandler: RequestHandler[] = [
@@ -19,7 +21,7 @@ const createOrderHandler: RequestHandler[] = [
         .array(
           z.object({
             count: uint('count'),
-            amount: uint('amount'),
+            amount: z.string(),
             logo: z.string().optional(),
             name: z.string({
               required_error: 'Product name is required',
@@ -44,6 +46,22 @@ const createOrderHandler: RequestHandler[] = [
     const { PAYMENT_URL } = envs();
     const { amount, products, currency, redirectUrl } = req.body;
 
+    const selectedCurrency = currency || 'USD';
+
+    const existingCurrency = await checkCurrencyExists(selectedCurrency);
+
+    if (!existingCurrency) {
+      return res.status(400).j({
+        message: 'Failed to create order',
+        error: {
+          message: 'Currency does not exist',
+          extras: selectedCurrency,
+        },
+      });
+    }
+
+    const number = convertCurrencyToUsd(amount, existingCurrency.rate);
+
     const user = req.user as IUser;
 
     const tokens = await getUserTokens(user._id as mongoose.Schema.Types.ObjectId);
@@ -54,17 +72,17 @@ const createOrderHandler: RequestHandler[] = [
       });
     }
 
-    const orderObj = {
-      amount,
-      redirectUrl,
+    const orderObj: IOrder = {
+      initialAmount: amount,
+      amount: number,
+      redirectUrl, // @ts-ignore
       user: user._id,
       status: 'pending',
-      currency: currency || 'USD',
+      currency: selectedCurrency,
       expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
     };
 
     if (products) {
-      // @ts-ignore
       orderObj.products = products;
     }
 
