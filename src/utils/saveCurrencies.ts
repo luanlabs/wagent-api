@@ -28,7 +28,7 @@ const saveCurrencies = async () => {
     await saveCurrency(currency, rate);
   }
 
-  await timeout(1296000);
+  await timeout(1296000 / 10);
   saveCurrencies();
 };
 
