@@ -1,7 +1,16 @@
 import Currency from '../models/Currency';
 
 const checkCurrencyExists = async (currenyName: string) => {
-  const existingCurrency = await Currency.findOne({ name: currenyName.toUpperCase() });
+  if (currenyName === 'usd') {
+    return {
+      name: 'usd',
+      rate: 1,
+    };
+  }
+
+  const existingCurrency = await Currency.findOne({
+    name: { $regex: new RegExp(currenyName, 'i') },
+  });
 
   if (!existingCurrency) {
     return null;

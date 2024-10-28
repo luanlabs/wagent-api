@@ -46,7 +46,11 @@ const createOrderHandler: RequestHandler[] = [
     const { PAYMENT_URL } = envs();
     const { amount, products, currency, redirectUrl } = req.body;
 
-    const selectedCurrency = currency || 'USD';
+    let selectedCurrency = 'usd';
+
+    if (currency) {
+      selectedCurrency = currency.toLowerCase();
+    }
 
     const existingCurrency = await checkCurrencyExists(selectedCurrency);
 
