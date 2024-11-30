@@ -12,6 +12,7 @@ import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
 import checkCurrencyExists from '../../utils/checkCurrencyExists';
 import convertCurrencyToUsd from '../../utils/convertCurrencyToUsd';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
+import createNewMemo from '../../utils/createNewMemo';
 
 const createOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -76,6 +77,8 @@ const createOrderHandler: RequestHandler[] = [
       });
     }
 
+    const memo = createNewMemo();
+
     const orderObj: IOrder = {
       initialAmount: amount,
       amount: number,
@@ -84,6 +87,7 @@ const createOrderHandler: RequestHandler[] = [
       status: 'pending',
       currency: selectedCurrency,
       expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
+      memo,
     };
 
     if (products) {

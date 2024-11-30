@@ -15,6 +15,7 @@ export interface IOrder {
   amount: string;
   user: Schema.Types.ObjectId;
   currency: string;
+  memo: string;
   status: 'pending' | 'completed' | 'expired' | 'cancelled';
   expiredTimestamp: number;
   redirectUrl: string;
@@ -26,6 +27,7 @@ const Order = new Schema<IOrder>(
     amount: { type: String, required: true },
     initialAmount: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    memo: { type: String, required: true, unique: true },
     status: {
       type: String,
       enum: ['pending', 'completed', 'expired', 'cancelled'],
