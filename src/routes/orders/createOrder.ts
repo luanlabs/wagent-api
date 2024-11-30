@@ -77,8 +77,6 @@ const createOrderHandler: RequestHandler[] = [
       });
     }
 
-    const memo = createNewMemo();
-
     const orderObj: IOrder = {
       initialAmount: amount,
       amount: number,
@@ -87,7 +85,7 @@ const createOrderHandler: RequestHandler[] = [
       status: 'pending',
       currency: selectedCurrency,
       expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
-      memo,
+      memo: '',
     };
 
     if (products) {
@@ -95,6 +93,10 @@ const createOrderHandler: RequestHandler[] = [
     }
 
     const order = new Order(orderObj);
+
+    const memo = createNewMemo(order._id.toString());
+
+    order.memo = memo;
 
     await order.save();
 
