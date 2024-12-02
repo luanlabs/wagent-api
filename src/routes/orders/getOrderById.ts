@@ -38,7 +38,7 @@ const getOrderByIdHandler: RequestHandler[] = [
       });
     }
 
-    if (order.expiredTimestamp < Date.now()) {
+    if (order.expiredTimestamp < Date.now() && order.status === 'pending') {
       order.status = 'expired';
 
       await order.save();
