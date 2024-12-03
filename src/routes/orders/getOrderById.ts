@@ -39,10 +39,7 @@ const getOrderByIdHandler: RequestHandler[] = [
       });
     }
 
-    const transaction = await Transaction.findOne({ order: order._id })
-      .populate('order')
-      .populate('token')
-      .exec();
+    const transaction = await Transaction.findOne({ order: order._id }).populate('token').exec();
 
     if (order.expiredTimestamp < Date.now() && order.status === 'pending') {
       order.status = 'expired';
