@@ -4,7 +4,8 @@ import { RequestHandler } from 'express';
 
 import Order from '../../models/Order';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
-import getUserTokens from '../../utils/getUserTokens';
+import Transaction from '../../models/Transaction';
+import OrdersToken from '../../models/OrdersToken';
 
 const getOrderByIdHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -38,15 +39,23 @@ const getOrderByIdHandler: RequestHandler[] = [
       });
     }
 
+    const transaction = await Transaction.findOne({ order: order._id })
+      .populate('order')
+      .populate('token')
+      .exec();
+
     if (order.expiredTimestamp < Date.now() && order.status === 'pending') {
       order.status = 'expired';
 
       await order.save();
     }
 
+    const ordersTokens = await OrdersToken.find({ order: order._id }).populate('token');
+
     const response = {
       ...order.toObject(),
-      token: await getUserTokens(order.user),
+      transaction,
+      tokens: ordersTokens,
     };
 
     return res.status(200).j({

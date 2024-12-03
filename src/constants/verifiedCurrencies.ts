@@ -33,6 +33,10 @@ const verifiedCurrencies = [
   'rub',
   'bhd',
   'ars',
+  // tokens
+  'xlm',
+  'eth',
+  'btc',
 ];
 
 export const vsCurrencies = verifiedCurrencies.join(',');
