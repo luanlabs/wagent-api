@@ -8,9 +8,7 @@ const convertUsdToToken = async (name: string, usdtAmount: string) => {
     return;
   }
 
-  const price = 1 / currency.rate;
-
-  const amount = new BigNumber(usdtAmount).div(price).toFixed(7);
+  const amount = new BigNumber(usdtAmount).div(1 / currency.rate).toFixed(7);
 
   return amount;
 };

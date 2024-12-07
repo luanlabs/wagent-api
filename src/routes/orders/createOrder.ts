@@ -15,7 +15,7 @@ import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import createNewMemo from '../../utils/createNewMemo';
 import Token from '../../models/Token';
 import convertUsdToToken from '../../utils/convertUsdToToken';
-import OrdersToken from '../../models/OrdersToken';
+import OrderToken from '../../models/OrderToken';
 
 const createOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -106,13 +106,13 @@ const createOrderHandler: RequestHandler[] = [
       if (token) {
         const amount = await convertUsdToToken(token.symbol, number);
 
-        const newOrdersToken = new OrdersToken({
+        const newOrderToken = new OrderToken({
           order: order._id,
           token: token._id,
           amount,
         });
 
-        await newOrdersToken.save();
+        await newOrderToken.save();
       }
     }
 

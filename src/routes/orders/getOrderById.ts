@@ -5,7 +5,7 @@ import { RequestHandler } from 'express';
 import Order from '../../models/Order';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import Transaction from '../../models/Transaction';
-import OrdersToken from '../../models/OrdersToken';
+import OrderToken from '../../models/OrderToken';
 
 const getOrderByIdHandler: RequestHandler[] = [
   validatorMiddleware({
@@ -47,12 +47,12 @@ const getOrderByIdHandler: RequestHandler[] = [
       await order.save();
     }
 
-    const ordersTokens = await OrdersToken.find({ order: order._id }).populate('token');
+    const orderTokens = await OrderToken.find({ order: order._id }).populate('token');
 
     const response = {
       ...order.toObject(),
       transaction,
-      tokens: ordersTokens,
+      tokens: orderTokens,
     };
 
     return res.status(200).j({
