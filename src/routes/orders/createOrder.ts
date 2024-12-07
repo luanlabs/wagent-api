@@ -12,6 +12,10 @@ import apiKeyMiddleware from '../../middlewares/apiKeyMiddleware';
 import checkCurrencyExists from '../../utils/checkCurrencyExists';
 import convertCurrencyToUsd from '../../utils/convertCurrencyToUsd';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
+import createNewMemo from '../../utils/createNewMemo';
+import Token from '../../models/Token';
+import convertUsdToToken from '../../utils/convertUsdToToken';
+import OrderToken from '../../models/OrderToken';
 
 const createOrderHandler: RequestHandler[] = [
   apiKeyMiddleware,
@@ -84,6 +88,7 @@ const createOrderHandler: RequestHandler[] = [
       status: 'pending',
       currency: selectedCurrency,
       expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
+      memo: '',
     };
 
     if (products) {
@@ -91,6 +96,25 @@ const createOrderHandler: RequestHandler[] = [
     }
 
     const order = new Order(orderObj);
+
+    const memo = createNewMemo(order._id.toString());
+
+    order.memo = memo;
+
+    for (let i = 0; i < tokens.length; i++) {
+      const token = await Token.findOne({ _id: tokens[i] });
+      if (token) {
+        const amount = await convertUsdToToken(token.symbol, number);
+
+        const newOrderToken = new OrderToken({
+          order: order._id,
+          token: token._id,
+          amount,
+        });
+
+        await newOrderToken.save();
+      }
+    }
 
     await order.save();
 
