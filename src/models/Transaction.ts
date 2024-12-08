@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
 
-interface ITransaction {
+export interface ITransaction {
+  _id: Schema.Types.ObjectId;
   hash: string;
   successful: boolean;
   method: string;
-  payerEmail: string;
   submittedAt: number;
   payerAddress: string;
   amount: string;
@@ -14,7 +14,6 @@ interface ITransaction {
 
 const Transaction = new Schema<ITransaction>(
   {
-    payerEmail: { type: String },
     submittedAt: { type: Number, required: true },
     method: { type: String, required: true, enum: ['single', 'stream', 'vesting'] },
     payerAddress: { type: String, required: true },

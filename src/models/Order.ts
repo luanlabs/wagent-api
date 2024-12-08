@@ -19,6 +19,7 @@ export interface IOrder {
   status: 'pending' | 'completed' | 'expired' | 'cancelled';
   expiredTimestamp: number;
   redirectUrl: string;
+  payerEmail?: string;
   products?: IProduct[];
 }
 
@@ -33,6 +34,7 @@ const Order = new Schema<IOrder>(
       enum: ['pending', 'completed', 'expired', 'cancelled'],
       required: true,
     },
+    payerEmail: { type: String, required: false },
     expiredTimestamp: { type: Number, required: true },
     redirectUrl: { type: String, required: true },
     currency: { type: String, default: 'USD' },
