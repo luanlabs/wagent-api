@@ -19,6 +19,7 @@ export interface IOrder {
   status: 'pending' | 'completed' | 'expired' | 'cancelled';
   expiredTimestamp: number;
   redirectUrl: string;
+  isTransfer: boolean;
   products?: IProduct[];
 }
 
@@ -35,6 +36,7 @@ const Order = new Schema<IOrder>(
     },
     expiredTimestamp: { type: Number, required: true },
     redirectUrl: { type: String, required: true },
+    isTransfer: { type: Boolean, required: true, default: false },
     currency: { type: String, default: 'USD' },
     products: [
       {
