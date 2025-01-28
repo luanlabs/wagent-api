@@ -104,12 +104,12 @@ const createOrderHandler: RequestHandler[] = [
     for (let i = 0; i < tokens.length; i++) {
       const token = await Token.findOne({ _id: tokens[i] });
       if (token) {
-        const amount = await convertUsdToToken(token.symbol, number);
+        const amounts = await convertUsdToToken(token.symbol, number);
 
         const newOrderToken = new OrderToken({
           order: order._id,
           token: token._id,
-          amount,
+          ...amounts,
         });
 
         await newOrderToken.save();

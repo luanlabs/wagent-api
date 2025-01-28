@@ -7,6 +7,8 @@ import resetPasswordHandler from './resetPassword';
 import requestResetPasswordHandler from './requestResetPassword';
 import validateResetPasswordHandler from './validateResetPassword';
 import requestVerificationTokenHandler from './requestVerificationToken';
+import requestEnabledAuthenticatorHandler from './requestEnabledAuthenticator';
+import enableAuthenticatorHandler from './enableAuthenticator';
 
 const router = express.Router();
 
@@ -19,5 +21,8 @@ router.get('/reset/:token', validateResetPasswordHandler);
 
 router.put('/verify', verifyHandler);
 router.post('/verify', requestVerificationTokenHandler);
+
+router.post('/authenticator', requestEnabledAuthenticatorHandler);
+router.put('/authenticator', enableAuthenticatorHandler);
 
 export default router;
