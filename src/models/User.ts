@@ -26,6 +26,8 @@ export interface IUser extends Document {
   minimumCancellableStreamDuration: number;
   matchPassword: (enteredPassword: string) => Promise<boolean>;
   notificationTokens: string[];
+  authenticatorSecretKey?: string;
+  isAuthenticatorEnable?: boolean;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -47,6 +49,8 @@ const UserSchema = new Schema<IUser>(
     subscribeToken: { type: String, required: true },
     minimumCancellableStreamDuration: { type: Number, required: true },
     notificationTokens: [{ type: String }],
+    authenticatorSecretKey: { type: String, required: false },
+    isAuthenticatorEnable: { type: Boolean, required: false },
   },
   { timestamps: true },
 );
