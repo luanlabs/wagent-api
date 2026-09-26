@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 import { FIFTEEN_MINUTES } from '../constants/dates';
 import orderStatusToExpired from '../utils/orders/orderStatusToExpired';
@@ -13,7 +13,7 @@ export interface IProduct {
 export interface IOrder {
   initialAmount: string;
   amount: string;
-  user: Schema.Types.ObjectId;
+  user: Types.ObjectId;
   currency: string;
   memo: string;
   status: 'pending' | 'completed' | 'expired' | 'cancelled';

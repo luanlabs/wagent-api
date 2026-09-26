@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 
 import UserToken from '../models/UserToken';
 
-const getUserTokens = async (userId: mongoose.Schema.Types.ObjectId) => {
+const getUserTokens = async (userId: Types.ObjectId) => {
   const userTokens = await UserToken.find({ user: userId }).populate('token').exec();
 
   return userTokens.map((userToken) => userToken.token);

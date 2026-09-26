@@ -10,10 +10,13 @@ export interface IToken {
 export interface IUser extends Document {
   name: string;
   logo?: string;
-  email: string;
+  email?: string;
   apiKey: string;
+  /** Stellar G address assigned by Blux. Merchants do not choose it. */
   address: string;
-  password: string;
+  /** Blux project user id. Authenticated requests are checked against this id. */
+  bluxUserId?: number;
+  password?: string;
   isAdmin: boolean;
   isVerified: boolean;
   isSubscribed: boolean;
@@ -34,12 +37,13 @@ const UserSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     logo: { type: String, required: false },
-    address: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    address: { type: String, required: true, unique: true },
+    bluxUserId: { type: Number, unique: true, sparse: true },
+    email: { type: String, required: false, unique: true, sparse: true },
     apiKey: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     isAdmin: { type: Boolean, required: false, default: false },
-    isVerified: { type: Boolean, required: true, default: false },
+    isVerified: { type: Boolean, required: true, default: true },
     isSubscribed: { type: Boolean, required: true, default: true },
     methods: { type: Number, enum: [1, 2, 3, 4, 5, 6, 7], default: 1 },
     verificationToken: { type: String, required: false },
@@ -55,21 +59,22 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
-UserSchema.pre<IUser>('save', async function (next) {
-  if (!this.isModified('password')) {
-    return next();
+UserSchema.pre('save', async function () {
+  if (this.isModified('email') && this.email) {
+    this.email = this.email.toLowerCase();
   }
 
-  this.email = this.email.toLowerCase();
-
-  this.password = await hashPassword(this.password);
-  next();
+  if (this.isModified('password') && this.password) {
+    this.password = await hashPassword(this.password);
+  }
 });
 
 UserSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
-  const isValid = await comparePassword(enteredPassword, this.password);
+  if (!this.password) {
+    return false;
+  }
 
-  return isValid;
+  return comparePassword(enteredPassword, this.password);
 };
 
 export default model<IUser>('User', UserSchema);

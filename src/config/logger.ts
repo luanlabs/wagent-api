@@ -4,24 +4,21 @@ import envs from './envs';
 
 const { LOG_FILE_PATH } = envs();
 
-const streams: bunyan.Stream[] = [
-  {
-    level: bunyan.TRACE,
-    stream: process.stdout,
-  },
-];
+const isProduction = process.env.NODE_ENV === 'production';
 
-if (process.env.NODE_ENV == 'production') {
-  streams[0] = {
-    level: bunyan.TRACE,
-    path: LOG_FILE_PATH,
-  };
-}
+// In production log to a file; otherwise log to stdout for local development.
+const streams: bunyan.Stream[] = [
+  isProduction
+    ? { level: bunyan.TRACE, path: LOG_FILE_PATH }
+    : { level: bunyan.TRACE, stream: process.stdout },
+];
 
 export const log = bunyan.createLogger({
   name: 'WAGENT_API',
   level: bunyan.TRACE,
-  src: true,
+  // `src` computes call-site info on every log call, which is expensive; only
+  // enable it outside production.
+  src: !isProduction,
   streams,
 });
 

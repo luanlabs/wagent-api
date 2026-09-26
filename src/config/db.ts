@@ -8,7 +8,7 @@ const db = async (uri: string, dbName: string) => {
 
     log.info('DB: Connected');
   } catch (err) {
-    log.fatal('DB: Failed to connect');
+    log.fatal(`DB: Failed to connect - ${err}`);
 
     process.exit(1);
   }

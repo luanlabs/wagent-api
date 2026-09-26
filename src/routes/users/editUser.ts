@@ -6,7 +6,6 @@ import UserToken from '../../models/UserToken';
 import User, { IUser } from '../../models/User';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
-import { addressValidation } from '../../utils/zodValidators';
 
 const editUserHandler: RequestHandler[] = [
   authorizationMiddleware,
@@ -15,15 +14,13 @@ const editUserHandler: RequestHandler[] = [
       logo: z.string().url().optional(),
       name: z.string().min(3).optional(),
       isSubscribed: z.boolean().optional(),
-      address: addressValidation.optional(),
       methods: z.number().min(1).max(7).optional(),
       tokens: z.array(z.string().min(5)).optional(),
       minimumCancellableStreamDuration: z.number().int().positive().optional(),
     }),
   }),
   async (req, res) => {
-    const { name, logo, address, isSubscribed, methods, tokens, minimumCancellableStreamDuration } =
-      req.body;
+    const { name, logo, isSubscribed, methods, tokens, minimumCancellableStreamDuration } = req.body;
 
     const reqUser = req.user as IUser;
     const user = await User.findById(reqUser._id);
@@ -40,10 +37,6 @@ const editUserHandler: RequestHandler[] = [
 
     if (logo) {
       user.logo = logo;
-    }
-
-    if (address) {
-      user.address = address;
     }
 
     if (methods) {

@@ -2,7 +2,14 @@
  * @swagger
  * /users/auth/login:
  *   post:
- *     summary: User login.
+ *     summary: Sign in or create a merchant from a Blux session.
+ *     description: >
+ *       Login and registration are the same request. The client completes the
+ *       Blux modal, then sends only the Blux session JWT. The API loads the
+ *       current user from `GET /users`, confirms the G address with
+ *       `POST /server/wallets/verify`, and issues a Wagent JWT. Later
+ *       authenticated requests re-check that wallet. The withdrawal address
+ *       always comes from Blux.
  *     tags: [AAA]
  *     requestBody:
  *       required: true
@@ -10,23 +17,16 @@
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - bluxToken
  *             properties:
- *               email:
+ *               bluxToken:
  *                 type: string
- *                 required: true
- *                 example: example@gmail.com
- *               password:
- *                 type: string
- *                 required: true
- *                 example: Aa@12345678
- *               authToken:
- *                 type: string
- *                 required: false
- *                 example: 245731
+ *                 description: Blux session JWT stored by @bluxcc/react after login.
  *
  *     responses:
  *       200:
- *         description: User login successful.
+ *         description: User signed in. A merchant account is created on first login.
  *         content:
  *           application/json:
  *             schema:
@@ -41,6 +41,9 @@
  *                     token:
  *                       type: string
  *                       example: jqndwjsidbfwbeyribikdfhkdfhdk
+ *                     address:
+ *                       type: string
+ *                       example: GBLUXDDBTGCLIC3TYAFYUJ5EO2MPXBSFMU7GHNLQ6IZWEJVXWMLBLUXX
  *
  *       400:
  *         description: Validation failed due to invalid fields.
@@ -52,43 +55,9 @@
  *                 message:
  *                   type: string
  *                   example: Validation failed
- *                 error:
- *                   type: object
- *                   properties:
- *                     message:
- *                       type: string
- *                       example: Validation failed
- *                     extras:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           path:
- *                             type: string
- *                             example: email
- *                           message:
- *                             type: string
- *                             example: Invalid email address
- *
- *       404:
- *         description: User not found or password incorrect.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Login failed
- *                 error:
- *                   type: object
- *                   properties:
- *                     message:
- *                       type: string
- *                       example: User not found
  *
  *       401:
- *         description: User is not verified
+ *         description: Blux session or wallet could not be verified.
  *         content:
  *           application/json:
  *             schema:
@@ -102,7 +71,29 @@
  *                   properties:
  *                     message:
  *                       type: string
- *                       example: User is not verified
+ *                       example: Blux session is invalid
+ *
+ *       409:
+ *         description: The Blux wallet is already linked to a different merchant.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Login failed
+ *
+ *       503:
+ *         description: Blux could not be reached.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Login failed
  *
  *       500:
  *         description: Internal server error.

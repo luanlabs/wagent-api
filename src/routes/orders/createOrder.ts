@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import mongoose from 'mongoose';
 import { RequestHandler } from 'express';
 
 import envs from '../../config/envs';
@@ -72,7 +71,7 @@ const createOrderHandler: RequestHandler[] = [
 
     const user = req.user as IUser;
 
-    const tokens = await getUserTokens(user._id as mongoose.Schema.Types.ObjectId);
+    const tokens = await getUserTokens(user._id);
 
     if (!tokens.length) {
       return res.status(400).j({
@@ -83,9 +82,10 @@ const createOrderHandler: RequestHandler[] = [
     const orderObj: IOrder = {
       initialAmount: amount,
       amount: number,
-      redirectUrl, // @ts-ignore
+      redirectUrl,
       user: user._id,
       status: 'pending',
+      isTransfer: false,
       currency: selectedCurrency,
       expiredTimestamp: Date.now() + FIFTEEN_MINUTES,
       memo: '',
@@ -107,8 +107,8 @@ const createOrderHandler: RequestHandler[] = [
         const amounts = await convertUsdToToken(token.symbol, number);
 
         const newOrderToken = new OrderToken({
-          order: order._id,
-          token: token._id,
+          order: order._id.toString(),
+          token: token._id.toString(),
           ...amounts,
         });
 

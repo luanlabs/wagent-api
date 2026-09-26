@@ -1,15 +1,15 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 export interface ITransaction {
-  _id: Schema.Types.ObjectId;
+  _id: Types.ObjectId;
   hash: string;
   successful: boolean;
   method: string;
   submittedAt: number;
   payerAddress: string;
   amount: string;
-  order: Schema.Types.ObjectId;
-  token: Schema.Types.ObjectId;
+  order: Types.ObjectId;
+  token: Types.ObjectId;
 }
 
 const Transaction = new Schema<ITransaction>(

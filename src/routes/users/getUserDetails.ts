@@ -9,7 +9,7 @@ const getUserDetailsHandler: RequestHandler[] = [
   async (req, res) => {
     const user = req.user as IUser;
 
-    const tokens = await getUserTokens(user.id);
+    const tokens = await getUserTokens(user._id);
 
     return res.j({
       message: 'User details',

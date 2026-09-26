@@ -2,7 +2,11 @@
  * @swagger
  * /users/auth:
  *   post:
- *     summary: Register a new user
+ *     summary: Sign in or create a merchant from a Blux session.
+ *     description: >
+ *       Same handler as `POST /users/auth/login`. The client sends the Blux
+ *       session JWT only. Wagent reads the G address from Blux and creates
+ *       the merchant on first login.
  *     tags: [AAA]
  *     requestBody:
  *       required: true
@@ -10,25 +14,16 @@
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - bluxToken
  *             properties:
- *               email:
+ *               bluxToken:
  *                 type: string
- *                 required: true
- *                 example: example@gmail.com
- *               name:
- *                 type: string
- *                 required: true
- *                 description: The name of the user or store.
- *                 example: MyShop
- *               password:
- *                 type: string
- *                 required: true
- *                 example: Aa@123455678
- *                 description: A password combination of letters numbers and symbols
+ *                 description: Blux session JWT stored by @bluxcc/react after login.
  *
  *     responses:
- *       201:
- *         description: Successful user registration.
+ *       200:
+ *         description: User signed in. A merchant account is created on first login.
  *         content:
  *           application/json:
  *             schema:
@@ -36,10 +31,17 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Verification email was sent
+ *                   example: Login was successful
+ *                 result:
+ *                   type: object
+ *                   properties:
+ *                     token:
+ *                       type: string
+ *                     address:
+ *                       type: string
  *
  *       401:
- *         description: Registration failed
+ *         description: Blux session or wallet could not be verified
  *         content:
  *           application/json:
  *             schema:
@@ -47,17 +49,16 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Registration failed
+ *                   example: Login failed
  *                 error:
  *                   type: object
  *                   properties:
  *                     message:
  *                       type: string
- *                       example: User already exists
- *
+ *                       example: Blux session is invalid
  *
  *       400:
- *         description: Registration failed because of validation
+ *         description: Validation failed
  *         content:
  *           application/json:
  *             schema:
@@ -66,23 +67,12 @@
  *                 message:
  *                   type: string
  *                   example: Validation failed
- *                 error:
- *                   type: object
- *                   properties:
- *                     message:
- *                       type: string
- *                       example: Something is missing
- *                     extras:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           path:
- *                             type: string
- *                             example: email
- *                           message:
- *                             type: string
- *                             example: Invalid email address
+ *
+ *       409:
+ *         description: The Blux wallet is already linked to a different merchant.
+ *
+ *       503:
+ *         description: Blux could not be reached.
  *
  *       500:
  *         description: Internal server error.
@@ -93,5 +83,5 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Failed to login user
+ *                   example: Failed to register user
  */

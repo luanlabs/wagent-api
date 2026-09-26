@@ -7,6 +7,8 @@ const envs = () => {
     'DB_NAME',
     'NODE_ENV',
     'JWT_SECRET',
+    'BLUX_APP_ID',
+    'BLUX_APP_SECRET',
     'EMAIL_USER',
     'EMAIL_PASS',
     'PAYMENT_URL',

@@ -39,7 +39,9 @@ const resetPasswordHandler: RequestHandler[] = [
 
     await user.save();
 
-    sendResetPasswordSuccess(user.email, user.name);
+    if (user.email) {
+      sendResetPasswordSuccess(user.email, user.name);
+    }
 
     return res.status(200).j({ message: 'Password has been reset' });
   },

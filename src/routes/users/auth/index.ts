@@ -3,6 +3,7 @@ import express from 'express';
 import loginHandler from './login';
 import verifyHandler from './verify';
 import registerHandler from './register';
+import { wrap } from '../../../utils/asyncHandler';
 import resetPasswordHandler from './resetPassword';
 import requestResetPasswordHandler from './requestResetPassword';
 import validateResetPasswordHandler from './validateResetPassword';
@@ -12,17 +13,17 @@ import enableAuthenticatorHandler from './enableAuthenticator';
 
 const router = express.Router();
 
-router.post('/', registerHandler);
-router.post('/login', loginHandler);
+router.post('/', wrap(registerHandler));
+router.post('/login', wrap(loginHandler));
 
-router.put('/reset', resetPasswordHandler);
-router.post('/reset', requestResetPasswordHandler);
-router.get('/reset/:token', validateResetPasswordHandler);
+router.put('/reset', wrap(resetPasswordHandler));
+router.post('/reset', wrap(requestResetPasswordHandler));
+router.get('/reset/:token', wrap(validateResetPasswordHandler));
 
-router.put('/verify', verifyHandler);
-router.post('/verify', requestVerificationTokenHandler);
+router.put('/verify', wrap(verifyHandler));
+router.post('/verify', wrap(requestVerificationTokenHandler));
 
-router.post('/authenticator', requestEnabledAuthenticatorHandler);
-router.put('/authenticator', enableAuthenticatorHandler);
+router.post('/authenticator', wrap(requestEnabledAuthenticatorHandler));
+router.put('/authenticator', wrap(enableAuthenticatorHandler));
 
 export default router;

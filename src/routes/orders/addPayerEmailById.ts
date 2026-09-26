@@ -36,7 +36,7 @@ const addPayerEmailByIdHandler: RequestHandler[] = [
 
     if (order.status === 'pending') {
       order.payerEmail = email;
-      order.save();
+      await order.save();
     }
 
     return res.status(200).j({

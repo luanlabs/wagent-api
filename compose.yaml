@@ -7,6 +7,7 @@ services:
       LOG_FILE_PATH: /app/storage/${LOG_FILENAME}
       FIREBASE_CONFIG_FILE_PATH: /app/firebase-config/${FIREBASE_CONFIG_FILENAME}
     build: .
+    init: true
     restart: unless-stopped
     volumes:
       - '${LOG_DIRNAME}:/app/storage'

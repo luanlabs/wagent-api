@@ -1,7 +1,7 @@
 /**
  * @swagger
  * /users/subscription:
- *   post:
+ *   put:
  *     summary: Subscribe or unsubscribe a user.
  *     tags: [Users]
  *     requestBody:
@@ -15,7 +15,7 @@
  *                 type: string
  *                 description: The token of the user to modify the subscription status.
  *                 example: "5135564e0d0f32ad99a89040cf6569b95994e6c9c9a19dc90121d15f4ac6bdb5"
- *               subscribe:
+ *               isSubscribed:
  *                 type: boolean
  *                 description: Pass `true` to subscribe or `false` to unsubscribe the user.
  *                 example: true

@@ -5,34 +5,25 @@ interface ICustomResponse {
   result?: object | string;
   error?: {
     message: string;
-    extras?: any;
+    extras?: unknown;
   };
 }
 
 declare module 'express-serve-static-core' {
   interface Response {
     /**
-     * Json a response.
+     * Send a JSON response using the API's standard envelope.
      *
-     * Examples:
+     * Example:
      *
-     *     res.j({
-     *      message: 'text'
-     *      result?: {} | null
-     *     });
+     *     res.j({ message: 'text', result: {} });
      */
     j: (body: ICustomResponse) => this;
   }
 }
 
-const customResponseHandler: RequestHandler = (_, res, next) => {
-  res.j = (body: ICustomResponse) => {
-    res.type('json');
-    res.send(body);
-    res.json;
-
-    return res;
-  };
+const customResponseHandler: RequestHandler = (_req, res, next) => {
+  res.j = (body: ICustomResponse) => res.json(body);
 
   next();
 };

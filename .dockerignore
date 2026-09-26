@@ -1,0 +1,28 @@
+# Dependencies and build output are reinstalled/recompiled inside the image
+node_modules
+dist
+
+# Version control and editor metadata
+.git
+.gitignore
+.github
+.vscode
+.idea
+
+# Secrets and environment files (never bake these into an image)
+.env
+.env.*
+!.env.example
+
+# Logs and caches
+*.log
+logs
+coverage
+.eslintcache
+
+# Local Docker/compose files and docs not needed at runtime
+Dockerfile
+.dockerignore
+compose*.yaml
+README.md
+LICENSE

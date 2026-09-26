@@ -47,7 +47,7 @@ const getOrderByIdHandler: RequestHandler[] = [
       await order.save();
     }
 
-    const orderTokens = await OrderToken.find({ order: order._id }).populate('token');
+    const orderTokens = await OrderToken.find({ order: order._id.toString() }).populate('token');
 
     const response = {
       ...order.toObject(),

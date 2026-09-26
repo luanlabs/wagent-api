@@ -1,4 +1,4 @@
-import { ZodSchema } from 'zod';
+import { ZodError, ZodSchema } from 'zod';
 import { RequestHandler } from 'express';
 
 interface ValidateOptions {
@@ -24,7 +24,11 @@ const validatorMiddleware = (options: ValidateOptions) => {
 
       return next();
     } catch (e) {
-      return res.status(400).j({ message: e.errors });
+      if (e instanceof ZodError) {
+        return res.status(400).j({ message: e.issues });
+      }
+
+      return next(e);
     }
   };
 

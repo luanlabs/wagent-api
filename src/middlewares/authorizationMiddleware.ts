@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 
 import User from '../models/User';
 import { verify } from '../utils/jwt';
+import { assertBluxProjectWallet, BluxVerificationError } from '../utils/blux';
 
 const authorizationMiddleware: RequestHandler = async (req, res, next) => {
   try {
@@ -21,7 +22,7 @@ const authorizationMiddleware: RequestHandler = async (req, res, next) => {
       });
     }
 
-    const token = authorization.replace('Bearer ', '');
+    const token = authorization.replace(/^Bearer\s+/i, '');
     const id = verify(token);
 
     if (!id) {
@@ -38,10 +39,23 @@ const authorizationMiddleware: RequestHandler = async (req, res, next) => {
       });
     }
 
+    await assertBluxProjectWallet(user);
+
     req.user = user;
 
     next();
-  } catch (e) {
+  } catch (error) {
+    if (error instanceof BluxVerificationError) {
+      const unavailable = error.status === 502 || error.status === 503;
+
+      return res.status(unavailable ? 503 : 401).j({
+        message: unavailable ? 'Blux verification is unavailable' : 'Authorization has failed',
+        error: {
+          message: error.message,
+        },
+      });
+    }
+
     return res.status(401).j({
       message: 'Authorization has failed',
     });

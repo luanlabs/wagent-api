@@ -1,5 +1,6 @@
 import express from 'express';
 
+import { wrap } from '../../utils/asyncHandler';
 import createOrderHandler from './createOrder';
 import getOrderByIdHandler from './getOrderById';
 import addPayerEmailByIdHandler from './addPayerEmailById';
@@ -7,9 +8,9 @@ import cancelOrderByIdHandler from './cancelOrderById';
 
 const router = express.Router();
 
-router.post('/', createOrderHandler);
-router.get('/:id', getOrderByIdHandler);
-router.put('/:id', addPayerEmailByIdHandler);
-router.delete('/:id', cancelOrderByIdHandler);
+router.post('/', wrap(createOrderHandler));
+router.get('/:id', wrap(getOrderByIdHandler));
+router.put('/:id', wrap(addPayerEmailByIdHandler));
+router.delete('/:id', wrap(cancelOrderByIdHandler));
 
 export default router;

@@ -41,6 +41,10 @@
  *                       type: string
  *                       example: example@gmail.com
  *
+ *                     address:
+ *                       type: string
+ *                       example: GBLUXDDBTGCLIC3TYAFYUJ5EO2MPXBSFMU7GHNLQ6IZWEJVXWMLBLUXX
+ *
  *                     apiKey:
  *                       type: string
  *                       example: abcfhkfgh30rir4t5

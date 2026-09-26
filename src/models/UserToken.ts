@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 export interface IUserToken {
-  user: Schema.Types.ObjectId;
-  token: Schema.Types.ObjectId;
+  user: Types.ObjectId;
+  token: Types.ObjectId;
 }
 
 const UserToken = new Schema<IUserToken>({
