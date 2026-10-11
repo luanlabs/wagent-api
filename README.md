@@ -13,7 +13,6 @@ conversion, JWT auth with optional TOTP two-factor, and transactional email.
 - **Validation:** Zod
 - **Stellar:** `@stellar/stellar-sdk` (address validation)
 - **Email:** Nodemailer (SMTP)
-- **Push:** Firebase Admin (see [Known limitations](#known-limitations))
 - **Logging:** Bunyan
 - **API docs:** Swagger / OpenAPI (`swagger-jsdoc` + `swagger-ui-express`)
 
@@ -21,8 +20,6 @@ conversion, JWT auth with optional TOTP two-factor, and transactional email.
 
 - Node.js **>= 20** and npm
 - A running **MongoDB** instance (local or remote)
-- A **Firebase** service-account JSON file (its path is a required env var)
-- API key for **CurrencyBeacon** (used as the currency-rate fallback)
 
 ## Getting started (local development)
 
@@ -105,21 +102,19 @@ All variables are documented in [`.env.example`](./.env.example). The required
 ones are validated at startup in [`src/config/envs.ts`](./src/config/envs.ts).
 Highlights:
 
-| Variable                    | Required | Purpose                                            |
-| --------------------------- | -------- | -------------------------------------------------- |
-| `PORT`                      | yes      | HTTP port                                          |
-| `NODE_ENV`                  | yes      | `development` or `production`                      |
-| `DB_URI`, `DB_NAME`         | yes      | MongoDB connection                                 |
-| `JWT_SECRET`                | yes      | Signs 30-day JWTs — use a long random value        |
-| `EMAIL_USER`, `EMAIL_PASS`  | yes      | SMTP credentials (smtp.hostinger.com:587)          |
-| `FRONTEND_URL`              | yes      | Base URL for email links                           |
-| `PAYMENT_URL`               | yes      | Base URL returned for created orders               |
-| `SWAGGER_API_URL`           | yes      | Server URL shown in Swagger UI                     |
-| `CURRENCY_BEACON_API_KEY`   | yes      | Fallback currency-rate provider                    |
-| `LOG_FILE_PATH`             | yes      | Log file used in production                        |
-| `FIREBASE_CONFIG_FILE_PATH` | yes      | Path to the Firebase service-account JSON          |
-| `ADMIN_PASSWORD`            | yes      | Currently required but unused (vestigial)          |
-| `CORS_ORIGIN`               | no       | Comma-separated allowlist; defaults to all origins |
+| Variable                   | Required | Purpose                                            |
+| -------------------------- | -------- | -------------------------------------------------- |
+| `PORT`                     | yes      | HTTP port                                          |
+| `NODE_ENV`                 | yes      | `development` or `production`                      |
+| `DB_URI`, `DB_NAME`        | yes      | MongoDB connection                                 |
+| `JWT_SECRET`               | yes      | Signs 30-day JWTs — use a long random value        |
+| `EMAIL_USER`, `EMAIL_PASS` | yes      | SMTP credentials (smtp.hostinger.com:587)          |
+| `FRONTEND_URL`             | yes      | Base URL for email links                           |
+| `PAYMENT_URL`              | yes      | Base URL returned for created orders               |
+| `SWAGGER_API_URL`          | yes      | Server URL shown in Swagger UI                     |
+| `LOG_FILE_PATH`            | yes      | Log file used in production                        |
+| `ADMIN_PASSWORD`           | yes      | Currently required but unused (vestigial)          |
+| `CORS_ORIGIN`              | no       | Comma-separated allowlist; defaults to all origins |
 
 ## API documentation
 
@@ -149,7 +144,7 @@ Mongoose connection state. Used by the Docker `HEALTHCHECK`.
 
 ```
 src/
-  config/        env validation, db, logger, firebase
+  config/        env validation, db, logger
   constants/     static config (tokens, currencies, dates, email)
   middlewares/   auth, api-key, admin, validation, response envelope, asyncHandler
   models/        Mongoose models (User, Order, Token, Transaction, ...)
@@ -165,13 +160,6 @@ src/
 These are pre-existing behaviours intentionally left unchanged. Review before
 relying on them:
 
-- **Push notifications are not wired up.** `src/utils/sendNotification.ts` is
-  never imported, and its Firebase message payload is malformed (no
-  `notification`/`data` field), so notifications would not be delivered even if
-  called. `firebase-admin` is therefore effectively unused at runtime. Decide
-  whether to finish wiring this up (and fix the payload) or remove it (which
-  would also let you drop the `firebase-admin` dependency and the
-  `FIREBASE_CONFIG_FILE_PATH` requirement).
 - **`src/utils/contract/getTransactionDetails.ts` is a stub** (returns hardcoded
   values) and is not imported anywhere.
 - **Public payment endpoints have no JWT auth by design:** `GET/PUT/DELETE

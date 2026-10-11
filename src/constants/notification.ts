@@ -1,1 +1,0 @@
-export const MAXIMUM_NOTIFICATION_TOKENS = 15;
