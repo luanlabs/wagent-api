@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
+import exactCaseInsensitive from '../../utils/exactCaseInsensitive';
 import adminMiddleware from '../../middlewares/adminMiddleware';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
@@ -27,7 +28,11 @@ const editTokenHandler: RequestHandler[] = [
     const { logo } = req.body;
     const { symbol } = req.params;
 
-    const token = await Token.findOneAndUpdate({ symbol: new RegExp(symbol, 'i') }, { logo });
+    const token = await Token.findOneAndUpdate(
+      { symbol: exactCaseInsensitive(symbol) },
+      { logo },
+      { returnDocument: 'after' },
+    );
 
     if (!token) {
       return res.status(404).j({

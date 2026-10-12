@@ -9,6 +9,10 @@ import { RequestHandler } from 'express';
 const asyncHandler =
   (handler: RequestHandler): RequestHandler =>
   (req, res, next) => {
+    // Express clears baseUrl when an error unwinds through mounted routers.
+    if (req.route) {
+      res.locals.requestRoute = `${req.baseUrl}${req.route.path}`;
+    }
     Promise.resolve(handler(req, res, next)).catch(next);
   };
 

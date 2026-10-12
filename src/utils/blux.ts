@@ -159,7 +159,10 @@ const fetchBluxProjectUser = async (userId: number) => {
 
   if (!response.ok) {
     log.error(`BLUX: User lookup failed (${response.status})`);
-    throw new BluxVerificationError('Blux verification failed', response.status === 401 ? 502 : 503);
+    throw new BluxVerificationError(
+      'Blux verification failed',
+      response.status === 401 ? 502 : 503,
+    );
   }
 
   const payload = await parseEnvelope<BluxProjectUser>(response);

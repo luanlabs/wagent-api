@@ -32,7 +32,9 @@ cp .env.example .env
 #    then edit .env and fill in real values (see Environment variables below)
 
 # 3. Start MongoDB (any local instance works), e.g. via Docker:
-docker compose -f compose.mongodb.yaml up -d   # requires the external network (see Docker section)
+docker network create wagentapi # once, if it does not already exist
+docker compose up -d mongo-wagent
+#    set DB_URI=mongodb://localhost:27016 in .env for this Compose database
 
 # 4. Run in watch mode (recompiles + restarts on change)
 npm run dev
@@ -50,6 +52,7 @@ exits immediately if a required variable is missing.
 | `npm run build`        | Compile TypeScript to `dist/`                         |
 | `npm start`            | Run the compiled app (`node dist/index.js`)           |
 | `npm run typecheck`    | Type-check without emitting                           |
+| `npm test`             | Build and run logger and HTTP route tests             |
 | `npm run lint`         | Lint with ESLint (flat config)                        |
 | `npm run lint:fix`     | Lint and auto-fix                                     |
 | `npm run format`       | Format with Prettier                                  |
@@ -63,24 +66,39 @@ npm run build
 NODE_ENV=production npm start
 ```
 
-In production (`NODE_ENV=production`) logs are written to `LOG_FILE_PATH`;
-otherwise they go to stdout.
+Logs always go to stdout, including in production. Production also writes the
+same logs to `LOG_FILE_PATH`. HTTP request logs include the method, route template,
+status, duration and request ID. Request bodies, headers, query strings and URL
+tokens are excluded from these request logs.
+
+`npm test` uses a temporary MongoDB instance with fresh data. Install `mongod`
+locally, or set `MONGOD_BIN` to its executable path. Blux and SMTP are simulated;
+tests never use the configured application database or send real emails.
 
 ## Docker
 
-The app and database are defined as **two separate compose files** that share an
-external Docker network named `wagentapi`.
+The API and MongoDB are defined together in `compose.yaml`. The API waits for
+MongoDB's health check before starting. Both use the external `wagentapi` network,
+which is also shared with the transaction monitor.
+
+Set `LOG_DIRNAME` and `LOG_FILENAME` in `.env` if needed. They default to `./logs`
+and `api.log`.
 
 ```bash
 # 1. Create the shared network once
 docker network create wagentapi
 
-# 2. Start MongoDB
-docker compose -f compose.mongodb.yaml up -d
+# 2. Prepare the API log directory (use LOG_DIRNAME if customized)
+mkdir -p ./logs
+sudo chown 1000:1000 ./logs
 
-# 3. Build and start the API
+# 3. Pull MongoDB, then build and start both services
+docker compose pull mongo-wagent
 docker compose up -d --build
 ```
+
+If upgrading from the separate MongoDB Compose file, follow the data migration
+below before running these commands.
 
 The image is a multi-stage build on `node:24-alpine`, runs as the non-root
 `node` user, ships only production dependencies, and defines a `HEALTHCHECK`
@@ -93,8 +111,56 @@ Notes:
 - `swagger-jsdoc` reads its annotations from the TypeScript sources at runtime,
   so `src/swagger/**` is included in the runtime image on purpose.
 
-> Docker builds could not be executed in the environment where this was last
-> updated — run `docker compose up --build` once to confirm in your setup.
+### MongoDB kernel compatibility
+
+The error `MongoDB cannot start: Linux kernel versions 6.19 and newer` is caused
+by a host kernel incompatibility with MongoDB's memory allocator. Containers use
+the host kernel, so merging Compose files does not fix it.
+
+Check the VPS with `uname -r`. Run MongoDB 8.0 on a distribution-supported kernel
+below 6.19 or upgrade to 7.0.14 or later, then reboot and check `uname -r` again.
+Pull the current `mongo:8.0` image before restarting; support for the fixed kernels
+was added in MongoDB 8.0.30. See MongoDB's
+[compatibility matrix](https://jira.mongodb.org/browse/SERVER-125742).
+
+Keep MongoDB 8.0 for existing data. Do not switch an existing 8.0 data directory
+to MongoDB 7.0 or bypass the kernel check.
+
+### Existing MongoDB container
+
+The old file mounted the host data directory at `/data/db/data`, but MongoDB
+stores its database at `/data/db` by default. The combined file corrects this to
+`~/storage/mongodb/data:/data/db`. If the old container has data, it may be in an
+anonymous Docker volume instead of the host directory.
+
+Before recreating the old container, stop it and inspect its mounts:
+
+```bash
+docker stop mongo-wagent
+docker inspect mongo-wagent --format '{{json .Mounts}}'
+```
+
+If it contains existing data, copy `/data/db` to a new backup directory while the
+container is stopped:
+
+```bash
+mkdir -p ~/storage/mongodb/backup-before-merge
+docker cp -a mongo-wagent:/data/db/. ~/storage/mongodb/backup-before-merge/
+```
+
+Verify the backup and restore its database files into `~/storage/mongodb/data`
+before recreating the container. Keep the backup and old volume until the API
+connects and the expected records are confirmed. If the old container never
+initialized and has no data, no restore is needed.
+
+After checking or restoring the data, remove only the old container so Compose
+can recreate it under the combined project:
+
+```bash
+docker rm mongo-wagent
+docker compose pull mongo-wagent
+docker compose up -d --build
+```
 
 ## Environment variables
 

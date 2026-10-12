@@ -4,16 +4,44 @@ services:
     env_file: .env
     environment:
       DB_URI: mongodb://mongo-wagent:27017
-      LOG_FILE_PATH: /app/storage/${LOG_FILENAME}
+      LOG_FILE_PATH: /app/storage/${LOG_FILENAME:-api.log}
     build: .
     init: true
     restart: unless-stopped
+    depends_on:
+      mongo-wagent:
+        condition: service_healthy
     volumes:
-      - '${LOG_DIRNAME}:/app/storage'
+      - '${LOG_DIRNAME:-./logs}:/app/storage'
     networks:
       - wagentapi
     ports:
       - '5000:5000'
+
+  mongo-wagent:
+    # MongoDB 8.0 requires a host kernel below 6.19 or 7.0.14+.
+    image: mongo:8.0
+    container_name: mongo-wagent
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:27016:27017'
+    networks:
+      - wagentapi
+    volumes:
+      - ~/storage/mongodb/data/:/data/db
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'mongosh',
+          '--quiet',
+          '--eval',
+          'quit(db.adminCommand({ ping: 1 }).ok === 1 ? 0 : 1)',
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
 networks:
   wagentapi:

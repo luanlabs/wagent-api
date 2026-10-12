@@ -1,4 +1,5 @@
 import Currency from '../models/Currency';
+import exactCaseInsensitive from './exactCaseInsensitive';
 
 const checkCurrencyExists = async (currenyName: string) => {
   if (currenyName === 'usd') {
@@ -9,7 +10,7 @@ const checkCurrencyExists = async (currenyName: string) => {
   }
 
   const existingCurrency = await Currency.findOne({
-    name: { $regex: new RegExp(currenyName, 'i') },
+    name: exactCaseInsensitive(currenyName),
   });
 
   if (!existingCurrency) {

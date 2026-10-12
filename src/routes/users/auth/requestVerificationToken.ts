@@ -16,7 +16,7 @@ const requestVerificationTokenHandler: RequestHandler[] = [
   async (req, res) => {
     const { email } = req.body;
 
-    const user = await User.findOne({ email: { $regex: new RegExp(email, 'i') } });
+    const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
       return res.status(404).j({

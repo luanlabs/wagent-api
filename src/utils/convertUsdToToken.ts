@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import Currency from '../models/Currency';
 
 const convertUsdToToken = async (name: string, usdAmount: string) => {
-  const currency = await Currency.findOne({ name });
+  const currency = await Currency.findOne({ name: name.toLowerCase() });
 
   if (!currency) {
     return;

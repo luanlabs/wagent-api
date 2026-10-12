@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { RequestHandler } from 'express';
 
 import Token from '../../models/Token';
+import exactCaseInsensitive from '../../utils/exactCaseInsensitive';
 import adminMiddleware from '../../middlewares/adminMiddleware';
 import validatorMiddleware from '../../middlewares/validatorMiddleware';
 import authorizationMiddleware from '../../middlewares/authorizationMiddleware';
@@ -22,7 +23,7 @@ const deleteTokenHandler: RequestHandler[] = [
     const { symbol } = req.params;
 
     const modifyToken = await Token.findOneAndDelete({
-      symbol: new RegExp(symbol, 'i'),
+      symbol: exactCaseInsensitive(symbol),
     });
 
     if (!modifyToken) {

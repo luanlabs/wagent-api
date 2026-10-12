@@ -1,0 +1,16 @@
+module.exports = {
+  PORT: '5000',
+  DB_URI: 'mongodb://127.0.0.1:27017',
+  DB_NAME: 'wagent_test',
+  NODE_ENV: 'production',
+  JWT_SECRET: 'test-only-secret-for-http-route-checks',
+  BLUX_APP_ID: 'test-app',
+  BLUX_APP_SECRET: 'test-blux-secret',
+  EMAIL_USER: 'no-reply@example.test',
+  EMAIL_PASS: 'test-email-password',
+  PAYMENT_URL: 'https://pay.example.test',
+  FRONTEND_URL: 'https://example.test',
+  LOG_FILE_PATH: 'unused-in-development.log',
+  ADMIN_PASSWORD: 'test-admin-password',
+  SWAGGER_API_URL: 'http://localhost:5000',
+};

@@ -1,4 +1,4 @@
-import { FIVE_MINUTES, ONE_DAY } from '../constants/dates';
+import { FIVE_MINUTES, ONE_HOUR } from '../constants/dates';
 
 const canRequestToken = (tokenExpirationTimestamp?: number): boolean => {
   if (!tokenExpirationTimestamp) {
@@ -6,7 +6,7 @@ const canRequestToken = (tokenExpirationTimestamp?: number): boolean => {
   }
 
   const currentTime = Date.now();
-  const lastTokenSentTimestamp = tokenExpirationTimestamp - ONE_DAY;
+  const lastTokenSentTimestamp = tokenExpirationTimestamp - ONE_HOUR;
 
   return currentTime > lastTokenSentTimestamp + FIVE_MINUTES;
 };

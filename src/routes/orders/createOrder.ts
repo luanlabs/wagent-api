@@ -101,10 +101,18 @@ const createOrderHandler: RequestHandler[] = [
 
     order.memo = memo;
 
+    const orderTokens = [];
+
     for (let i = 0; i < tokens.length; i++) {
       const token = await Token.findOne({ _id: tokens[i] });
       if (token) {
         const amounts = await convertUsdToToken(token.symbol, number);
+
+        if (!amounts) {
+          return res.status(400).j({
+            message: 'Exchange rate is unavailable for a selected token',
+          });
+        }
 
         const newOrderToken = new OrderToken({
           order: order._id.toString(),
@@ -112,8 +120,12 @@ const createOrderHandler: RequestHandler[] = [
           ...amounts,
         });
 
-        await newOrderToken.save();
+        orderTokens.push(newOrderToken);
       }
+    }
+
+    for (const orderToken of orderTokens) {
+      await orderToken.save();
     }
 
     await order.save();

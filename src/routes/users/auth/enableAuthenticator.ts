@@ -30,7 +30,13 @@ const enableAuthenticatorHandler: RequestHandler[] = [
       });
     }
 
-    const isVerifyToken = verifyAuthenticatorToken(user.authenticatorSecretKey!, token);
+    if (!user.authenticatorSecretKey) {
+      return res.status(400).j({
+        message: 'Request authenticator setup first',
+      });
+    }
+
+    const isVerifyToken = verifyAuthenticatorToken(user.authenticatorSecretKey, token);
 
     if (!isVerifyToken) {
       return res.status(400).j({
