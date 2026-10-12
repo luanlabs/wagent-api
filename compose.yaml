@@ -19,8 +19,7 @@ services:
       - '5000:5000'
 
   mongo-wagent:
-    # MongoDB 8.0 requires a host kernel below 6.19 or 7.0.14+.
-    image: mongo:8.0
+    image: mongo:7.0
     container_name: mongo-wagent
     restart: unless-stopped
     ports:

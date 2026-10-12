@@ -77,7 +77,7 @@ tests never use the configured application database or send real emails.
 
 ## Docker
 
-The API and MongoDB are defined together in `compose.yaml`. The API waits for
+The API and MongoDB 7.0 are defined together in `compose.yaml`. The API waits for
 MongoDB's health check before starting. Both use the external `wagentapi` network,
 which is also shared with the transaction monitor.
 
@@ -111,20 +111,15 @@ Notes:
 - `swagger-jsdoc` reads its annotations from the TypeScript sources at runtime,
   so `src/swagger/**` is included in the runtime image on purpose.
 
-### MongoDB kernel compatibility
+### MongoDB version
 
-The error `MongoDB cannot start: Linux kernel versions 6.19 and newer` is caused
-by a host kernel incompatibility with MongoDB's memory allocator. Containers use
-the host kernel, so merging Compose files does not fix it.
+Compose uses `mongo:7.0`. After changing the image version, run the pull and
+startup commands above to recreate the container.
 
-Check the VPS with `uname -r`. Run MongoDB 8.0 on a distribution-supported kernel
-below 6.19 or upgrade to 7.0.14 or later, then reboot and check `uname -r` again.
-Pull the current `mongo:8.0` image before restarting; support for the fixed kernels
-was added in MongoDB 8.0.30. See MongoDB's
-[compatibility matrix](https://jira.mongodb.org/browse/SERVER-125742).
-
-Keep MongoDB 8.0 for existing data. Do not switch an existing 8.0 data directory
-to MongoDB 7.0 or bypass the kernel check.
+If MongoDB 8.0 already initialized the data directory, do not reuse those files
+with 7.0. Community Edition does not support an in-place binary downgrade.
+Restore a compatible MongoDB 7.0 backup into a separate data directory and keep
+the original files. See [MongoDB's downgrade policy](https://www.mongodb.com/docs/v8.0/release-notes/8.0-downgrade/).
 
 ### Existing MongoDB container
 
@@ -148,10 +143,11 @@ mkdir -p ~/storage/mongodb/backup-before-merge
 docker cp -a mongo-wagent:/data/db/. ~/storage/mongodb/backup-before-merge/
 ```
 
-Verify the backup and restore its database files into `~/storage/mongodb/data`
-before recreating the container. Keep the backup and old volume until the API
-connects and the expected records are confirmed. If the old container never
-initialized and has no data, no restore is needed.
+For a database last used by MongoDB 7.0, verify the backup and restore its files
+into `~/storage/mongodb/data` before recreating the container. For 8.0 data, follow
+the version notes above. Keep the backup and old volume until the API connects
+and the expected records are confirmed. If the old container never initialized
+and has no data, no restore is needed.
 
 After checking or restoring the data, remove only the old container so Compose
 can recreate it under the combined project:
